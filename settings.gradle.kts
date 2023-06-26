@@ -1,3 +1,1 @@
-
-rootProject.name = "buddy-bff"
-
+rootProject.name = "com.buddy"
