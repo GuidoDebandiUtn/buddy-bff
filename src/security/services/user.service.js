@@ -1,4 +1,8 @@
 import { User } from "../../models/User.js";
+import { getUserStateByName } from "./userState.service.js";
+import { addStateUser, createStateUser } from "./stateUser.service.js";
+import { StateUser } from "../../models/StateUser.js";
+import { UserState } from "../../models/UserState.js";
 
 export async function createUser(userData) {
   const { mail, password, userName, name, lastName } = userData;
@@ -25,13 +29,12 @@ export async function createUser(userData) {
         ],
       }
     );
+    const userState = await getUserStateByName("active".toUpperCase());
+    const stateUser = await createStateUser();
+    await addStateUser(stateUser, newUser.idUser, userState.idUserState);
     return newUser;
   } catch (error) {
-    if (error.errors[0].path == "mail") {
-      throw new Error("mail");
-    } else {
-      throw new Error(error);
-    }
+    console.error(error);
   }
 }
 
@@ -45,6 +48,16 @@ export async function getAllUsers() {
         "name",
         "lastName",
         "createdDate",
+      ],
+      include: [
+        {
+          model: StateUser,
+          include: [
+            {
+              model: UserState,
+            },
+          ],
+        },
       ],
     });
     return users;
@@ -96,9 +109,8 @@ export async function updateUser(user, userData) {
 
 export async function deleteUser(idUser) {
   try {
-    user.destroy({
-      where: { idUser },
-    });
+    User.destroy({ where: { idUser } });
+    return;
   } catch (error) {
     console.error(error);
   }

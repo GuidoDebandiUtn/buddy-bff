@@ -1,37 +1,23 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../database/database.js";
 
-export class User extends Model {}
+export class UserState extends Model {}
 
-User.init(
+UserState.init(
   {
-    idUser: {
+    idUserState: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
     },
-    mail: {
-      type: DataTypes.STRING,
-      unique: true,
-      allowNull: false,
-    },
-    password: {
+    userStateName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    userName: {
-      type: DataTypes.STRING,
-    },
-    name: {
-      type: DataTypes.STRING,
-    },
-    lastName: {
-      type: DataTypes.STRING,
-    },
-    validated: {
+    active: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false,
+      defaultValue: true,
     },
     createdDate: {
       type: DataTypes.DATE,
@@ -43,6 +29,6 @@ User.init(
   {
     sequelize,
     timestamps: false,
-    modelName: "users",
+    modelName: "userState",
   }
 );

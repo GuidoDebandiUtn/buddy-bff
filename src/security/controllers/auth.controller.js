@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import { CreateUserDto } from "../dtos/userDto.js";
 import { createUser, getUserByMail } from "../services/user.service.js";
-import { token } from "morgan";
 import { findToken, insertToken } from "../services/token.service.js";
 
 export async function userRegistration(req, res) {
@@ -76,8 +75,8 @@ export async function logout(req, res) {
   const token = req.header("auth-token");
   try {
     await insertToken(token);
-    res.status(200).json({ message: "Logout successful" });
+    res.status(200).json({ message: "Logout exitoso" });
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: error.message });
   }
 }

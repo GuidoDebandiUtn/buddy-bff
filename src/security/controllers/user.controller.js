@@ -3,15 +3,16 @@ import {
   getAllUsers,
   getUserById,
   updateUser,
+  deleteUser,
 } from "../services/user.service.js";
 
 export async function getUsers(req, res) {
   try {
     const users = await getAllUsers();
-    const usersDto = users.map((user) => new UserDto(user.mail, user.userName));
-    res.status(200).json(usersDto);
+    // const usersDto = users.map((user) => new UserDto(user.mail, user.userName));
+    res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: error.message });
   }
 }
 
@@ -28,7 +29,7 @@ export async function getUser(req, res) {
       });
     }
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: error.message });
   }
 }
 
@@ -44,7 +45,6 @@ export async function userUpdate(req, res) {
   try {
     const updatedUser = await updateUser(user, userData);
     const updatedUserDto = new UpdateUserDto(
-      updatedUser.mail,
       updatedUser.userName,
       updatedUser.name,
       updatedUser.lastName,
@@ -52,7 +52,7 @@ export async function userUpdate(req, res) {
     );
     res.status(200).json(updatedUserDto);
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: error.message });
   }
 }
 
@@ -68,6 +68,6 @@ export async function userDelete(req, res) {
     await deleteUser(user.idUser);
     res.status(200).json({ message: "Usuario eliminado" });
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: error.message });
   }
 }
