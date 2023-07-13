@@ -1,29 +1,50 @@
 import { StateUser } from "../../models/StateUser.js";
 
-export async function createStateUser() {
+export async function createStateUser(idUser, idUserState, idUserAuthor) {
+  let idAuthor;
+  if (idUserAuthor) {
+    idAuthor = idUserAuthor;
+  } else {
+    idAuthor = idUser;
+  }
   try {
     const newStateUser = await StateUser.create(
       {
+        idUserAuthor: idAuthor,
         createdDate: new Date(),
         updatedDate: new Date(),
+        userIdUser: idUser,
+        userStateIdUserState: idUserState,
       },
       {
-        fields: ["createdDate", "updatedDate"],
+        fields: [
+          "idUserAuthor",
+          "createdDate",
+          "updatedDate",
+          "userIdUser",
+          "userStateIdUserState",
+        ],
       }
     );
     return newStateUser;
   } catch (error) {
-    console.error(error);
+    throw new Error(error);
   }
 }
 
-export async function addStateUser(stateUser, idUser, idUserState) {
+export async function changeStateUser(idUser, idUserState, idUserAuthor) {
   try {
-    stateUser.userIdUser = idUser;
-    stateUser.userStateIdUserState = idUserState;
-    await stateUser.save();
+    const state = await StateUser.findOne({
+      where: {
+        userIdUser: idUser,
+      },
+      order: [["createdDate", "DESC"]],
+    });
+    state.updatedDate = new Date();
+    await state.save();
+    await createStateUser(idUser, idUserState, idUserAuthor);
     return;
   } catch (error) {
-    console.error(error);
+    throw new Error(error);
   }
 }

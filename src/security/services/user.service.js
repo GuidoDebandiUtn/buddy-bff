@@ -1,13 +1,13 @@
 import { User } from "../../models/User.js";
 import { getUserStateByName } from "./userState.service.js";
-import { addStateUser, createStateUser } from "./stateUser.service.js";
+import { changeStateUser, createStateUser } from "./stateUser.service.js";
 import { StateUser } from "../../models/StateUser.js";
 import { UserState } from "../../models/UserState.js";
 
 export async function createUser(userData) {
   const { mail, password, userName, name, lastName } = userData;
   try {
-    let newUser = await User.create(
+    const newUser = await User.create(
       {
         mail,
         password,
@@ -30,57 +30,72 @@ export async function createUser(userData) {
       }
     );
     const userState = await getUserStateByName("active".toUpperCase());
-    const stateUser = await createStateUser();
-    await addStateUser(stateUser, newUser.idUser, userState.idUserState);
+    await createStateUser(newUser.idUser, userState.idUserState);
     return newUser;
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 }
 
 export async function getAllUsers() {
   try {
     const users = await User.findAll({
-      atributes: [
-        "idUser",
-        "mail",
-        "username",
-        "name",
-        "lastName",
-        "createdDate",
-      ],
-      include: [
-        {
-          model: StateUser,
-          include: [
-            {
-              model: UserState,
-            },
-          ],
+      attributes: ["mail", "username", "name", "lastName"],
+      include: {
+        model: StateUser,
+        attributes: ["createdDate", "idStateUser"],
+        include: {
+          model: UserState,
+          attributes: ["userStateName"],
         },
-      ],
+      },
+      order: [[StateUser, "createdDate", "DESC"]],
     });
     return users;
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 }
 
 export async function getUserById(idUser) {
   try {
-    const user = await User.findByPk(idUser);
+    const user = await User.findOne({
+      where: { idUser },
+      attributes: ["idUser", "mail", "username", "name", "lastName"],
+      include: {
+        model: StateUser,
+        attributes: ["createdDate", "idStateUser"],
+        include: {
+          model: UserState,
+          attributes: ["userStateName"],
+        },
+      },
+      order: [[StateUser, "createdDate", "DESC"]],
+    });
     return user;
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 }
 
 export async function getUserByMail(mail) {
   try {
-    const user = await User.findOne({ where: { mail } });
+    const user = await User.findOne({
+      where: { mail },
+      attributes: ["idUser", "mail", "validated"],
+      include: {
+        model: StateUser,
+        attributes: ["createdDate"],
+        include: {
+          model: UserState,
+          attributes: ["userStateName"],
+        },
+      },
+      order: [[StateUser, "createdDate", "DESC"]],
+    });
     return user;
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 }
 
@@ -103,15 +118,15 @@ export async function updateUser(user, userData) {
     await user.save();
     return user;
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 }
 
-export async function deleteUser(idUser) {
+export async function deleteUser(idUser, idUserState, idUserAuthor) {
   try {
-    User.destroy({ where: { idUser } });
+    await changeStateUser(idUser, idUserState, idUserAuthor);
     return;
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 }

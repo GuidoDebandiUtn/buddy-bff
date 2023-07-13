@@ -5,7 +5,7 @@ export async function insertToken(token) {
     await RevokedToken.create({ token });
     return;
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 }
 
@@ -14,6 +14,6 @@ export async function findToken(token) {
     const authToken = await RevokedToken.findOne({ where: { token } });
     return authToken;
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 }

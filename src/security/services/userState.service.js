@@ -15,7 +15,7 @@ export async function createUserState(userStateName) {
     );
     return userState;
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 }
 
@@ -24,7 +24,7 @@ export async function getAllUserState() {
     const userStates = await UserState.findAll();
     return userStates;
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 }
 
@@ -33,7 +33,7 @@ export async function getUserStateById(idUserState) {
     const userState = await UserState.findByPk(idUserState);
     return userState;
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 }
 
@@ -42,7 +42,7 @@ export async function getUserStateByName(userStateName) {
     const userState = await UserState.findOne({ where: { userStateName } });
     return userState;
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 }
 
@@ -53,7 +53,7 @@ export async function updateUserState(userState, userStateName) {
     await userState.save();
     return userState;
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 }
 
@@ -64,6 +64,6 @@ export async function deleteUserState(userState) {
     await userState.save();
     return userState;
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 }
