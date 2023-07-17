@@ -28,7 +28,7 @@ export async function createStateUser(idUser, idUserState, idUserAuthor) {
     );
     return newStateUser;
   } catch (error) {
-    throw new Error(error);
+    throw error;
   }
 }
 
@@ -40,11 +40,14 @@ export async function changeStateUser(idUser, idUserState, idUserAuthor) {
       },
       order: [["createdDate", "DESC"]],
     });
+
     state.updatedDate = new Date();
+
     await state.save();
+
     await createStateUser(idUser, idUserState, idUserAuthor);
     return;
   } catch (error) {
-    throw new Error(error);
+    throw error;
   }
 }

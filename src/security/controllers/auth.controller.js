@@ -1,24 +1,24 @@
 import jwt from "jsonwebtoken";
-import { CreateUserDto } from "../dtos/userDto.js";
-import { createUser, getUserByMail } from "../services/user.service.js";
+import {
+  createUser,
+  getUserById,
+  getUserByMail,
+  userValidate,
+} from "../services/user.service.js";
 import { findToken, insertToken } from "../services/token.service.js";
+import { validateMail } from "../helper/mailHelper.js";
 
 export async function userRegistration(req, res) {
   const userData = req.body;
   try {
-    if (await getUserByMail(userData.mail)) {
+    const user = await getUserByMail(userData.mail);
+    if (user) {
       return res
         .status(400)
         .json({ message: "Este mail ya se necuentra en uso" });
     }
     const newUser = await createUser(userData);
-    const newUserDto = new CreateUserDto(
-      newUser.mail,
-      newUser.userName,
-      newUser.name,
-      newUser.lastName,
-      newUser.createdDate
-    );
+    await validateMail(newUser.userName, newUser.mail, newUser.idUser);
     res.status(201).json(newUserDto);
   } catch (error) {
     res.status(500).json({
@@ -81,7 +81,23 @@ export async function logout(req, res) {
   const token = req.header("auth-token");
   try {
     await insertToken(token);
-    res.status(200).json({ message: "Logout exitoso" });
+    res.status(200);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+export async function validateUser(req, res) {
+  const { idUser } = req.params;
+  try {
+    const checkUser = await getUserById(idUser);
+    if (!checkUser) {
+      return res
+        .status(404)
+        .json({ error: "No existe un usuario con este id" });
+    }
+    await userValidate(checkUser);
+    res.status(400);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

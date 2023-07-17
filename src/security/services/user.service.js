@@ -1,6 +1,6 @@
 import { User } from "../../models/User.js";
 import { getUserStateByName } from "./userState.service.js";
-import { changeStateUser, createStateUser } from "./stateUser.service.js";
+import { createStateUser } from "./stateUser.service.js";
 import { StateUser } from "../../models/StateUser.js";
 import { UserState } from "../../models/UserState.js";
 
@@ -40,7 +40,7 @@ export async function createUser(userData) {
 export async function getAllUsers() {
   try {
     const users = await User.findAll({
-      attributes: ["mail", "username", "name", "lastName"],
+      attributes: ["mail", "userName", "name", "lastName"],
       include: {
         model: StateUser,
         attributes: ["createdDate", "idStateUser"],
@@ -61,7 +61,7 @@ export async function getUserById(idUser) {
   try {
     const user = await User.findOne({
       where: { idUser },
-      attributes: ["idUser", "mail", "username", "name", "lastName"],
+      attributes: ["idUser", "mail", "userName", "name", "lastName"],
       include: {
         model: StateUser,
         attributes: ["createdDate", "idStateUser"],
@@ -83,15 +83,6 @@ export async function getUserByMail(mail) {
     const user = await User.findOne({
       where: { mail },
       attributes: ["idUser", "mail", "validated"],
-      include: {
-        model: StateUser,
-        attributes: ["createdDate"],
-        include: {
-          model: UserState,
-          attributes: ["userStateName"],
-        },
-      },
-      order: [[StateUser, "createdDate", "DESC"]],
     });
     return user;
   } catch (error) {
@@ -100,11 +91,8 @@ export async function getUserByMail(mail) {
 }
 
 export async function updateUser(user, userData) {
-  const { password, userName, name, lastName } = userData;
+  const { userName, name, lastName, password } = userData;
   try {
-    if (password) {
-      user.password = password;
-    }
     if (userName) {
       user.userName = userName;
     }
@@ -114,6 +102,9 @@ export async function updateUser(user, userData) {
     if (lastName) {
       user.lastName = lastName;
     }
+    if (password) {
+      user.password = password;
+    }
     user.updatedDate = new Date();
     await user.save();
     return user;
@@ -122,9 +113,11 @@ export async function updateUser(user, userData) {
   }
 }
 
-export async function deleteUser(idUser, idUserState, idUserAuthor) {
+export async function userValidate(user) {
   try {
-    await changeStateUser(idUser, idUserState, idUserAuthor);
+    user.validated = true;
+    user.updatedDate = new Date();
+    await user.save();
     return;
   } catch (error) {
     throw error;
