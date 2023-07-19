@@ -6,7 +6,7 @@ import {
   userValidate,
 } from "../services/user.service.js";
 import { findToken, insertToken } from "../services/token.service.js";
-import { validateMail } from "../helper/mailHelper.js";
+import { validateMail } from "../helpers/mailHelper.js";
 
 export async function userRegistration(req, res) {
   const userData = req.body;

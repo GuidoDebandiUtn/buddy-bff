@@ -1,50 +1,34 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../database/database.js";
 
-export class User extends Model {}
+export class PetBreed extends Model {}
 
-User.init(
+PetBreed.init(
   {
-    idUser: {
+    idPetBreed: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
     },
-    mail: {
-      type: DataTypes.STRING,
-      unique: true,
-      allowNull: false,
-    },
-    password: {
+    petBreedName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    userName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    name: {
+    size: {
       type: DataTypes.STRING,
     },
-    lastName: {
+    intelligence: {
       type: DataTypes.STRING,
     },
-    phoneNumber: {
-      type: DataTypes.INTEGER,
-    },
-    cuit: {
+    temperament: {
       type: DataTypes.STRING,
     },
-    dni: {
-      type: DataTypes.INTEGER,
+    lifespan: {
+      type: DataTypes.SMALLINT,
     },
-    birthDate: {
-      type: DataTypes.DATE,
-    },
-    validated: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
+    specialProperty: {
+      type: DataTypes.STRING,
     },
     createdDate: {
       type: DataTypes.DATE,
@@ -56,6 +40,6 @@ User.init(
   {
     sequelize,
     timestamps: false,
-    modelName: "users",
+    modelName: "petBreed",
   }
 );
