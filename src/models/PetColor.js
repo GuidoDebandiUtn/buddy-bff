@@ -3,7 +3,7 @@ import { sequelize } from "../database/database.js";
 
 export class PetColor extends Model {}
 
-Locality.init(
+PetColor.init(
   {
     idPetColor: {
       type: DataTypes.UUID,

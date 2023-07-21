@@ -4,8 +4,9 @@ import { createStateUser } from "./stateUser.service.js";
 import { StateUser } from "../../models/StateUser.js";
 import { UserState } from "../../models/UserState.js";
 
-export async function createUser(userData) {
-  const { mail, password, userName, name, lastName } = userData;
+export async function createUser(data) {
+  const { mail, password, userName, name, lastName } = data;
+
   try {
     const newUser = await User.create(
       {
@@ -29,8 +30,11 @@ export async function createUser(userData) {
         ],
       }
     );
+
     const userState = await getUserStateByName("active".toUpperCase());
+
     await createStateUser(newUser.idUser, userState.idUserState);
+
     return newUser;
   } catch (error) {
     throw error;
@@ -51,6 +55,7 @@ export async function getAllUsers() {
       },
       order: [[StateUser, "createdDate", "DESC"]],
     });
+
     return users;
   } catch (error) {
     throw error;
@@ -72,6 +77,7 @@ export async function getUserById(idUser) {
       },
       order: [[StateUser, "createdDate", "DESC"]],
     });
+
     return user;
   } catch (error) {
     throw error;
@@ -84,40 +90,53 @@ export async function getUserByMail(mail) {
       where: { mail },
       attributes: ["idUser", "mail", "validated"],
     });
+
     return user;
   } catch (error) {
     throw error;
   }
 }
 
-export async function updateUser(user, userData) {
+export async function updateUser(idUser, userData) {
   const { userName, name, lastName, password } = userData;
+
   try {
+    const updates = {};
+    const updateOptions = { where: { idUser } };
+
     if (userName) {
-      user.userName = userName;
+      updates.userName = userName;
     }
+
     if (name) {
-      user.name = name;
+      updates.name = name;
     }
-    if (lastName) {
-      user.lastName = lastName;
-    }
+
     if (password) {
-      user.password = password;
+      updates.password = password;
     }
-    user.updatedDate = new Date();
-    await user.save();
-    return user;
+
+    if (lastName) {
+      updates.lastName = lastName;
+    }
+
+    updates.updatedDate = new Date();
+
+    await User.update(updates, updateOptions);
+
+    return;
   } catch (error) {
     throw error;
   }
 }
 
-export async function userValidate(user) {
+export async function userValidate(idUser) {
   try {
-    user.validated = true;
-    user.updatedDate = new Date();
-    await user.save();
+    await User.update(
+      { validated: true, updatedDate: new Date() },
+      { where: { idUser: idUser }, returning: true }
+    );
+
     return;
   } catch (error) {
     throw error;

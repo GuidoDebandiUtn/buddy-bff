@@ -3,7 +3,7 @@ import { sequelize } from "../database/database.js";
 
 export class Country extends Model {}
 
-Region.init(
+Country.init(
   {
     idCountry: {
       type: DataTypes.UUID,

@@ -2,11 +2,13 @@ import { StateUser } from "../../models/StateUser.js";
 
 export async function createStateUser(idUser, idUserState, idUserAuthor) {
   let idAuthor;
+
   if (idUserAuthor) {
     idAuthor = idUserAuthor;
   } else {
     idAuthor = idUser;
   }
+
   try {
     const newStateUser = await StateUser.create(
       {
@@ -26,6 +28,7 @@ export async function createStateUser(idUser, idUserState, idUserAuthor) {
         ],
       }
     );
+
     return newStateUser;
   } catch (error) {
     throw error;
@@ -46,6 +49,7 @@ export async function changeStateUser(idUser, idUserState, idUserAuthor) {
     await state.save();
 
     await createStateUser(idUser, idUserState, idUserAuthor);
+
     return;
   } catch (error) {
     throw error;
