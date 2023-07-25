@@ -72,8 +72,8 @@ export async function getProvinceByName(provinceName) {
 export async function updateProvince(idProvince, provinceName) {
   try {
     await Province.update(
-      { provinceName: provinceName, updatedDate: new Date() },
-      { where: { idProvince: idProvince }, returning: true }
+      { provinceName, updatedDate: new Date() },
+      { where: { idProvince }, returning: true }
     );
 
     return;
@@ -86,7 +86,7 @@ export async function deleteProvince(idProvince) {
   try {
     await Province.update(
       { active: false, updatedDate: new Date() },
-      { where: { idProvince: idProvince }, returning: true }
+      { where: { idProvince }, returning: true }
     );
 
     return;

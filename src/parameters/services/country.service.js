@@ -34,7 +34,7 @@ export async function getAllCountries() {
 export async function getCountryById(idCountry) {
   try {
     const country = await Country.findOne({
-      where: { idCountry },
+      where: { idCountry, active: true },
       attributes: ["countryName"],
       include: {
         model: Province,
@@ -51,7 +51,7 @@ export async function getCountryById(idCountry) {
 export async function getCountryByName(countryName) {
   try {
     const country = await Country.findOne({
-      where: { countryName },
+      where: { countryName, active: true },
       attributes: ["idCountry", "countryName"],
     });
 
@@ -61,13 +61,12 @@ export async function getCountryByName(countryName) {
   }
 }
 
-export async function updateCountry(countryName, idCountry) {
+export async function updateCountry(idCountry, countryName) {
   try {
     await Country.update(
-      { countryName: countryName, updatedDate: new Date() },
-      { where: { idCountry: idCountry }, returning: true }
+      { countryName, updatedDate: new Date() },
+      { where: { idCountry }, returning: true }
     );
-
     return;
   } catch (error) {
     throw error;

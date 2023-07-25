@@ -24,7 +24,7 @@ export async function userRegistration(req, res) {
 
     await validateMail(newUser.userName, newUser.mail, newUser.idUser);
 
-    return res.status(201).json(newUserDto);
+    return res.status(201).json(newUser);
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -85,7 +85,7 @@ export async function verifyToken(req, res, next) {
 
     next();
   } catch (error) {
-    res.status(400).json({
+    res.status(500).json({
       error: "El token no es válido",
     });
   }
@@ -115,9 +115,9 @@ export async function validateUser(req, res) {
         .json({ error: "No existe un usuario con este id" });
     }
 
-    await userValidate(checkUser);
+    await userValidate(idUser);
 
-    return res.status(200);
+    return res.status(200).json({ message: "Se ha validado el usuario" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

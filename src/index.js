@@ -15,7 +15,7 @@ import "./models/ServiceType.js";
 import "./models/index.js";
 
 async function main() {
-  await sequelize.sync({ alter: false });
+  await sequelize.sync({ force: false });
   app.listen(4000);
   console.log("Server on port 4000");
 }

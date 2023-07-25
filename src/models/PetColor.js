@@ -29,6 +29,6 @@ PetColor.init(
   {
     sequelize,
     timestamps: false,
-    modelName: "locality",
+    modelName: "petcolor",
   }
 );

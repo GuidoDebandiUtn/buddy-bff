@@ -11,9 +11,11 @@ import { getUserStateByName } from "../services/userState.service.js";
 export async function getUsers(req, res) {
   try {
     const users = await getAllUsers();
+
     if (!users) {
       return res.status(404).json({ message: "No existe ningun usuario" });
     }
+
     return res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -52,9 +54,11 @@ export async function userUpdate(req, res) {
 
     const userData = req.body;
 
-    const updatedUser = await updateUser(idUser, userData);
+    await updateUser(idUser, userData);
 
-    res.status(200).json(updatedUser);
+    res
+      .status(200)
+      .json({ message: "Se ha actualizado correctamente el usuario" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -77,6 +81,7 @@ export async function userDelete(req, res) {
     const idUserAuthor = await getIdToken(req.header("auth-token"));
 
     await changeState(idUser, userState.idUserState, idUserAuthor);
+
     res.status(200).json({ message: "El usuario se ha dado de baja" });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -133,9 +138,9 @@ export async function changePassword(req, res) {
 
     const userData = req.body;
 
-    const updatedUser = await updateUser(idUser, userData);
+    await updateUser(idUser, userData);
 
-    res.status(200).json(updatedUser);
+    res.status(200).json({ message: "Se ha actulizado la contraseña" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

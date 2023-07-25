@@ -134,7 +134,7 @@ export async function userValidate(idUser) {
   try {
     await User.update(
       { validated: true, updatedDate: new Date() },
-      { where: { idUser: idUser }, returning: true }
+      { where: { idUser }, returning: true }
     );
 
     return;
