@@ -24,7 +24,9 @@ export async function userRegistration(req, res) {
 
     await validateMail(newUser.userName, newUser.mail, newUser.idUser);
 
-    return res.status(201).json(newUser);
+    return res
+      .status(201)
+      .json({ message: "Se creó correctamente el ususario" });
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -37,15 +39,13 @@ export async function login(req, res) {
     const user = await getUserByMail(req.body.mail);
 
     if (!user) {
-      return res.status(404).json({
-        message: "No existe un usuario con ese mail",
-      });
+      return res
+        .status(404)
+        .json({ message: "No existe un usuario con ese mail" });
     }
 
     if (!user.validated) {
-      return res.status(400).json({
-        message: "Aun no ha validado el usuario",
-      });
+      return res.status(400).json({ message: "Aun no ha validado el usuario" });
     }
 
     const token = jwt.sign(
@@ -56,7 +56,7 @@ export async function login(req, res) {
       }
     );
 
-    return res.header("auth-token", token).json({
+    return res.status(200).header("auth-token", token).json({
       data: { token },
     });
   } catch (error) {
@@ -68,10 +68,11 @@ export async function verifyToken(req, res, next) {
   const token = req.header("auth-token");
 
   try {
-    if (!token)
+    if (!token) {
       return res.status(401).json({
-        error: "Acceso denegado",
+        error: "Aún no ha iniciado sesión",
       });
+    }
 
     if (await findToken(token)) {
       return res.status(401).json({

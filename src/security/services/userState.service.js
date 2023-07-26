@@ -45,7 +45,10 @@ export async function getUserStateById(idUserState) {
 
 export async function getUserStateByName(userStateName) {
   try {
-    const userState = await UserState.findOne({ where: { userStateName } });
+    const userState = await UserState.findOne({
+      where: { userStateName },
+      attributes: ["userStateName"],
+    });
 
     return userState;
   } catch (error) {

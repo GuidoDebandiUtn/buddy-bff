@@ -1,5 +1,6 @@
 import app from "./app.js";
 import { sequelize } from "./database/database.js";
+import { swaggerDocs } from "./swagger.js";
 import "./models/User.js";
 import "./models/RevokedToken.js";
 import "./models/UserState.js";
@@ -16,8 +17,10 @@ import "./models/index.js";
 
 async function main() {
   await sequelize.sync({ force: false });
-  app.listen(4000);
-  console.log("Server on port 4000");
+  app.listen(4000, () => {
+    console.log("Server on port 4000");
+    swaggerDocs(app, 4000);
+  });
 }
 
 main();

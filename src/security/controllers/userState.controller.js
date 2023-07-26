@@ -14,7 +14,7 @@ export async function userStateCreate(req, res) {
     const userState = await getUserStateByName(userStateName.toUpperCase());
 
     if (userState) {
-      return res.status(404).json({
+      return res.status(400).json({
         message: "Ya existe un UserState con ese nombre",
       });
     }
@@ -79,7 +79,7 @@ export async function userStateUpdate(req, res) {
     const { userStateName } = req.body;
 
     if (await getUserStateByName(userStateName.toUpperCase())) {
-      return res.status(404).json({
+      return res.status(400).json({
         message: "Ya existe un UserState con ese nombre",
       });
     }

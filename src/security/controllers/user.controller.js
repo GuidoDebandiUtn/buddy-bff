@@ -94,6 +94,22 @@ export async function changeState(req, res) {
   try {
     const idUserAuthor = await getIdToken(req.header("auth-token"));
 
+    const user = await getUserById(idUser);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "No existe ningun usuario con ese id",
+      });
+    }
+
+    const exist = await getUserById(idUser);
+
+    if (!exist) {
+      return res.status(404).json({
+        message: "No existe ningun usuario con ese id",
+      });
+    }
+
     const userState = await getUserStateByName(userStateName.toUpperCase());
 
     await changeStateUser(idUser, userState.idUserState, idUserAuthor);
