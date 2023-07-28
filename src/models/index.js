@@ -28,5 +28,7 @@ Province.belongsTo(Country, { foreignKey: Country.idCountry });
 Country.hasMany(Province, { foreignKey: Country.idCountry });
 
 PetType.hasMany(PetBreed, { foreignKey: PetType.idPetType });
-
 PetBreed.belongsTo(PetType, { foreignKey: PetType.idPetType });
+
+
+//TODO: Set relation for publications

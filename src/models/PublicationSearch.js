@@ -1,0 +1,62 @@
+import { DataTypes, Model } from "sequelize";
+import { sequelize } from "../database/database.js";
+
+export class PublicationSearch extends Model {}
+
+PublicationSearch.init(
+{
+    idPublicationSearch: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false,
+        primaryKey: true,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      images: {
+        type: DataTypes.TEXT, 
+        allowNull: false,
+        get() {
+          // This getter will parse the JSON data stored in the database into a JavaScript array
+          const value = this.getDataValue("images");
+          return value ? JSON.parse(value) : [];
+        },
+        set(value) {
+          // This setter will convert the JavaScript array to a JSON string before storing it in the database
+          this.setDataValue("images", value ? JSON.stringify(value) : "[]");
+        },
+      },
+      description: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      latitude: {
+        type: DataTypes.DOUBLE,
+        allowNull: false
+      },
+      longitude: {
+        type: DataTypes.DOUBLE,
+        allowNull: false
+      },
+      isFound: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
+      LostDate:{
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+    },
+    {
+      sequelize,
+      timestamps: false,
+      modelName: "publicationSearch",
+    }
+);
+
