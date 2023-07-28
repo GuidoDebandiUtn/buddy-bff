@@ -66,10 +66,11 @@ export async function getProvinceByName(provinceName) {
   }
 }
 
-export async function updateProvince(idProvince, provinceName) {
+export async function updateProvince(data, idProvince) {
+  const { provinceName } = data;
   try {
     await Province.update(
-      { provinceName, updatedDate: new Date() },
+      { provinceName: provinceName.toUpperCase(), updatedDate: new Date() },
       { where: { idProvince }, returning: true }
     );
 

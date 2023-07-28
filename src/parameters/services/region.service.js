@@ -64,11 +64,13 @@ export async function getRegionByName(regionName) {
   }
 }
 
-export async function updateRegion(idRegion, regionName) {
+export async function updateRegion(data, idRegion) {
+  const { regionName } = data;
+
   try {
     await Region.update(
       {
-        regionName,
+        regionName: regionName.toUpperCase(),
         updatedDate: new Date(),
       },
       { where: { idRegion }, returning: true }

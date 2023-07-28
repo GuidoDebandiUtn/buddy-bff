@@ -1,3 +1,4 @@
+import { PetBreed } from "../../models/PetBreed.js";
 import { PetType } from "../../models/PetType.js";
 
 export async function createPetType(data) {
@@ -45,6 +46,10 @@ export async function getPetTypeById(idPetType) {
     const petType = await PetType.findOne({
       attributes: ["idPetType", "petTypeName"],
       where: { idPetType, active: true },
+      include: {
+        model: PetBreed,
+        attributes: ["petBreedName"],
+      },
     });
 
     return petType;

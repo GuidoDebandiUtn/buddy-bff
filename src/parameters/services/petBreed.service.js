@@ -65,9 +65,9 @@ export async function getPetBreedByName(petBreedName) {
   }
 }
 
-export async function updatedPetBreed(data, idPetBreed) {
+export async function updatePetBreed(data, idPetBreed) {
   const { petBreedName } = data;
-
+  console.log("object");
   try {
     await PetBreed.update(
       { petBreedName: petBreedName.toUpperCase(), updatedDate: new Date() },

@@ -60,10 +60,12 @@ export async function getLocalityByName(localityName) {
   }
 }
 
-export async function updateLocality(idLocality, localityName) {
+export async function updateLocality(data, idLocality) {
+  const { localityName } = data;
+
   try {
     await Locality.update(
-      { localityName, updatedDate: new Date() },
+      { localityName: localityName.toUpperCase(), updatedDate: new Date() },
       { where: { idLocality }, returning: true }
     );
 

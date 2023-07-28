@@ -1,11 +1,122 @@
-import {} from "../services/.service.js";
+import {
+  createPetType,
+  deletePetType,
+  getAllPetTypes,
+  getPetTypeById,
+  getPetTypeByName,
+  updatePetType,
+} from "../services/petType.service.js";
 
-export async function localityCreate(req, res) {}
+export async function petTypeCreate(req, res) {
+  try {
+    const duplicate = await getPetTypeByName(req.body.petTypeName);
 
-export async function getLocalities(req, res) {}
+    if (duplicate) {
+      return res
+        .status(400)
+        .json({ message: "Ya existe un Tipo de mascota con este nombre" });
+    }
 
-export async function getLocality(req, res) {}
+    const petType = await createPetType(req.body);
 
-export async function localityUpdate(req, res) {}
+    return res.status(201).json({ petType });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}
 
-export async function localityDelete(req, res) {}
+export async function getPetTypes(req, res) {
+  try {
+    const petTypes = await getAllPetTypes();
+
+    if (!petTypes) {
+      return res
+        .status(404)
+        .json({ message: "No existe ningun tipo de mascota" });
+    }
+
+    return res.status(200).json({ petTypes });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function getPetType(req, res) {
+  const { idPetType } = req.params;
+
+  try {
+    const petType = await getPetTypeById(idPetType);
+
+    if (!petType) {
+      return res
+        .status(404)
+        .json({ message: "No existe el tipo de mascota con ese id" });
+    }
+
+    return res.status(200).json({ petType });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function petTypeUpdate(req, res) {
+  const { idPetType } = req.params;
+
+  try {
+    const petType = await getPetTypeById(idPetType);
+
+    if (!petType) {
+      return res
+        .status(404)
+        .json({ message: "No existe el tipo de mascota con ese id" });
+    }
+
+    const duplicate = await getPetTypeByName(req.body.petTypeName);
+
+    if (duplicate) {
+      return res
+        .status(400)
+        .json({ message: "Ya existe un Tipo de mascota con este nombre" });
+    }
+
+    await updatePetType(req.body, idPetType);
+
+    return res
+      .status(200)
+      .json({ message: "Se ha actualizado correctamente el tipo de mascota" });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function petTypeDelete(req, res) {
+  const { idPetType } = req.params;
+
+  try {
+    const petType = await getPetTypeById(idPetType);
+
+    if (!petType) {
+      return res
+        .status(404)
+        .json({ message: "No existe el tipo de mascota con ese id" });
+    }
+
+    await deletePetType(idPetType);
+
+    return res
+      .status(200)
+      .json({ message: "Se ha dado de baja correctamente el tipo de mascota" });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}
