@@ -8,9 +8,8 @@ import {
 } from "../services/region.service.js";
 
 export async function regionCreate(req, res) {
-  const { regionName, idProvince } = req.body;
   try {
-    const duplicate = await getRegionByName(regionName.toUpperCase());
+    const duplicate = await getRegionByName(req.body.regionName);
 
     if (duplicate) {
       return res
@@ -18,7 +17,7 @@ export async function regionCreate(req, res) {
         .json({ message: "Ya existe una region con ese nombre" });
     }
 
-    const region = await createRegion(regionName.toUpperCase(), idProvince);
+    const region = await createRegion(req.body);
 
     return res.status(201).json({ region });
   } catch (error) {

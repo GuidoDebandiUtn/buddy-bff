@@ -8,10 +8,8 @@ import {
 } from "../services/locality.service.js";
 
 export async function localityCreate(req, res) {
-  const { localityName, idRegion } = req.body;
-  console.log(localityName, idRegion);
   try {
-    const duplicate = await getLocalityByName(localityName.toUpperCase());
+    const duplicate = await getLocalityByName(req.body.localityName);
 
     if (duplicate) {
       return res
@@ -19,7 +17,7 @@ export async function localityCreate(req, res) {
         .json({ message: "Ya existe una localidad con ese nombre" });
     }
 
-    const locality = await createLocality(localityName.toUpperCase(), idRegion);
+    const locality = await createLocality(req.body);
 
     return res.status(201).json({ locality });
   } catch (error) {

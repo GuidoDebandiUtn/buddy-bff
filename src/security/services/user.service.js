@@ -32,6 +32,7 @@ export async function createUser(data) {
     );
 
     const userState = await getUserStateByName("active".toUpperCase());
+    console.log(newUser.idUser, userState.idUserState);
 
     await createStateUser(newUser.idUser, userState.idUserState);
 
@@ -138,6 +139,17 @@ export async function userValidate(idUser) {
     );
 
     return;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function destroyUser(mail) {
+  try {
+    await User.destroy({
+      where: { mail },
+      force: true,
+    });
   } catch (error) {
     throw error;
   }

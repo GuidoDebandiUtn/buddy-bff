@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import {
   createUser,
+  destroyUser,
   getUserById,
   getUserByMail,
   userValidate,
@@ -28,6 +29,7 @@ export async function userRegistration(req, res) {
       .status(201)
       .json({ message: "Se creó correctamente el ususario" });
   } catch (error) {
+    await destroyUser(req.body.mail);
     res.status(500).json({
       message: error.message,
     });

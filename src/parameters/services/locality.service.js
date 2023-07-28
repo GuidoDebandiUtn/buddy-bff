@@ -1,21 +1,18 @@
 import { Locality } from "../../models/Locality.js";
 
-export async function createLocality(localityName, idRegion) {
+export async function createLocality(data) {
+  const { localityName, idRegion } = data;
+
   try {
     const locality = await Locality.create(
       {
-        localityName,
+        localityName: localityName.toUpperCase(),
         createdDate: new Date(),
         updatedDate: new Date(),
-        regionIdRegion: idRegion,
+        idRegion,
       },
       {
-        fields: [
-          "localityName",
-          "createdDate",
-          "updatedDate",
-          "regionIdRegion",
-        ],
+        fields: ["localityName", "createdDate", "updatedDate", "idRegion"],
       }
     );
 
@@ -53,7 +50,7 @@ export async function getLocalityById(idLocality) {
 export async function getLocalityByName(localityName) {
   try {
     const locality = await Locality.findOne({
-      where: { localityName, active: true },
+      where: { localityName: localityName.toUpperCase(), active: true },
       attributes: ["idLocality", "localityName"],
     });
 

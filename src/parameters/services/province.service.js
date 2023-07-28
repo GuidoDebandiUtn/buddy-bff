@@ -1,22 +1,19 @@
 import { Province } from "../../models/Province.js";
 import { Region } from "../../models/Region.js";
 
-export async function createProvince(provinceName, idCountry) {
+export async function createProvince(data) {
+  const { provinceName, idCountry } = data;
+
   try {
     const province = await Province.create(
       {
-        provinceName,
+        provinceName: provinceName.toUpperCase(),
         createdDate: new Date(),
         updatedDate: new Date(),
-        countryIdCountry: idCountry,
+        idCountry,
       },
       {
-        fields: [
-          "provinceName",
-          "createdDate",
-          "updatedDate",
-          "countryIdCountry",
-        ],
+        fields: ["provinceName", "createdDate", "updatedDate", "idCountry"],
       }
     );
 
@@ -59,7 +56,7 @@ export async function getProvinceById(idProvince) {
 export async function getProvinceByName(provinceName) {
   try {
     const province = await Province.findOne({
-      where: { provinceName, active: true },
+      where: { provinceName: provinceName.toUpperCase(), active: true },
       attributes: ["idProvince", "provinceName"],
     });
 

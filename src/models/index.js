@@ -10,23 +10,23 @@ import { PetColor } from "./PetColor.js";
 import { PetType } from "./PetType.js";
 import { ServiceType } from "./ServiceType.js";
 
-User.hasMany(StateUser, { foreignKey: User.idUser });
+User.hasMany(StateUser, { foreignKey: "idUser" });
 
-UserState.hasMany(StateUser, { foreignKey: UserState.idUserState });
+UserState.hasMany(StateUser, { foreignKey: "idUserState" });
 
-StateUser.belongsTo(User, { foreignKey: User.idUser });
-StateUser.belongsTo(UserState, { foreignKey: UserState.idUserState });
+StateUser.belongsTo(User, { foreignKey: "idUser" });
+StateUser.belongsTo(UserState, { foreignKey: "idUserState" });
 
-Locality.belongsTo(Region, { foreignKey: Region.idRegion });
+Locality.belongsTo(Region, { foreignKey: "idRegion" });
 
-Region.hasMany(Locality, { foreignKey: Region.idRegion });
-Region.belongsTo(Province, { foreignKey: Province.idProvince });
+Region.hasMany(Locality, { foreignKey: "idRegion" });
+Region.belongsTo(Province, { foreignKey: "idProvince" });
 
-Province.hasMany(Region, { foreignKey: Province.idProvince });
-Province.belongsTo(Country, { foreignKey: Country.idCountry });
+Province.hasMany(Region, { foreignKey: "idProvince" });
+Province.belongsTo(Country, { foreignKey: "idCountry" });
 
-Country.hasMany(Province, { foreignKey: Country.idCountry });
+Country.hasMany(Province, { foreignKey: "idCountry" });
 
-PetType.hasMany(PetBreed, { foreignKey: PetType.idPetType });
+PetType.hasMany(PetBreed, { foreignKey: "idPetType" });
 
-PetBreed.belongsTo(PetType, { foreignKey: PetType.idPetType });
+PetBreed.belongsTo(PetType, { foreignKey: "idPetType" });

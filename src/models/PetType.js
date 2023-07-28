@@ -15,8 +15,12 @@ PetType.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    legNumber: {
+    legsNumber: {
       type: DataTypes.SMALLINT,
+    },
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
     },
     createdDate: {
       type: DataTypes.DATE,

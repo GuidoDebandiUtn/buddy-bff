@@ -47,7 +47,7 @@ export async function getUserStateByName(userStateName) {
   try {
     const userState = await UserState.findOne({
       where: { userStateName },
-      attributes: ["userStateName"],
+      attributes: ["idUserState", "userStateName"],
     });
 
     return userState;

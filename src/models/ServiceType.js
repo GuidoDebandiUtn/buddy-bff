@@ -15,6 +15,10 @@ ServiceType.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
     createdDate: {
       type: DataTypes.DATE,
     },

@@ -8,10 +8,8 @@ import {
 } from "../services/province.service.js";
 
 export async function provinceCreate(req, res) {
-  const { provinceName, idCountry } = req.body;
-
   try {
-    const duplicate = await getProvinceByName(provinceName.toUpperCase());
+    const duplicate = await getProvinceByName(req.body.provinceName);
 
     if (duplicate) {
       return res
@@ -19,10 +17,7 @@ export async function provinceCreate(req, res) {
         .json({ message: "Ya existe una provincia con este nombre" });
     }
 
-    const province = await createProvince(
-      provinceName.toUpperCase(),
-      idCountry
-    );
+    const province = await createProvince(req.body);
 
     return res.status(201).json({ province });
   } catch (error) {
