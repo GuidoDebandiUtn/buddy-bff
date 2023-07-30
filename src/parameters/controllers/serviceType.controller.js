@@ -1,11 +1,120 @@
-import {} from "../services/.service.js";
+import {
+  createServiceType,
+  deleteServiceType,
+  getAllServiceTypes,
+  getServiceTypeById,
+  getServiceTypeByName,
+  updateServiceType,
+} from "../services/serviceType.service.js";
 
-export async function localityCreate(req, res) {}
+export async function serviceTypeCreate(req, res) {
+  try {
+    const duplicate = await getServiceTypeByName(req.body.serviceTypeName);
 
-export async function getLocalities(req, res) {}
+    if (duplicate) {
+      return res
+        .status(400)
+        .json({ message: "Ya existe un tipo de servicio con este nombre" });
+    }
 
-export async function getLocality(req, res) {}
+    const serviceType = await createServiceType(req.body);
 
-export async function localityUpdate(req, res) {}
+    return res.status(201).json({ serviceType });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}
 
-export async function localityDelete(req, res) {}
+export async function getServiceTypes(req, res) {
+  try {
+    const serviceTypes = await getAllServiceTypes();
+
+    if (!serviceTypes) {
+      return res.status(404).json({ message: "No existen tipos de servicio" });
+    }
+
+    return res.status(200).json({ serviceTypes });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function getServiceType(req, res) {
+  const { idServiceType } = req.params;
+
+  try {
+    const serviceType = await getServiceTypeById(idServiceType);
+
+    if (!serviceType) {
+      return res
+        .status(404)
+        .json({ message: "No existe un tipo de servicio con este id" });
+    }
+
+    return res.status(200).json({ serviceType });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function serviceTypeUpdate(req, res) {
+  const { idServiceType } = req.params;
+
+  try {
+    const serviceType = await getServiceTypeById(idServiceType);
+
+    if (!serviceType) {
+      return res
+        .status(404)
+        .json({ message: "No existe un tipo de servicio con este id" });
+    }
+
+    const duplicate = await getServiceTypeByName(req.body.serviceTypeName);
+
+    if (duplicate) {
+      return res
+        .status(400)
+        .json({ message: "Ya existe un tipo de servicio con este nombre" });
+    }
+
+    await updateServiceType(req.body, idServiceType);
+
+    return res
+      .status(200)
+      .json({ message: "Se ha actualizado correctamente el tipo de servicio" });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function serviceTypeDelete(req, res) {
+  const { idServiceType } = req.params;
+
+  try {
+    const serviceType = await getServiceTypeById(idServiceType);
+
+    if (!serviceType) {
+      return res
+        .status(404)
+        .json({ message: "No existe un tipo de servicio con este id" });
+    }
+
+    await deleteServiceType(idServiceType);
+
+    return res.status(200).json({
+      message: "Se ha dade de baja correctamente el tipo de servicio",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}

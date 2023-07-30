@@ -213,7 +213,7 @@ router.post("/changeState/:idUser/:userStateName", verifyToken, changeState);
  *      500:
  *        description: Hubo un error
  */
-router.post("/resetPassword", verifyToken, resetPassword);
+router.post("/resetPassword", resetPassword);
 
 /**
  * @swagger
@@ -252,6 +252,6 @@ router.post("/resetPassword", verifyToken, resetPassword);
  *      500:
  *        description: Hubo un error
  */
-router.put("/changePassword/:idUser", verifyToken, changePassword);
+router.put("/changePassword/:idUser", changePassword);
 
 export default router;

@@ -35,7 +35,7 @@ export async function getAllPetColors() {
 export async function getPetColorById(idPetColor) {
   try {
     const petColor = await PetColor.findOne({
-      attributes: ["petColorNamne", "idPetColor"],
+      attributes: ["petColorName", "idPetColor"],
       where: { idPetColor, active: true },
     });
 
@@ -48,7 +48,7 @@ export async function getPetColorById(idPetColor) {
 export async function getPetColorByName(petColorName) {
   try {
     const petColor = await PetColor.findOne({
-      attributes: ["petColorNamne", "idPetColor"],
+      attributes: ["petColorName", "idPetColor"],
       where: { petColorName: petColorName.toUpperCase(), active: true },
     });
 
@@ -59,7 +59,7 @@ export async function getPetColorByName(petColorName) {
 }
 
 export async function updatePetColor(data, idPetColor) {
-  const { petcolorName } = data;
+  const { petColorName } = data;
 
   try {
     await PetColor.update(

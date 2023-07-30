@@ -6,11 +6,11 @@ export async function createServiceType(data) {
   try {
     const serviceType = await ServiceType.create(
       {
-        serviceTypeName: serviceTypeName.toUpperCase,
+        serviceTypeName: serviceTypeName.toUpperCase(),
         createdDate: new Date(),
         updatedDate: new Date(),
       },
-      { fields: ["serviceType", "active", "createdDate", "updatedDate"] }
+      { fields: ["serviceTypeName", "active", "createdDate", "updatedDate"] }
     );
 
     return serviceType;
@@ -49,7 +49,7 @@ export async function getServiceTypeByName(serviceTypeName) {
   try {
     const serviceType = await ServiceType.findOne({
       attributes: ["idServiceType", "serviceTypeName"],
-      where: { serviceTypeName: serviceTypeName.toUpperName, active: true },
+      where: { serviceTypeName: serviceTypeName.toUpperCase(), active: true },
     });
 
     return serviceType;

@@ -4,6 +4,7 @@ import { changeStateUser } from "../services/stateUser.service.js";
 import {
   getAllUsers,
   getUserById,
+  getUserByMail,
   updateUser,
 } from "../services/user.service.js";
 import { getUserStateByName } from "../services/userState.service.js";
@@ -121,18 +122,20 @@ export async function changeState(req, res) {
 }
 
 export async function resetPassword(req, res) {
-  try {
-    const idUser = await getIdToken(req.header("auth-token"));
+  const { mail } = req.body;
 
-    const user = await getUserById(idUser);
+  try {
+    const exist = await getUserByMail(mail);
 
     if (!user) {
       return res.status(404).json({
-        message: "No existe ningun usuario con ese id",
+        message: "No existe ningun usuario con ese usuario",
       });
     }
 
-    await resetPasswordMail(user.userName, user.mail, idUser);
+    const user = await getUserById(exist.idUser);
+
+    await resetPasswordMail(user.userName, user.mail, user.idUser);
 
     res.status(200).json({ message: "Se ha enviado el mail" });
   } catch (error) {
@@ -152,9 +155,7 @@ export async function changePassword(req, res) {
       });
     }
 
-    const userData = req.body;
-
-    await updateUser(idUser, userData);
+    await updateUser(idUser, req.body);
 
     res.status(200).json({ message: "Se ha actulizado la contraseña" });
   } catch (error) {

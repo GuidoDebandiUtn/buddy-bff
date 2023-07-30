@@ -80,7 +80,7 @@ router.get("/", getCountries);
  *     tags: [COUNTRY]
  *     responses:
  *       200:
- *         description: País buscado.
+ *         description: País buscado por id.
  *         content:
  *            application/json:
  *              schema:
