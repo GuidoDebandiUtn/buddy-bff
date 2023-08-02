@@ -7,6 +7,7 @@ import petTypeRoutes from "./routes/petType.routes.js";
 import petBreedRoutes from "./routes/petBreed.routes.js";
 import petColorRoutes from "./routes/petColor.routes.js";
 import serviceTypeRoutes from "./routes/serviceType.routes.js";
+import userTypeRoutes from "./routes/userType.routes.js";
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router.use("/petType", petTypeRoutes);
 router.use("/petBreed", petBreedRoutes);
 router.use("/petColor", petColorRoutes);
 router.use("/serviceType", serviceTypeRoutes);
+router.use("/userType", userTypeRoutes);
 
 export default router;

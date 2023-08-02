@@ -39,7 +39,7 @@ export async function changeStateUser(idUser, idUserState, idUserAuthor) {
   try {
     const state = await StateUser.findOne({
       where: {
-        userIdUser: idUser,
+        idUser,
       },
       order: [["createdDate", "DESC"]],
     });

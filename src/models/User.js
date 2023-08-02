@@ -1,4 +1,4 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, STRING } from "sequelize";
 import { sequelize } from "../database/database.js";
 
 export class User extends Model {}
@@ -31,13 +31,13 @@ User.init(
       type: DataTypes.STRING,
     },
     phoneNumber: {
-      type: DataTypes.INTEGER,
-    },
-    cuit: {
       type: DataTypes.STRING,
     },
     dni: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
+    },
+    address: {
+      type: DataTypes.STRING,
     },
     birthDate: {
       type: DataTypes.DATE,
@@ -56,6 +56,6 @@ User.init(
   {
     sequelize,
     timestamps: false,
-    modelName: "users",
+    modelName: "user",
   }
 );

@@ -1,38 +1,37 @@
 import { User } from "../../models/User.js";
 import { getUserStateByName } from "./userState.service.js";
 import { createStateUser } from "./stateUser.service.js";
-import { StateUser } from "../../models/StateUser.js";
-import { UserState } from "../../models/UserState.js";
+import { getUserTypeByName } from "../../parameters/services/userType.service.js";
+import { sequelize } from "../../database/database.js";
 
 export async function createUser(data) {
-  const { mail, password, userName, name, lastName } = data;
+  const { mail, password, userName } = data;
 
   try {
+    const userType = await getUserTypeByName("BÁSICO");
+
     const newUser = await User.create(
       {
         mail,
         password,
         userName,
-        name,
-        lastName,
         createdDate: new Date(),
         updatedDate: new Date(),
+        idUserType: userType.idUserType,
       },
       {
         fields: [
           "mail",
           "password",
           "userName",
-          "name",
-          "lastName",
           "createdDate",
           "updatedDate",
+          "idUserType",
         ],
       }
     );
 
-    const userState = await getUserStateByName("active".toUpperCase());
-    console.log(newUser.idUser, userState.idUserState);
+    const userState = await getUserStateByName("ACTIVO");
 
     await createStateUser(newUser.idUser, userState.idUserState);
 
@@ -44,17 +43,22 @@ export async function createUser(data) {
 
 export async function getAllUsers() {
   try {
-    const users = await User.findAll({
-      attributes: ["mail", "userName", "name", "lastName"],
-      include: {
-        model: StateUser,
-        attributes: ["createdDate", "idStateUser"],
-        include: {
-          model: UserState,
-          attributes: ["userStateName"],
-        },
-      },
-      order: [[StateUser, "createdDate", "DESC"]],
+    const query = `
+    SELECT users.mail, users.userName
+    FROM users
+    INNER JOIN (
+      SELECT idUser, idUserState, MAX(createdDate) AS ultimaFecha
+      FROM stateUsers 
+      GROUP BY idUser
+    ) AS ultimosEstados ON users.idUser = ultimosEstados.idUser
+    INNER JOIN userStates ON ultimosEstados.idUserState = userStates.idUserState
+    INNER JOIN userTypes ON users.idUserType = userTypes.idUserType
+    WHERE userStates.userStateName = 'ACTIVO' and userTypes.userTypeName = "BÁSICO"
+    `;
+
+    const users = await sequelize.query(query, {
+      model: User,
+      mapToModel: true,
     });
 
     return users;
@@ -65,18 +69,21 @@ export async function getAllUsers() {
 
 export async function getUserById(idUser) {
   try {
-    const user = await User.findOne({
-      where: { idUser },
-      attributes: ["idUser", "mail", "userName", "name", "lastName"],
-      include: {
-        model: StateUser,
-        attributes: ["createdDate", "idStateUser"],
-        include: {
-          model: UserState,
-          attributes: ["userStateName"],
-        },
-      },
-      order: [[StateUser, "createdDate", "DESC"]],
+    const query = `
+    SELECT users.idUser, users.mail, users.userName
+    FROM users
+    INNER JOIN (
+      SELECT idUser, idUserState, MAX(createdDate) AS ultimaFecha
+      FROM stateUsers 
+      GROUP BY idUser
+    ) AS ultimosEstados ON users.idUser = ultimosEstados.idUser
+    INNER JOIN userStates ON ultimosEstados.idUserState = userStates.idUserState
+    INNER JOIN userTypes ON users.idUserType = userTypes.idUserType
+    WHERE userStates.userStateName = 'ACTIVO' and userTypes.userTypeName = 'BÁSICO' and users.idUser = '${idUser}'
+    `;
+    const user = await sequelize.query(query, {
+      model: User,
+      mapToModel: true,
     });
 
     return user;
@@ -88,8 +95,8 @@ export async function getUserById(idUser) {
 export async function getUserByMail(mail) {
   try {
     const user = await User.findOne({
+      attributes: ["idUser", "mail", "userName", "validated"],
       where: { mail },
-      attributes: ["idUser", "mail", "validated"],
     });
 
     return user;
@@ -98,8 +105,17 @@ export async function getUserByMail(mail) {
   }
 }
 
-export async function updateUser(idUser, userData) {
-  const { userName, name, lastName, password } = userData;
+export async function updateUser(idUser, data) {
+  const {
+    userName,
+    name,
+    lastName,
+    password,
+    phoneNumber,
+    dni,
+    birthDate,
+    address,
+  } = data;
 
   try {
     const updates = {};
@@ -115,6 +131,22 @@ export async function updateUser(idUser, userData) {
 
     if (password) {
       updates.password = password;
+    }
+
+    if (phoneNumber) {
+      updates.phoneNumber = phoneNumber;
+    }
+
+    if (birthDate) {
+      updates.birthDate = birthDate;
+    }
+
+    if (dni) {
+      updates.dni = dni;
+    }
+
+    if (address) {
+      updates.address = address;
     }
 
     if (lastName) {
