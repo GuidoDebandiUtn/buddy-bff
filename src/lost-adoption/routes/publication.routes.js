@@ -1,7 +1,5 @@
 import { Router } from "express";
-import {
-    getPublications
-} from "../controllers/publication.controller.js";
+import {    getPublications, postSearch} from "../controllers/publication.controller.js";
 const router = Router();
 /**
  * @swagger
@@ -51,5 +49,52 @@ const router = Router();
  *          description: Error interno del servicio
  */
 router.get('/',getPublications);
+
+
+/**
+ * @swagger
+ * /parameters/publications/:
+ *   POST:
+ *     summary: Crea una nueva publicacion.
+ *     tags: [PUBLICATION]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               -idPublicationSearch:
+ *                 type: UUID
+ *               -title:
+ *                 type:STRING
+ *               -images:
+ *                 type:TEXT
+ *               -description:
+ *                 type:STRING
+ *               -latitude:
+ *                 type:DOUBLE
+ *               -longitude:
+ *                 type:DOUBLE
+ *               -isFound:
+ *                 type:BOOLEAN
+ *               -LostDate:
+ *                 type:DATE
+ *     responses:
+ *       200:
+ *         description: Lista de publicaciones obtenida.
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *       400:
+ *         description: Error en los atributos de la publicacion.
+ *       500:
+ *          description: Error interno del servicio
+ */
+router.post('/search',postSearch);
 
 export default router;

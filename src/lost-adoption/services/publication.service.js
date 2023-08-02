@@ -3,6 +3,7 @@ import { PublicationSearch } from "../../models/PublicationSearch.js";
 import { getPaginatedData } from "../../utils/pagination.js";
 
 
+
 export async function retrivePaginatedPublications(page = 1, recordsPerPage = 10, modelType = 'search') {
 
   try {
@@ -23,4 +24,21 @@ export async function retrivePaginatedPublications(page = 1, recordsPerPage = 10
     throw error;
   }
 };
+
+export async function createSearch(searchDto) {
+  try {
+    const newPublication = await PublicationSearch.create(
+      {
+        createdAt: new Date(),
+        ...searchDto
+      },
+      { fields: ["createdAt", "title", "images", "description", "latitude",
+       "longitude","isFound", "lostDate",] }
+    );
+
+    return newPublication;
+  } catch (error) {
+    throw error;
+  }
+}
 

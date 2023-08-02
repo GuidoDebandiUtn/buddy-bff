@@ -48,7 +48,7 @@ PublicationSearch.init(
         type: DataTypes.BOOLEAN,
         allowNull: false,
       },
-      LostDate:{
+      lostDate:{
         type: DataTypes.DATE,
         allowNull: false,
       },

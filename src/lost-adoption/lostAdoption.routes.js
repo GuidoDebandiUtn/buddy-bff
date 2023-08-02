@@ -4,6 +4,7 @@ import publicationRoutes from "./routes/publication.routes.js";
 
 const router = Router();
 
-router.use("/publications", publicationRoutes)
+router.use("/publication", publicationRoutes)
+
 
 export default router;
