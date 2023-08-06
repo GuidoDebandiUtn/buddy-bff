@@ -1,9 +1,9 @@
 import { Router } from "express";
 import {
-  userRegistration,
   login,
   logout,
   validateUser,
+  resetPassword,
 } from "../controllers/auth.controller.js";
 
 const router = Router();
@@ -14,46 +14,6 @@ const router = Router();
  *   name: AUTH
  *   description: Endpoints relacionados con la autenticación, creación, log y validación
  */
-
-/**
- * @swagger
- * /security/auth/register:
- *   post:
- *     summary: Crea un nuevo usuario
- *     tags: [AUTH]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               username:
- *                 type: string
- *               mail:
- *                 type: string
- *               password:
- *                  type: string
- *               name:
- *                  type: string
- *               lastName:
- *                  type: string
- *     responses:
- *       201:
- *         description: Usuario creado exitosamente
- *         content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  message:
- *                    type: string
- *       400:
- *         description: Este mail ya se encuentra en uso
- *       500:
- *          description: Hubo un eror
- */
-router.post("/register", userRegistration);
 
 /**
  * @swagger
@@ -116,5 +76,35 @@ router.post("/logout", logout);
  *          description: Hubo un eror
  */
 router.get("/validateAccount/:idUser", validateUser);
+
+/**
+ * @swagger
+ * /security/auth/resetPassword/:
+ *  post:
+ *    summary: Para mandar mail para cambiar contraseña
+ *    tags: [AUTH]
+ *    responses:
+ *      200:
+ *        description: Se ha enviado el mail
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *      404:
+ *        description: No se encuentra el usuario
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *      500:
+ *        description: Hubo un error
+ */
+router.post("/resetPassword", resetPassword);
 
 export default router;

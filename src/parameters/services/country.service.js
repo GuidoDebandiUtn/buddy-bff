@@ -1,11 +1,13 @@
 import { Country } from "../../models/Country.js";
 import { Province } from "../../models/Province.js";
 
-export async function createCountry(countryName) {
+export async function createCountry(data) {
+  const { countryName } = data;
+
   try {
     const newCountry = await Country.create(
       {
-        countryName,
+        countryName: countryName.toUpperCase(),
         createdDate: new Date(),
         updatedDate: new Date(),
       },
@@ -51,7 +53,7 @@ export async function getCountryById(idCountry) {
 export async function getCountryByName(countryName) {
   try {
     const country = await Country.findOne({
-      where: { countryName, active: true },
+      where: { countryName: countryName.toUpperCase(), active: true },
       attributes: ["idCountry", "countryName"],
     });
 
@@ -61,10 +63,12 @@ export async function getCountryByName(countryName) {
   }
 }
 
-export async function updateCountry(idCountry, countryName) {
+export async function updateCountry(data, idCountry) {
+  const { countryName } = data;
+
   try {
     await Country.update(
-      { countryName, updatedDate: new Date() },
+      { countryName: countryName.toUpperCase(), updatedDate: new Date() },
       { where: { idCountry }, returning: true }
     );
     return;

@@ -1,3 +1,4 @@
+import { getProvinceById } from "../services/province.service.js";
 import {
   createRegion,
   deleteRegion,
@@ -8,9 +9,8 @@ import {
 } from "../services/region.service.js";
 
 export async function regionCreate(req, res) {
-  const { regionName, idProvince } = req.body;
   try {
-    const duplicate = await getRegionByName(regionName.toUpperCase());
+    const duplicate = await getRegionByName(req.body.regionName);
 
     if (duplicate) {
       return res
@@ -18,7 +18,15 @@ export async function regionCreate(req, res) {
         .json({ message: "Ya existe una region con ese nombre" });
     }
 
-    const region = await createRegion(regionName.toUpperCase(), idProvince);
+    const province = await getProvinceById(req.body.idProvince);
+
+    if (!province) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna provincia con ese id" });
+    }
+
+    const region = await createRegion(req.body);
 
     return res.status(201).json({ region });
   } catch (error) {
@@ -64,8 +72,8 @@ export async function getRegion(req, res) {
 }
 
 export async function regionUpdate(req, res) {
-  const { regionName } = req.body;
   const { idRegion } = req.params;
+
   try {
     const region = await getRegionById(idRegion);
 
@@ -75,7 +83,7 @@ export async function regionUpdate(req, res) {
         .json({ message: "No existe ninguna region con este id" });
     }
 
-    const duplicate = await getRegionByName(regionName.toUpperCase());
+    const duplicate = await getRegionByName(req.body.regionName);
 
     if (duplicate) {
       return res
@@ -83,7 +91,7 @@ export async function regionUpdate(req, res) {
         .json({ message: "Ya existe una region con ese nombre" });
     }
 
-    await updateRegion(idRegion, regionName.toUpperCase());
+    await updateRegion(req.body, idRegion);
 
     return res
       .status(200)

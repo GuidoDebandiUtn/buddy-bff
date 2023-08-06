@@ -1,22 +1,19 @@
 import { Region } from "../../models/Region.js";
 import { Locality } from "../../models/Locality.js";
 
-export async function createRegion(regionName, idProvince) {
+export async function createRegion(data) {
+  const { regionName, idProvince } = data;
+
   try {
     const region = await Region.create(
       {
-        regionName,
+        regionName: regionName.toUpperCase(),
         createdDate: new Date(),
         updatedDate: new Date(),
-        provinceIdProvince: idProvince,
+        idProvince,
       },
       {
-        fields: [
-          "regionName",
-          "createdDate",
-          "updatedDate",
-          "provinceIdProvince",
-        ],
+        fields: ["regionName", "createdDate", "updatedDate", "idProvince"],
       }
     );
 
@@ -58,7 +55,7 @@ export async function getRegionById(idRegion) {
 export async function getRegionByName(regionName) {
   try {
     const region = await Region.findOne({
-      where: { regionName, active: true },
+      where: { regionName: regionName.toUpperCase(), active: true },
       attributes: ["idRegion", "regionName"],
     });
     return region;
@@ -67,11 +64,13 @@ export async function getRegionByName(regionName) {
   }
 }
 
-export async function updateRegion(idRegion, regionName) {
+export async function updateRegion(data, idRegion) {
+  const { regionName } = data;
+
   try {
     await Region.update(
       {
-        regionName,
+        regionName: regionName.toUpperCase(),
         updatedDate: new Date(),
       },
       { where: { idRegion }, returning: true }

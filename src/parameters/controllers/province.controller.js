@@ -6,12 +6,11 @@ import {
   getProvinceByName,
   updateProvince,
 } from "../services/province.service.js";
+import { getCountryById } from "../services/country.service.js";
 
 export async function provinceCreate(req, res) {
-  const { provinceName, idCountry } = req.body;
-
   try {
-    const duplicate = await getProvinceByName(provinceName.toUpperCase());
+    const duplicate = await getProvinceByName(req.body.provinceName);
 
     if (duplicate) {
       return res
@@ -19,10 +18,15 @@ export async function provinceCreate(req, res) {
         .json({ message: "Ya existe una provincia con este nombre" });
     }
 
-    const province = await createProvince(
-      provinceName.toUpperCase(),
-      idCountry
-    );
+    const country = await getCountryById(req.body.idCountry);
+
+    if (!country) {
+      return res
+        .status(404)
+        .json({ message: "No existe ningún país con ese nombre" });
+    }
+
+    const province = await createProvince(req.body);
 
     return res.status(201).json({ province });
   } catch (error) {
@@ -81,7 +85,7 @@ export async function provinceUpdate(req, res) {
         .json({ message: "No existe ninguna provincia con este id" });
     }
 
-    const duplicate = await getProvinceByName(provinceName.toUpperCase());
+    const duplicate = await getProvinceByName(req.body.provinceName);
 
     if (duplicate) {
       return res
@@ -89,7 +93,7 @@ export async function provinceUpdate(req, res) {
         .json({ message: "Ya existe una provincia con este nombre" });
     }
 
-    await updateProvince(idProvince, provinceName.toUpperCase());
+    await updateProvince(req.body, idProvince);
 
     return res
       .status(200)

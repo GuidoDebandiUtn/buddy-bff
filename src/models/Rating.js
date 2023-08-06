@@ -1,26 +1,25 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../database/database.js";
 
-export class PetType extends Model {}
+export class Rating extends Model {}
 
-PetType.init(
+Rating.init(
   {
-    idPetType: {
+    idRating: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
     },
-    petTypeName: {
+    titleRating: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    legsNumber: {
-      type: DataTypes.SMALLINT,
+    descriptionRating: {
+      type: DataTypes.STRING,
     },
-    active: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
+    numberRating: {
+      type: DataTypes.INTEGER,
     },
     createdDate: {
       type: DataTypes.DATE,
@@ -32,6 +31,6 @@ PetType.init(
   {
     sequelize,
     timestamps: false,
-    modelName: "petType",
+    modelName: "rating",
   }
 );

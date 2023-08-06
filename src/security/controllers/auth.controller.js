@@ -1,38 +1,11 @@
 import jwt from "jsonwebtoken";
 import {
-  createUser,
   getUserById,
   getUserByMail,
   userValidate,
 } from "../services/user.service.js";
 import { findToken, insertToken } from "../services/token.service.js";
-import { validateMail } from "../helpers/mailHelper.js";
-
-export async function userRegistration(req, res) {
-  const userData = req.body;
-
-  try {
-    const user = await getUserByMail(userData.mail);
-
-    if (user) {
-      return res
-        .status(400)
-        .json({ message: "Este mail ya se necuentra en uso" });
-    }
-
-    const newUser = await createUser(userData);
-
-    await validateMail(newUser.userName, newUser.mail, newUser.idUser);
-
-    return res
-      .status(201)
-      .json({ message: "Se creó correctamente el ususario" });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-}
+import { resetPasswordMail } from "../helpers/mailHelper.js";
 
 export async function login(req, res) {
   try {
@@ -110,7 +83,7 @@ export async function validateUser(req, res) {
   try {
     const checkUser = await getUserById(idUser);
 
-    if (!checkUser) {
+    if (!checkUser[0]) {
       return res
         .status(404)
         .json({ error: "No existe un usuario con este id" });
@@ -119,6 +92,26 @@ export async function validateUser(req, res) {
     await userValidate(idUser);
 
     return res.status(200).json({ message: "Se ha validado el usuario" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+export async function resetPassword(req, res) {
+  const { mail } = req.body;
+
+  try {
+    const user = await getUserByMail(mail);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "No existe ningun usuario con ese id",
+      });
+    }
+
+    await resetPasswordMail(user.userName, user.mail, user.idUser);
+
+    res.status(200).json({ message: "Se ha enviado el mail" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

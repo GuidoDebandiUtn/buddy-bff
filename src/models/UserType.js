@@ -1,22 +1,19 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../database/database.js";
 
-export class PetType extends Model {}
+export class UserType extends Model {}
 
-PetType.init(
+UserType.init(
   {
-    idPetType: {
+    idUserType: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
     },
-    petTypeName: {
+    userTypeName: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    legsNumber: {
-      type: DataTypes.SMALLINT,
     },
     active: {
       type: DataTypes.BOOLEAN,
@@ -32,6 +29,6 @@ PetType.init(
   {
     sequelize,
     timestamps: false,
-    modelName: "petType",
+    modelName: "userType",
   }
 );

@@ -23,7 +23,7 @@ export async function validateMail(userName, mail, idUser) {
 
 export async function resetPasswordMail(userName, mail, idUser) {
   const transport = await infoTransport();
-  console.log(userName, mail, idUser);
+
   await transport.sendMail({
     from: "BUDDY!",
     to: mail,

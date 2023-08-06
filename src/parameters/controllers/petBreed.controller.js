@@ -1,11 +1,130 @@
-import {} from "../services/.service.js";
+import {
+  createPetBreed,
+  deletePetBreed,
+  getAllPetBreeds,
+  getPetBreedById,
+  getPetBreedByName,
+  updatePetBreed,
+} from "../services/petBreed.service.js";
+import { getPetTypeById } from "../services/petType.service.js";
 
-export async function localityCreate(req, res) {}
+export async function petBreedCreate(req, res) {
+  try {
+    const duplicate = await getPetBreedByName(req.body.petBreedName);
 
-export async function getLocalities(req, res) {}
+    if (duplicate) {
+      return res
+        .status(400)
+        .json({ message: "Ya existe una raza de mascota con ese nombre" });
+    }
 
-export async function getLocality(req, res) {}
+    const petType = await getPetTypeById(req.body.idPetType);
 
-export async function localityUpdate(req, res) {}
+    if (!petType) {
+      return res
+        .status(404)
+        .json({ message: "No existe ningun tipo de mascota con ese id" });
+    }
 
-export async function localityDelete(req, res) {}
+    const petBreed = await createPetBreed(req.body);
+
+    return res.status(201).json({ petBreed });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function getPetBreeds(req, res) {
+  try {
+    const petBreeds = await getAllPetBreeds();
+    if (!petBreeds) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna raza de mascota" });
+    }
+
+    return res.status(200).json({ petBreeds });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function getPetBreed(req, res) {
+  const { idPetBreed } = req.params;
+
+  try {
+    const petBreed = await getPetBreedById(idPetBreed);
+
+    if (!petBreed) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna raza de mascota con este id" });
+    }
+
+    return res.status(200).json({ petBreed });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function petBreedUpdate(req, res) {
+  const { idPetBreed } = req.params;
+
+  try {
+    const petBreed = await getPetBreedById(idPetBreed);
+
+    if (!petBreed) {
+      return res
+        .status(404)
+        .json({ message: "No existe la raza de mascota con ese id" });
+    }
+
+    const duplicate = await getPetBreedByName(req.body.petBreedName);
+
+    if (duplicate) {
+      return res
+        .status(400)
+        .json({ message: "Ya existe una Raza de mascota con este nombre" });
+    }
+
+    await updatePetBreed(req.body, idPetBreed);
+
+    return res
+      .status(200)
+      .json({ message: "Se ha actualizado correctamente la raza de mascota" });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function petBreedDelete(req, res) {
+  const { idPetBreed } = req.params;
+
+  try {
+    const petBreed = await getPetBreedById(idPetBreed);
+
+    if (!petBreed) {
+      return res
+        .status(404)
+        .json({ message: "No existe la raza de mascota con ese id" });
+    }
+
+    await deletePetBreed(idPetBreed);
+
+    return res
+      .status(200)
+      .json({ message: "Se ha dado de baja correctamente la raza de mascota" });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}

@@ -1,37 +1,34 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../database/database.js";
 
-export class PetType extends Model {}
+export class Image extends Model {}
 
-PetType.init(
+Image.init(
   {
-    idPetType: {
+    idImage: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
     },
-    petTypeName: {
-      type: DataTypes.STRING,
+    image: {
+      type: DataTypes.BLOB,
       allowNull: false,
     },
-    legsNumber: {
-      type: DataTypes.SMALLINT,
-    },
-    active: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
+    idReference: {
+      type: DataTypes.UUID,
+      allowNull: false,
     },
     createdDate: {
       type: DataTypes.DATE,
     },
-    updatedDate: {
+    createdDate: {
       type: DataTypes.DATE,
     },
   },
   {
     sequelize,
     timestamps: false,
-    modelName: "petType",
+    modelName: "image",
   }
 );

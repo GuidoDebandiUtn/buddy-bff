@@ -15,16 +15,16 @@ export async function createStateUser(idUser, idUserState, idUserAuthor) {
         idUserAuthor: idAuthor,
         createdDate: new Date(),
         updatedDate: new Date(),
-        userIdUser: idUser,
-        userStateIdUserState: idUserState,
+        idUser,
+        idUserState,
       },
       {
         fields: [
           "idUserAuthor",
           "createdDate",
           "updatedDate",
-          "userIdUser",
-          "userStateIdUserState",
+          "idUser",
+          "idUserState",
         ],
       }
     );
@@ -39,7 +39,7 @@ export async function changeStateUser(idUser, idUserState, idUserAuthor) {
   try {
     const state = await StateUser.findOne({
       where: {
-        userIdUser: idUser,
+        idUser,
       },
       order: [["createdDate", "DESC"]],
     });

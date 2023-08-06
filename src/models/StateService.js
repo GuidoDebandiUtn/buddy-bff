@@ -1,26 +1,18 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../database/database.js";
 
-export class PetType extends Model {}
+export class StateService extends Model {}
 
-PetType.init(
+StateService.init(
   {
-    idPetType: {
+    idStateService: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
     },
-    petTypeName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    legsNumber: {
-      type: DataTypes.SMALLINT,
-    },
-    active: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
+    idUserAuthor: {
+      type: DataTypes.UUID,
     },
     createdDate: {
       type: DataTypes.DATE,
@@ -32,6 +24,6 @@ PetType.init(
   {
     sequelize,
     timestamps: false,
-    modelName: "petType",
+    modelName: "stateService",
   }
 );

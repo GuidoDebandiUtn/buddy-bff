@@ -1,27 +1,27 @@
 import { Router } from "express";
 import {
-  getPetType,
-  getPetTypes,
-  petTypeCreate,
-  petTypeDelete,
-  petTypeUpdate,
-} from "../controllers/petType.controller.js";
+  getUserType,
+  getUserTypes,
+  userTypeCreate,
+  userTypeDelete,
+  userTypeUpdate,
+} from "../controllers/userType.controller.js";
 
 const router = Router();
 
 /**
  * @swagger
  * tags:
- *   name: PETTYPE
- *   description: ABM tipo de mascotas
+ *   name: USERTYPE
+ *   description: ABM tipo de usuarios
  */
 
 /**
  * @swagger
- * /parameters/petType/:
+ * /parameters/userType/:
  *   post:
- *     summary: Crea un nuevo tipo de mascota.
- *     tags: [PETTYPE]
+ *     summary: Crea un nuevo tipo de usuario.
+ *     tags: [USERTYPE]
  *     requestBody:
  *       required: true
  *       content:
@@ -29,11 +29,11 @@ const router = Router();
  *           schema:
  *             type: object
  *             properties:
- *               petTypeName:
+ *               userTypeName:
  *                 type: string
  *     responses:
  *       201:
- *         description: Tipo de mascota creado exitosamente.
+ *         description: Tipo de usuario creado exitosamente.
  *         content:
  *            application/json:
  *              schema:
@@ -42,67 +42,67 @@ const router = Router();
  *                  message:
  *                    type: string
  *       400:
- *         description: Ya existe un tipo de mascota con ese nombre.
+ *         description: Ya existe un tipo de usuario con ese nombre.
  *       500:
  *          description: Hubo un error
  */
-router.post("/", petTypeCreate);
+router.post("/", userTypeCreate);
 
 /**
  * @swagger
- * /parameters/petType/:
+ * /parameters/userType/:
  *   get:
- *     summary: Obtiene una lista de tipos de mascotas activos
- *     tags: [PETTYPE]
+ *     summary: Obtiene una lista de tipos de usuarios activos
+ *     tags: [USERTYPE]
  *     responses:
  *       200:
- *         description: Lista de tipos de mascotas activos.
+ *         description: Lista de tipos de usuarios activos.
  *         content:
  *            application/json:
  *              schema:
  *                type: array
  *                items:
  *                  properties:
- *                    petTypeName:
+ *                    userTypeName:
  *                      type: string
  *       404:
- *         description: No existe ningun tipo de mascota.
+ *         description: No existe ningun tipo de usuario.
  *       500:
  *          description: Hubo un error
  */
-router.get("/", getPetTypes);
+router.get("/", getUserTypes);
 
 /**
  * @swagger
- * /parameters/petType/{idPetType}:
+ * /parameters/userType/{idUserType}:
  *   get:
- *     summary: Obtiene el tipo de mascota por el id
- *     tags: [PETTYPE]
+ *     summary: Obtiene el tipo de usuario por el id
+ *     tags: [USERTYPE]
  *     responses:
  *       200:
- *         description: Tipo de mascota buscado por id.
+ *         description: Tipo de usuario buscado por id.
  *         content:
  *            application/json:
  *              schema:
  *              type: object
  *              properties:
- *                petTypeName:
+ *                userTypeName:
  *                  type: string
  *                provinceName:
  *                  type: array
  *       404:
- *         description: No existe ningun tipo de mascota con ese id.
+ *         description: No existe ningun tipo de usuario con ese id.
  *       500:
  *          description: Hubo un error
  */
-router.get("/:idPetType", getPetType);
+router.get("/:idUserType", getUserType);
 
 /**
  * @swagger
- * /parameters/petType/{idPetType}:
+ * /parameters/userType/{idUserType}:
  *   put:
- *     summary: Actualiza un tipo de mascota
- *     tags: [PETTYPE]
+ *     summary: Actualiza un tipo de usuario
+ *     tags: [USERTYPE]
  *     requestBody:
  *       required: true
  *       content:
@@ -110,11 +110,11 @@ router.get("/:idPetType", getPetType);
  *           schema:
  *             type: object
  *             properties:
- *               petTypeName:
+ *               userTypeName:
  *                 type: string
  *     responses:
  *       200:
- *         description: Tipo de mascota actualizado exitosamente.
+ *         description: Tipo de usuario actualizado exitosamente.
  *         content:
  *            application/json:
  *              schema:
@@ -123,23 +123,23 @@ router.get("/:idPetType", getPetType);
  *                message:
  *                  type: string
  *       400:
- *         description: Ya existe un tipo de mascota con ese nombre
+ *         description: Ya existe un tipo de usuario con ese nombre
  *       404:
- *         description: No existe ningun tipo de mascota con ese id.
+ *         description: No existe ningun tipo de usuario con ese id.
  *       500:
  *          description: Hubo un error
  */
-router.put("/:idPetType", petTypeUpdate);
+router.put("/:idUserType", userTypeUpdate);
 
 /**
  * @swagger
- * /parameters/petType/{idPetType}:
+ * /parameters/userType/{idUserType}:
  *   delete:
- *     summary: Dar de baja un tipo de mascota
- *     tags: [PETTYPE]
+ *     summary: Dar de baja un tipo de usuario
+ *     tags: [USERTYPE]
  *     responses:
  *       200:
- *         description: Tipo de mascota dado de baja.
+ *         description: Tipo de usuario dado de baja.
  *         content:
  *            application/json:
  *              schema:
@@ -148,10 +148,10 @@ router.put("/:idPetType", petTypeUpdate);
  *                message:
  *                  type: string
  *       404:
- *         description: No existe ningun tipo de mascota con es id.
+ *         description: No existe ningun tipo de usuario con es id.
  *       500:
  *          description: Hubo un error
  */
-router.delete("/:idPetType", petTypeDelete);
+router.delete("/:idUserType", userTypeDelete);
 
 export default router;

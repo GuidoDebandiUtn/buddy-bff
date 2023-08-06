@@ -8,10 +8,8 @@ import {
 } from "../services/userState.service.js";
 
 export async function userStateCreate(req, res) {
-  const { userStateName } = req.body;
-
   try {
-    const userState = await getUserStateByName(userStateName.toUpperCase());
+    const userState = await getUserStateByName(req.body.userStateName);
 
     if (userState) {
       return res.status(400).json({
@@ -19,7 +17,7 @@ export async function userStateCreate(req, res) {
       });
     }
 
-    const newUserState = await createUserState(userStateName);
+    const newUserState = await createUserState(req.body);
 
     return res.status(201).json(newUserState);
   } catch (error) {
@@ -76,14 +74,15 @@ export async function userStateUpdate(req, res) {
       });
     }
 
-    const { userStateName } = req.body;
+    const duplicate = await getUserStateByName(req.body.userStateName);
 
-    if (await getUserStateByName(userStateName.toUpperCase())) {
+    if (duplicate) {
       return res.status(400).json({
         message: "Ya existe un UserState con ese nombre",
       });
     }
-    await updateUserState(userState, userStateName);
+
+    await updateUserState(req.body, userState);
 
     return res
       .status(200)

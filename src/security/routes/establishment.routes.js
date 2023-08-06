@@ -1,13 +1,13 @@
 import { Router } from "express";
 import {
-  getUsers,
-  getUser,
-  userUpdate,
-  userDelete,
-  changeState,
   changePassword,
-  userCreate,
-} from "../controllers/user.controller.js";
+  changeState,
+  establishmentCreate,
+  establishmentDelete,
+  establishmentUpdate,
+  getEstablishment,
+  getEstablishments,
+} from "../controllers/establishment.controller.js";
 import { verifyToken } from "../controllers/auth.controller.js";
 
 const router = Router();
@@ -15,15 +15,15 @@ const router = Router();
 /**
  * @swagger
  * tags:
- *   name: USER
- *   description: Endpoints relacionados con los usuarios
+ *   name: ESTABLISHMENT
+ *   description: Endpoints relacionados con los establecimientos
  */
 /**
  * @swagger
  * /security/auth/register:
  *   post:
- *     summary: Crea un nuevo usuario
- *     tags: [USER]
+ *     summary: Crea un nuevo establecimiento
+ *     tags: [ESTABLISHMENT]
  *     requestBody:
  *       required: true
  *       content:
@@ -31,7 +31,7 @@ const router = Router();
  *           schema:
  *             type: object
  *             properties:
- *               username:
+ *               establishmentname:
  *                 type: string
  *               mail:
  *                 type: string
@@ -52,17 +52,17 @@ const router = Router();
  *       500:
  *          description: Hubo un eror
  */
-router.post("/register", userCreate);
+router.post("/register", establishmentCreate);
 
 /**
  * @swagger
- * /security/user/:
+ * /security/establishment/:
  *  get:
- *    summary: Obtener todos los usuarios
- *    tags: [USER]
+ *    summary: Obtener todos los establecimientos
+ *    tags: [ESTABLISHMENT]
  *    responses:
  *      200:
- *        description: Lista de usuarios activos
+ *        description: Lista de establecimientos activos
  *        content:
  *          application/json:
  *            schema:
@@ -72,14 +72,14 @@ router.post("/register", userCreate);
  *                properties:
  *                  mail:
  *                    type: string
- *                  userName:
+ *                  establishmentName:
  *                    type: string
  *                  name:
  *                    type: string
  *                  lastName:
  *                    type: string
  *      404:
- *        description: No se ha encotrado ningun usuario
+ *        description: No se ha encotrado ningun establecimiento
  *        content:
  *          application/json:
  *            schema:
@@ -90,14 +90,14 @@ router.post("/register", userCreate);
  *      500:
  *        description: Hubo un error
  */
-router.get("/", verifyToken, getUsers);
+router.get("/", verifyToken, getEstablishments);
 
 /**
  * @swagger
- * /security/user/{idUser}:
+ * /security/establishment/{idUser}:
  *   get:
  *     summary: Traer el ususario por id
- *     tags: [USER]
+ *     tags: [ESTABLISHMENT]
  *     responses:
  *       200:
  *         description: Devuleve el ususario buscado
@@ -109,7 +109,7 @@ router.get("/", verifyToken, getUsers);
  *                  message:
  *                    type: string
  *       404:
- *         description: No se econtraron usuarios
+ *         description: No se econtraron establecimientos
  *         content:
  *            application/json:
  *              schema:
@@ -120,14 +120,14 @@ router.get("/", verifyToken, getUsers);
  *       500:
  *          description: Hubo un eror
  */
-router.get("/:idUser", verifyToken, getUser);
+router.get("/:idUser", verifyToken, getEstablishment);
 
 /**
  * @swagger
- * /security/user/{id}:
+ * /security/establishment/{idUser}:
  *   put:
- *     summary: Modificar un usuario
- *     tags: [USER]
+ *     summary: Modificar un establecimiento
+ *     tags: [ESTABLISHMENT]
  *     requestBody:
  *       required: false
  *       content:
@@ -135,7 +135,7 @@ router.get("/:idUser", verifyToken, getUser);
  *           schema:
  *             type: object
  *             properties:
- *               username:
+ *               establishmentname:
  *                 type: string
  *               name:
  *                 type: string
@@ -154,21 +154,21 @@ router.get("/:idUser", verifyToken, getUser);
  *                  message:
  *                    type: string
  *       404:
- *         description: No se encontró el usuario
+ *         description: No se encontró el establecimiento
  *       500:
  *          description: Hubo un eror
  */
-router.put("/:idUser", verifyToken, userUpdate);
+router.put("/:idUser", verifyToken, establishmentUpdate);
 
 /**
  * @swagger
- * /security/user/{idUser}:
+ * /security/establishment/{idUser}:
  *  delete:
- *    summary: Dar de baja un usuario
- *    tags: [USER]
+ *    summary: Dar de baja un establecimiento
+ *    tags: [ESTABLISHMENT]
  *    responses:
  *      200:
- *        description: Se ha dado de baja un usuario exitosamente
+ *        description: Se ha dado de baja un establecimiento exitosamente
  *        content:
  *          application/json:
  *            schema:
@@ -177,7 +177,7 @@ router.put("/:idUser", verifyToken, userUpdate);
  *                message:
  *                  type: string
  *      404:
- *        description: No se ha encotrado ningun usuario
+ *        description: No se ha encotrado ningun establecimiento
  *        content:
  *          application/json:
  *            schema:
@@ -188,17 +188,17 @@ router.put("/:idUser", verifyToken, userUpdate);
  *      500:
  *        description: Hubo un error
  */
-router.delete("/:idUser", verifyToken, userDelete);
+router.delete("/:idUser", verifyToken, establishmentDelete);
 
 /**
  * @swagger
- * /security/user/changeState/{idUser}/{userStateName}:
+ * /security/establishment/changeState/{idUser}/{userStateName}:
  *  post:
- *    summary: Cambiar estado de un usuario
- *    tags: [USER]
+ *    summary: Cambiar estado de un establecimiento
+ *    tags: [ESTABLISHMENT]
  *    responses:
  *      200:
- *        description: Se ha cambiado de estado un usuario exitosamente
+ *        description: Se ha cambiado de estado un establecimiento exitosamente
  *        content:
  *          application/json:
  *            schema:
@@ -207,7 +207,7 @@ router.delete("/:idUser", verifyToken, userDelete);
  *                message:
  *                  type: string
  *      404:
- *        description: No se encuentra el usuario al que se le va a cambiar el estado ni el ususario autor
+ *        description: No se encuentra el establecimiento al que se le va a cambiar el estado ni el ususario autor
  *        content:
  *          application/json:
  *            schema:
@@ -222,10 +222,10 @@ router.post("/changeState/:idUser/:userStateName", verifyToken, changeState);
 
 /**
  * @swagger
- * /security/user/changeState/{idUser}:
+ * /security/establishment/changeState/{idUser}:
  *  put:
- *    summary: Dar de baja un usuario
- *    tags: [USER]
+ *    summary: Dar de baja un establecimiento
+ *    tags: [ESTABLISHMENT]
  *    requestBody:
  *       required: false
  *       content:
@@ -246,7 +246,7 @@ router.post("/changeState/:idUser/:userStateName", verifyToken, changeState);
  *                message:
  *                  type: string
  *      404:
- *        description: No se encuentra el usuario al que se le va a cambiar el estado ni el ususario autor
+ *        description: No se encuentra el establecimiento al que se le va a cambiar el estado ni el ususario autor
  *        content:
  *          application/json:
  *            schema:

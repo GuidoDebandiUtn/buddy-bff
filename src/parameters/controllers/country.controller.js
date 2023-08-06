@@ -8,10 +8,8 @@ import {
 } from "../services/country.service.js";
 
 export async function countryCreate(req, res) {
-  const { countryName } = req.body;
-
   try {
-    const duplicate = await getCountryByName(countryName.toUpperCase());
+    const duplicate = await getCountryByName(req.body.countryName);
 
     if (duplicate) {
       return res
@@ -19,7 +17,7 @@ export async function countryCreate(req, res) {
         .json({ message: "Ya existe un pais con este nombre" });
     }
 
-    const country = await createCountry(countryName.toUpperCase());
+    const country = await createCountry(req.body);
 
     return res.status(201).json({ country });
   } catch (error) {
@@ -77,7 +75,7 @@ export async function countryUpdate(req, res) {
         .json({ message: "No existe ningun país con este id" });
     }
 
-    const duplicate = await getCountryByName(countryName.toUpperCase());
+    const duplicate = await getCountryByName(req.body.countryName);
 
     if (duplicate) {
       return res
@@ -85,7 +83,7 @@ export async function countryUpdate(req, res) {
         .json({ message: "Ya existe un pais con este nombre" });
     }
 
-    await updateCountry(idCountry, countryName.toUpperCase());
+    await updateCountry(req.body, idCountry);
 
     return res.status(200).json({ message: "Se ha actualizado correctamente" });
   } catch (error) {

@@ -1,11 +1,11 @@
 import { UserState } from "../../models/UserState.js";
 
-export async function createUserState(userStateName) {
-  userStateName = userStateName.toUpperCase();
+export async function createUserState(data) {
+  const { userStateName } = data;
   try {
     const userState = await UserState.create(
       {
-        userStateName,
+        userStateName: userStateName.toUpperCase(),
         createdDate: new Date(),
         updatedDate: new Date(),
       },
@@ -46,8 +46,8 @@ export async function getUserStateById(idUserState) {
 export async function getUserStateByName(userStateName) {
   try {
     const userState = await UserState.findOne({
-      where: { userStateName },
-      attributes: ["userStateName"],
+      where: { userStateName: userStateName.toUpperCase(), active: true },
+      attributes: ["idUserState", "userStateName"],
     });
 
     return userState;
@@ -56,10 +56,12 @@ export async function getUserStateByName(userStateName) {
   }
 }
 
-export async function updateUserState(idUserState, userStateName) {
+export async function updateUserState(data, idUserState) {
+  const { userStateName } = data;
+
   try {
     await UserState.update(
-      { userStateName: userStateName, updatedDate: new Date() },
+      { userStateName: userStateName.toUpperCase(), updatedDate: new Date() },
       { where: { idUserState: idUserState }, returning: true }
     );
 

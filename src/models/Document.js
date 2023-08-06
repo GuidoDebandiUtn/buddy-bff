@@ -1,37 +1,34 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../database/database.js";
 
-export class PetType extends Model {}
+export class Document extends Model {}
 
-PetType.init(
+Document.init(
   {
-    idPetType: {
+    idDocument: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
     },
-    petTypeName: {
-      type: DataTypes.STRING,
+    file: {
+      type: DataTypes.BLOB,
       allowNull: false,
     },
-    legsNumber: {
-      type: DataTypes.SMALLINT,
+    idUser: {
+      type: DataTypes.UUID,
+      allowNull: false,
     },
-    active: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
-    },
-    createdDate: {
+    validDate: {
       type: DataTypes.DATE,
     },
-    updatedDate: {
+    createdDate: {
       type: DataTypes.DATE,
     },
   },
   {
     sequelize,
     timestamps: false,
-    modelName: "petType",
+    modelName: "document",
   }
 );
