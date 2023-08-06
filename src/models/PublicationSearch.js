@@ -52,6 +52,26 @@ PublicationSearch.init(
         type: DataTypes.DATE,
         allowNull: false,
       },
+      idPetColor: {
+        type: DataTypes.UUID,
+        allowNull: true
+      },
+      idPetBreed: {
+        type: DataTypes.UUID,
+        allowNull: true
+      },
+      idLocality: {
+        type: DataTypes.UUID,
+        allowNull: true
+      },
+      idPublicationState: {
+        type: DataTypes.UUID,
+        allowNull: true
+      },
+      idUser: {
+        type: DataTypes.UUID,
+        allowNull: false
+      }
     },
     {
       sequelize,

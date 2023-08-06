@@ -49,6 +49,26 @@ PublicationAdoption.init(
         type: DataTypes.UUID,
         allowNull: true
       },
+      idPetColor: {
+        type: DataTypes.UUID,
+        allowNull: true
+      },
+      idPetBreed: {
+        type: DataTypes.UUID,
+        allowNull: true
+      },
+      idLocality: {
+        type: DataTypes.UUID,
+        allowNull: true
+      },
+      idPublicationState: {
+        type: DataTypes.UUID,
+        allowNull: true
+      },
+      idUser: {
+        type: DataTypes.UUID,
+        allowNull: false
+      }
     },
     {
       sequelize,
