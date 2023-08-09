@@ -1,6 +1,7 @@
 import { Locality } from "../../models/Locality.js";
 import { PetBreed } from "../../models/PetBreed.js";
 import { PetColor } from "../../models/PetColor.js";
+import { PetType } from "../../models/PetType.js";
 import { PublicationAdoption } from "../../models/PublicationAdoption.js";
 import { PublicationSearch } from "../../models/PublicationSearch.js";
 import { PublicationState } from "../../models/PublicationState.js";
@@ -24,7 +25,7 @@ export async function retrivePaginatedPublications(page = 1, recordsPerPage = 10
     let include = [
       {model:PetColor, as:'color', attributes: ['petColorName']},
       {model:Locality, as:'locality', attributes: ['localityName']},
-      {model:PetBreed, as:'breed', attributes: ['petBreedName','size','intelligence','temperament','lifespan','idPetType']},
+      {model:PetBreed, as:'breed',include: [{model:PetType, as:'type', attributes: ['petTypeName']}], attributes: ['petBreedName','size','intelligence','temperament','lifespan','idPetType','idPetBreed']},
       {model:PublicationState, as:'state', attributes: ['name','code']}
     ];
     let attributes = ['title','images','description'];

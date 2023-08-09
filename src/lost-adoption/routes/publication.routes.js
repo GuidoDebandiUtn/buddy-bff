@@ -10,7 +10,7 @@ const router = Router();
 
 /**
  * @swagger
- * /parameters/publications/:
+ * /publications/publication:
  *   get:
  *     summary: Obtiene una lista de publiaciones.
  *     tags: [PUBLICATION]
@@ -53,7 +53,7 @@ router.get('/',getPublications);
 
 /**
  * @swagger
- * /parameters/publications/:
+ * /publications/publication/search:
  *   POST:
  *     summary: Crea una nueva publicacion.
  *     tags: [PUBLICATION]

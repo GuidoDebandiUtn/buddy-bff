@@ -52,7 +52,7 @@ Country.hasMany(Province, { foreignKey: "idCountry" });
 PetType.hasMany(PetBreed, { foreignKey: "idPetType" });
 
 
-PetBreed.belongsTo(PetType, { foreignKey: "idPetType" });
+PetBreed.belongsTo(PetType, { foreignKey: "idPetType",as: 'type' });
 
 Service.hasMany(StateService, { foreignKey: "idUser" });
 Service.belongsTo(ServiceType, { foreignKey: "idServiceType" });
