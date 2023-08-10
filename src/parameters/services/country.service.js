@@ -81,7 +81,7 @@ export async function deleteCountry(idCountry) {
   try {
     await Country.update(
       { active: false, updatedDate: new Date() },
-      { where: { idCountry: idCountry }, returning: true }
+      { where: { idCountry }, returning: true }
     );
 
     return;

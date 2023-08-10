@@ -30,7 +30,7 @@ export async function provinceCreate(req, res) {
 
     return res.status(201).json({ province });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -46,7 +46,7 @@ export async function getProvinces(req, res) {
 
     return res.status(200).json({ provinces });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -66,7 +66,7 @@ export async function getProvince(req, res) {
 
     return res.status(200).json({ province });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -99,7 +99,7 @@ export async function provinceUpdate(req, res) {
       .status(200)
       .json({ message: "Se ha actualizado correctamente la provincia" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -121,7 +121,7 @@ export async function provinceDelete(req, res) {
 
     return res.status(200).json({ message: "Se dio de baja la provincia" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }

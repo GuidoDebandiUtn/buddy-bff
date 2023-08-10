@@ -33,7 +33,7 @@ export async function login(req, res) {
       data: { token },
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -59,7 +59,7 @@ export async function verifyToken(req, res, next) {
 
     next();
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       error: "El token no es válido",
     });
   }
@@ -73,7 +73,7 @@ export async function logout(req, res) {
 
     res.status(200);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -93,7 +93,7 @@ export async function validateUser(req, res) {
 
     return res.status(200).json({ message: "Se ha validado el usuario" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -113,6 +113,6 @@ export async function resetPassword(req, res) {
 
     res.status(200).json({ message: "Se ha enviado el mail" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }

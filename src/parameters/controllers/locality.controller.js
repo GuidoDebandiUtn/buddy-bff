@@ -30,7 +30,7 @@ export async function localityCreate(req, res) {
 
     return res.status(201).json({ locality });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -46,7 +46,7 @@ export async function getLocalities(req, res) {
 
     return res.status(200).json({ localities });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -65,7 +65,7 @@ export async function getLocality(req, res) {
 
     return res.status(200).json({ locality });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -95,7 +95,7 @@ export async function localityUpdate(req, res) {
       .status(200)
       .json({ message: "Se ha actulizado correctamente la localidad" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -116,7 +116,7 @@ export async function localityDelete(req, res) {
 
     return res.status(200).json({ message: "Se ha dado de baja la localidad" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }

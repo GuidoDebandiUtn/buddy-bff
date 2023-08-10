@@ -21,7 +21,7 @@ export async function serviceTypeCreate(req, res) {
 
     return res.status(201).json({ serviceType });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -37,7 +37,7 @@ export async function getServiceTypes(req, res) {
 
     return res.status(200).json({ serviceTypes });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -57,7 +57,7 @@ export async function getServiceType(req, res) {
 
     return res.status(200).json({ serviceType });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -89,7 +89,7 @@ export async function serviceTypeUpdate(req, res) {
       .status(200)
       .json({ message: "Se ha actualizado correctamente el tipo de servicio" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -113,7 +113,7 @@ export async function serviceTypeDelete(req, res) {
       message: "Se ha dade de baja correctamente el tipo de servicio",
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }

@@ -30,7 +30,7 @@ export async function regionCreate(req, res) {
 
     return res.status(201).json({ region });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -46,7 +46,7 @@ export async function getRegions(req, res) {
 
     return res.status(200).json({ regions });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -65,7 +65,7 @@ export async function getRegion(req, res) {
 
     return res.status(200).json({ region });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -97,7 +97,7 @@ export async function regionUpdate(req, res) {
       .status(200)
       .json({ message: "Se ha actulizado correctamente la region" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -118,7 +118,7 @@ export async function regionDelete(req, res) {
 
     return res.status(200).json({ message: "Se ha dado de baja la region" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }

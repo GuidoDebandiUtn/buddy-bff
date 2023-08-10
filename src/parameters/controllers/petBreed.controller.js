@@ -30,7 +30,7 @@ export async function petBreedCreate(req, res) {
 
     return res.status(201).json({ petBreed });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -47,7 +47,7 @@ export async function getPetBreeds(req, res) {
 
     return res.status(200).json({ petBreeds });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -67,7 +67,7 @@ export async function getPetBreed(req, res) {
 
     return res.status(200).json({ petBreed });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -99,7 +99,7 @@ export async function petBreedUpdate(req, res) {
       .status(200)
       .json({ message: "Se ha actualizado correctamente la raza de mascota" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -123,7 +123,7 @@ export async function petBreedDelete(req, res) {
       .status(200)
       .json({ message: "Se ha dado de baja correctamente la raza de mascota" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }

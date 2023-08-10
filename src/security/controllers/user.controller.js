@@ -32,7 +32,7 @@ export async function userCreate(req, res) {
       .json({ message: "Se creó correctamente el ususario" });
   } catch (error) {
     await destroyUser(data.mail);
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -48,7 +48,7 @@ export async function getUsers(req, res) {
 
     return res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -66,7 +66,7 @@ export async function getUser(req, res) {
 
     return res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -88,7 +88,7 @@ export async function userUpdate(req, res) {
       .status(200)
       .json({ message: "Se ha actualizado correctamente el usuario" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -112,7 +112,7 @@ export async function userDelete(req, res) {
 
     res.status(200).json({ message: "El usuario se ha dado de baja" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -144,7 +144,7 @@ export async function changeState(req, res) {
 
     res.status(200).json({ message: "Se ha cambiado el estado del usuario" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -164,6 +164,6 @@ export async function changePassword(req, res) {
 
     res.status(200).json({ message: "Se ha actualizado la contraseña" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }

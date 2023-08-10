@@ -36,7 +36,7 @@ export async function establishmentCreate(req, res) {
       .json({ message: "Se creó correctamente el establecimiento" });
   } catch (error) {
     await destroyUser(data.mail);
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -72,7 +72,7 @@ export async function getEstablishment(req, res) {
 
     return res.status(200).json(establishment);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -94,7 +94,7 @@ export async function establishmentUpdate(req, res) {
       .status(200)
       .json({ message: "Se ha actualizado correctamente el establecimiento" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -118,7 +118,7 @@ export async function establishmentDelete(req, res) {
 
     res.status(200).json({ message: "El establecimiento se ha dado de baja" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -152,7 +152,7 @@ export async function changeState(req, res) {
       .status(200)
       .json({ message: "Se ha cambiado el estado del establecimiento" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -172,6 +172,6 @@ export async function changePassword(req, res) {
 
     res.status(200).json({ message: "Se ha actualizado la contraseña" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }

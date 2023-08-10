@@ -21,7 +21,7 @@ export async function petColorCreate(req, res) {
 
     return res.status(201).json({ petColor });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -39,7 +39,7 @@ export async function getPetColors(req, res) {
 
     return res.status(200).json({ petColors });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -58,7 +58,7 @@ export async function getPetColor(req, res) {
 
     return res.status(200).json({ petColor });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -89,7 +89,7 @@ export async function petColorUpdate(req, res) {
       .status(200)
       .json({ message: "Se ha actualizado correctamente el color de mascota" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -112,7 +112,7 @@ export async function petColorDelete(req, res) {
       message: "Se ha dado de baja correctamente el color de mascota",
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }

@@ -11,10 +11,10 @@ import { PetType } from "./PetType.js";
 import { ServiceType } from "./ServiceType.js";
 // import { Document } from "./Document.js";
 // import { Image } from "./Image.js";
-// import { Pet } from "./Pet.js";
-// import { Vaccine } from "./Vaccine.js";
-// import { Information } from "./Information.js";
-// import { Turn } from "./Turn.js";
+import { Pet } from "./Pet.js";
+import { Vaccine } from "./Vaccine.js";
+import { Information } from "./Information.js";
+import { Turn } from "./Turn.js";
 import { Rating } from "./Rating.js";
 import { Service } from "./Service.js";
 import { StateService } from "./StateService.js";
@@ -24,6 +24,8 @@ import { UserType } from "./UserType.js";
 User.hasMany(StateUser, { foreignKey: "idUser" });
 User.belongsTo(UserType, { foreignKey: "idUserType" });
 User.hasMany(Rating, { foreignKey: "idUser" });
+User.hasMany(Pet, { foreignKey: "idUser" });
+User.belongsTo(Locality, { foreignKey: "idLocality" });
 
 UserState.hasMany(StateUser, { foreignKey: "idUserState" });
 
@@ -33,6 +35,7 @@ StateUser.belongsTo(UserState, { foreignKey: "idUserState" });
 UserType.hasMany(User, { foreignKey: "idUserType" });
 
 Locality.belongsTo(Region, { foreignKey: "idRegion" });
+Locality.hasMany(User, { foreignKey: "idLocality" });
 
 Region.hasMany(Locality, { foreignKey: "idRegion" });
 Region.belongsTo(Province, { foreignKey: "idProvince" });
@@ -59,3 +62,12 @@ ServiceType.hasMany(Service, { foreignKey: "idServiceType" });
 
 Rating.belongsTo(User, { foreignKey: "idUser" });
 Rating.belongsTo(Service, { foreignKey: "idService" });
+
+Pet.hasMany(Information, { foreignKey: "idPet" });
+Pet.hasMany(Vaccine, { foreignKey: "idPet" });
+Pet.hasMany(Turn, { foreignKey: "idPet" });
+Pet.belongsTo(User, { foreignKey: "idUser" });
+
+Information.belongsTo(Pet, { foreignKey: "idPet" });
+Vaccine.belongsTo(Pet, { foreignKey: "idPet" });
+Turn.belongsTo(Pet, { foreignKey: "idPet" });

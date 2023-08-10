@@ -21,7 +21,7 @@ export async function userTypeCreate(req, res) {
 
     return res.status(201).json({ userType });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -37,7 +37,7 @@ export async function getUserTypes(req, res) {
 
     return res.status(200).json({ userTypes });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -57,7 +57,7 @@ export async function getUserType(req, res) {
 
     return res.status(200).json({ userType });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -89,7 +89,7 @@ export async function userTypeUpdate(req, res) {
       .status(200)
       .json({ message: "Se ha actualizado correctamente el tipo de usuario" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -113,7 +113,7 @@ export async function userTypeDelete(req, res) {
       message: "Se ha dade de baja correctamente el tipo de usuario",
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }

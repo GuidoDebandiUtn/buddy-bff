@@ -21,7 +21,7 @@ export async function petTypeCreate(req, res) {
 
     return res.status(201).json({ petType });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -39,7 +39,7 @@ export async function getPetTypes(req, res) {
 
     return res.status(200).json({ petTypes });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -59,7 +59,7 @@ export async function getPetType(req, res) {
 
     return res.status(200).json({ petType });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -91,7 +91,7 @@ export async function petTypeUpdate(req, res) {
       .status(200)
       .json({ message: "Se ha actualizado correctamente el tipo de mascota" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -115,7 +115,7 @@ export async function petTypeDelete(req, res) {
       .status(200)
       .json({ message: "Se ha dado de baja correctamente el tipo de mascota" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
