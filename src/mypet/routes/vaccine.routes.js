@@ -12,7 +12,7 @@ const router = Router();
 /**
  * @swagger
  * tags:
- *   name: INFO
+ *   name: VACCINE
  *   description: ABM vacuna de una mascota
  */
 
@@ -21,7 +21,7 @@ const router = Router();
  * /mypet/vaccine/{idPet}:
  *   post:
  *     summary: Crea una nueva vacuna de una mascota.
- *     tags: [INFO]
+ *     tags: [VACCINE]
  *     requestBody:
  *       required: true
  *       content:
@@ -53,7 +53,7 @@ router.post("/:idPet", vaccineCreate);
  * /mypet/vaccine/{idPet}:
  *   get:
  *     summary: Obtiene una lista de vacuna activa de una mascota
- *     tags: [INFO]
+ *     tags: [VACCINE]
  *     responses:
  *       200:
  *         description: Lista de vacuna de una mascota.
@@ -79,7 +79,7 @@ router.get("/:idPet", getVaccines);
  * /mypet/vaccine/{idPet}/{idVaccine}:
  *   get:
  *     summary: Obtiene la vacuna por el id
- *     tags: [INFO]
+ *     tags: [VACCINE]
  *     responses:
  *       200:
  *         description: Vacuna buscada por id.
@@ -104,7 +104,7 @@ router.get("/:idPet/:idVaccine", getVaccine);
  * /mypet/vaccine/{idPet}/{idVaccine}:
  *   put:
  *     summary: Actualiza una vacuna de una mascota
- *     tags: [INFO]
+ *     tags: [VACCINE]
  *     requestBody:
  *       required: true
  *       content:
@@ -138,7 +138,7 @@ router.put("/:idPet/:idVaccine", vaccineUpdate);
  * /mypet/vaccine/{idPet}/{idVaccine}:
  *   delete:
  *     summary: Dar de baja una vacuna de una mascota
- *     tags: [INFO]
+ *     tags: [VACCINE]
  *     responses:
  *       200:
  *         description: Vacuna dada de baja.

@@ -19,32 +19,32 @@ const router = Router();
 /**
  * @swagger
  * /mypet/information/{idPet}:
- *   post:
- *     summary: Crea una nueva información de una mascota.
- *     tags: [INFO]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               titleInformation:
- *                 type: string
- *               descriptionInformation:
- *                 type: string
- *     responses:
- *       201:
- *         description: Información creada exitosamente.
- *         content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  message:
- *                    type: string
- *       500:
- *          description: Hubo un error
+ *  post:
+ *    summary: Crea una nueva información de una mascota.
+ *    tags: [INFO]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              titleInformation:
+ *                type: string
+ *              descriptionInformation:
+ *                type: string
+ *    responses:
+ *      201:
+ *        description: Información creada exitosamente.
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *      500:
+ *        description: Hubo un error
  */
 router.post("/:idPet", informationCreate);
 

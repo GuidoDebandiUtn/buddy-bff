@@ -14,6 +14,7 @@ const options = {
   apis: [
     "src/security/routes/*.routes.js",
     "src/parameters/routes/*.routes.js",
+    "src/mypet/routes/*.routes.js",
   ],
 };
 
