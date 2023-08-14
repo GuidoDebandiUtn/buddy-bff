@@ -5,6 +5,7 @@ import {
   getPetBreedById,
   getPetBreedByName,
   updatePetBreed,
+  getPetBreedsByPetType
 } from "../services/petBreed.service.js";
 import { getPetTypeById } from "../services/petType.service.js";
 
@@ -122,6 +123,27 @@ export async function petBreedDelete(req, res) {
     return res
       .status(200)
       .json({ message: "Se ha dado de baja correctamente la raza de mascota" });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+
+
+export async function getPetBreedsByType(req, res) {
+  const { petTypeName } = req.params;
+
+  try {
+    const petBreeds = await getPetBreedsByPetType(petTypeName);
+    if (!petBreeds) {
+      return res
+        .status(404)
+        .json({ message: "No existen razas asociadas a ese Animal" });
+    }
+
+    return res.status(200).json(petBreeds);
   } catch (error) {
     res.status(500).json({
       message: error.message,

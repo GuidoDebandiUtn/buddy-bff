@@ -5,6 +5,7 @@ import {
   petBreedCreate,
   petBreedDelete,
   petBreedUpdate,
+  getPetBreedsByType
 } from "../controllers/petBreed.controller.js";
 
 const router = Router();
@@ -73,7 +74,7 @@ router.get("/", getPetBreeds);
 
 /**
  * @swagger
- * /parameters/petBreed/{idPetBreed}:
+ * /parameters/petBreed/byId/{idPetBreed}:
  *   get:
  *     summary: Obtiene la raza por el id
  *     tags: [PETBREED]
@@ -94,7 +95,7 @@ router.get("/", getPetBreeds);
  *       500:
  *          description: Hubo un error
  */
-router.get("/:idPetBreed", getPetBreed);
+router.get("/byId/:idPetBreed", getPetBreed);
 
 /**
  * @swagger
@@ -151,6 +152,33 @@ router.put("/:idPetBreed", petBreedUpdate);
  *       500:
  *          description: Hubo un error
  */
-router.delete("/:idPetBreed", petBreedDelete);
+router.delete(":idPetBreed", petBreedDelete);
+
+
+
+/**
+ * @swagger
+ * /parameters/petBreed/byType/{petTypeName}:
+ *   get:
+ *     summary: Obtiene una lista de razas de un tipo de animal especifico
+ *     tags: [PETBREED]
+ *     responses:
+ *       200:
+ *         description: Obtiene una lista de razas de un tipo de animal especifico
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  properties:
+ *                    petTypeName:
+ *                      type: string
+ *       404:
+ *         description: No existe ninguna raza.
+ *       500:
+ *          description: Hubo un error
+ */
+router.get("/byType/:petTypeName", getPetBreedsByType);
+
 
 export default router;

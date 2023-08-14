@@ -1,4 +1,5 @@
 import { PetBreed } from "../../models/PetBreed.js";
+import { PetType } from "../../models/PetType.js";
 
 export async function createPetBreed(data) {
   const { petBreedName, idPetType } = data;
@@ -51,6 +52,22 @@ export async function getPetBreedById(idPetBreed) {
     throw error;
   }
 }
+
+
+export async function getPetBreedsByPetType(petTypeName) {
+  try {
+    const petBreed = await PetBreed.findOne({
+      attributes: ["petBreedName", "idPetBreed"],
+      include: [{model:PetType, as:'type', attributes: ["idPetType",'petTypeName'],where: {petTypeName, active: true }}],
+    });
+
+    return petBreed;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
 
 export async function getPetBreedByName(petBreedName) {
   try {

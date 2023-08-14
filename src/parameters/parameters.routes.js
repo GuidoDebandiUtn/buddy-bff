@@ -22,3 +22,5 @@ router.use("/serviceType", serviceTypeRoutes);
 router.use("/userType", userTypeRoutes);
 
 export default router;
+
+
