@@ -5,9 +5,10 @@ import {
   getPetById,
   updatePet,
 } from "../services/pet.service.js";
+import { getIdToken } from "../../helpers/authHelper.js";
 
 export async function petCreate(req, res) {
-  const { idUser } = req.params;
+  const idUser = await getIdToken(req.header("auth-token"));
 
   try {
     const newPet = await createPet(req.body, idUser);
@@ -21,7 +22,7 @@ export async function petCreate(req, res) {
 }
 
 export async function getPets(req, res) {
-  const { idUser } = req.params;
+  const idUser = await getIdToken(req.header("auth-token"));
 
   try {
     const pets = await getAllPets(idUser);

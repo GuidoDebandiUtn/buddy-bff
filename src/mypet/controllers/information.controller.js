@@ -1,4 +1,5 @@
 import {
+  archiveInformation,
   createInformation,
   deleteInformation,
   getAllInformation,
@@ -88,11 +89,33 @@ export async function informationDelete(req, res) {
         .json({ message: "No existe información con ese id" });
     }
 
-    await deleteInformation(idInformation, req.body);
+    await deleteInformation(idInformation);
 
     return res
       .status(200)
       .json({ message: "Se ha dado de baja correctamente la información" });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export async function informationArchive(req, res) {
+  const { idInformation } = req.params;
+
+  try {
+    const information = await getInformationById(idInformation);
+
+    if (!information[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe información con ese id" });
+    }
+
+    await archiveInformation(idInformation, information[0].archive);
+
+    return res
+      .status(200)
+      .json({ message: "Se ha actualizado correctamente la información" });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

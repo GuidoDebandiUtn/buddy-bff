@@ -37,7 +37,7 @@ export async function createVaccine(data, idPet) {
 export async function getAllVaccines(idPet) {
   try {
     const query = `
-        SELECT titleVaccine, descriptionVaccine
+        SELECT idVaccine, titleVaccine, descriptionVaccine
         FROM vaccines
         WHERE idPet = "${idPet}" and active = true`;
 
@@ -55,7 +55,7 @@ export async function getAllVaccines(idPet) {
 export async function getVaccineById(idVaccine) {
   try {
     const query = `
-        SELECT titleVaccine, descriptionVaccine
+        SELECT idVaccine, titleVaccine, descriptionVaccine
         FROM vaccines
         WHERE idVaccine = "${idVaccine}"`;
 

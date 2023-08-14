@@ -5,8 +5,8 @@ import {
   getEstablishmentByMail,
   updateEstablishment,
 } from "../services/establishment.service.js";
-import { getIdToken } from "../helpers/authHelper.js";
-import { validateMail } from "../helpers/mailHelper.js";
+import { getIdToken } from "../../helpers/authHelper.js";
+import { validateMail } from "../../helpers/mailHelper.js";
 import { changeStateUser } from "../services/stateUser.service.js";
 import { getUserStateByName } from "../services/userState.service.js";
 import { destroyUser, getUserById } from "../services/user.service.js";

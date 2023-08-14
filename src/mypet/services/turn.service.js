@@ -39,7 +39,7 @@ export async function createTurn(data, idPet) {
 export async function getAllTurns(idPet) {
   try {
     const query = `
-        SELECT titleTurn, descriptionTurn
+        SELECT idTurn, titleTurn, descriptionTurn
         FROM turns
         WHERE idPet = "${idPet}" and active = true`;
 
@@ -57,7 +57,7 @@ export async function getAllTurns(idPet) {
 export async function getTurnById(idTurn) {
   try {
     const query = `
-            SELECT titleTurn, descriptionTurn
+            SELECT idTurn, titleTurn, descriptionTurn
             FROM turns
             WHERE idTurn = "${idTurn}"`;
 

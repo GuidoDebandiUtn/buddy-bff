@@ -37,7 +37,7 @@ export async function createInformation(data, idPet) {
 export async function getAllInformation(idPet) {
   try {
     const query = `
-        SELECT titleInformation, descriptionInformation
+        SELECT idInformation, titleInformation, descriptionInformation, archive
         FROM information
         WHERE idPet = "${idPet}" and active = true`;
 
@@ -55,7 +55,7 @@ export async function getAllInformation(idPet) {
 export async function getInformationById(idInformation) {
   try {
     const query = `
-            SELECT titleInformation, descriptionInformation
+            SELECT idInformation, titleInformation, descriptionInformation, archive
             FROM information
             WHERE idInformation = "${idInformation}"`;
 
@@ -100,6 +100,27 @@ export async function deleteInformation(idInformation) {
       { active: false, updatedDate: new Date() },
       { where: { idInformation }, returning: true }
     );
+
+    return;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function archiveInformation(idInformation, archive) {
+  try {
+    const updates = {};
+    const updateOptions = { where: { idInformation } };
+
+    if (archive) {
+      updates.archive = false;
+    } else {
+      updates.archive = true;
+    }
+
+    updates.updatedDate = new Date();
+
+    await Information.update(updates, updateOptions);
 
     return;
   } catch (error) {

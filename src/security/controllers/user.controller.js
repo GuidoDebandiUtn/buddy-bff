@@ -1,5 +1,5 @@
-import { getIdToken } from "../helpers/authHelper.js";
-import { validateMail } from "../helpers/mailHelper.js";
+import { getIdToken } from "../../helpers/authHelper.js";
+import { validateMail } from "../../helpers/mailHelper.js";
 import { changeStateUser } from "../services/stateUser.service.js";
 import {
   createUser,

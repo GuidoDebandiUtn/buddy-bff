@@ -5,7 +5,7 @@ import {
   userValidate,
 } from "../services/user.service.js";
 import { findToken, insertToken } from "../services/token.service.js";
-import { resetPasswordMail } from "../helpers/mailHelper.js";
+import { resetPasswordMail } from "../../helpers/mailHelper.js";
 
 export async function login(req, res) {
   try {

@@ -35,7 +35,7 @@ export async function createPet(data, idUser) {
 export async function getAllPets(idUser) {
   try {
     const query = `
-        SELECT petName, birthDate
+        SELECT idPet, petName, birthDate
         FROM pets
         WHERE idUser = "${idUser}" and active = true`;
 
@@ -53,7 +53,7 @@ export async function getAllPets(idUser) {
 export async function getPetById(idPet) {
   try {
     const query = `
-            SELECT petName, birthDate
+            SELECT idPet, petName, birthDate
             FROM pets
             WHERE idPet = "${idPet}"`;
 

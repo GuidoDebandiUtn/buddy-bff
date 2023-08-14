@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   getInformation,
   getInformations,
+  informationArchive,
   informationCreate,
   informationDelete,
   informationUpdate,
@@ -155,5 +156,28 @@ router.put("/:idPet/:idInformation", informationUpdate);
  *          description: Hubo un error
  */
 router.delete("/:idPet/:idInformation", informationDelete);
+
+/**
+ * @swagger
+ * /mypet/information/{idPet}/{idInformation}/archive:
+ *   put:
+ *     summary: Archiva o desarchiva una información de una mascota
+ *     tags: [INFO]
+ *     responses:
+ *       200:
+ *         description: Información actualizada exitosamente.
+ *         content:
+ *            application/json:
+ *              schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *       404:
+ *         description: No existe ninguna información con ese id.
+ *       500:
+ *          description: Hubo un error
+ */
+router.put("/:idPet/:idInformation/archive", informationArchive);
 
 export default router;

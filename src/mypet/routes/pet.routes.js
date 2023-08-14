@@ -18,7 +18,7 @@ const router = Router();
 
 /**
  * @swagger
- * /mypet/pet/{idUser}:
+ * /mypet/pet/:
  *   post:
  *     summary: Crea una nueva mascota
  *     tags: [PETS]
@@ -46,11 +46,11 @@ const router = Router();
  *       500:
  *          description: Hubo un error
  */
-router.post("/:idUser", petCreate);
+router.post("/", petCreate);
 
 /**
  * @swagger
- * /mypet/pet/{idUser}:
+ * /mypet/pet/:
  *   get:
  *     summary: Obtiene una lista de mascota activas de un usuario
  *     tags: [PETS]
@@ -72,11 +72,11 @@ router.post("/:idUser", petCreate);
  *       500:
  *          description: Hubo un error
  */
-router.get("/:idUser", getPets);
+router.get("/", getPets);
 
 /**
  * @swagger
- * /mypet/pet/{idUser}/{idPet}:
+ * /mypet/pet/{idPet}:
  *   get:
  *     summary: Obtiene la mascota por el id
  *     tags: [PETS]
@@ -97,11 +97,11 @@ router.get("/:idUser", getPets);
  *       500:
  *          description: Hubo un error
  */
-router.get("/:idUser/:idPet", getPet);
+router.get("/:idPet", getPet);
 
 /**
  * @swagger
- * /mypet/pet/{idUser}/{idPet}:
+ * /mypet/pet/{idPet}:
  *   put:
  *     summary: Actualiza una mascota
  *     tags: [PETS]
@@ -131,11 +131,11 @@ router.get("/:idUser/:idPet", getPet);
  *       500:
  *          description: Hubo un error
  */
-router.put("/:idUser/:idPet", petUpdate);
+router.put("/:idPet", petUpdate);
 
 /**
  * @swagger
- * /mypet/pet/{idUser}/{idPet}:
+ * /mypet/pet/{idPet}:
  *   delete:
  *     summary: Dar de baja una mascota
  *     tags: [PETS]
@@ -154,6 +154,6 @@ router.put("/:idUser/:idPet", petUpdate);
  *       500:
  *          description: Hubo un error
  */
-router.delete("/:idUser/:idPet", petDelete);
+router.delete("/:idPet", petDelete);
 
 export default router;
