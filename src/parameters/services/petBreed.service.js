@@ -56,9 +56,9 @@ export async function getPetBreedById(idPetBreed) {
 
 export async function getPetBreedsByPetType(petTypeName) {
   try {
-    const petBreed = await PetBreed.findOne({
+    const petBreed = await PetBreed.findAll({
       attributes: ["petBreedName", "idPetBreed"],
-      include: [{model:PetType, as:'type', attributes: ["idPetType",'petTypeName'],where: {petTypeName, active: true }}],
+      include: [{model:PetType, as:'type', attributes: [],where: {petTypeName, active: true }}],
     });
 
     return petBreed;
