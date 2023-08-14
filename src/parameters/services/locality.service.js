@@ -26,7 +26,7 @@ export async function getAllLocalities() {
   try {
     const localities = await Locality.findAll({
       where: { active: true },
-      attributes: ["localityName"],
+      attributes: ["idLocality","localityName"],
     });
 
     return localities;

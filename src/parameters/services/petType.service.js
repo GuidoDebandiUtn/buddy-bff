@@ -31,7 +31,7 @@ export async function createPetType(data) {
 export async function getAllPetTypes() {
   try {
     const petTypes = await PetType.findAll({
-      attributes: ["petTypeName"],
+      attributes: ["idPetType","petTypeName"],
       where: { active: true },
     });
 

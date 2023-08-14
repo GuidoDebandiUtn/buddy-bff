@@ -24,7 +24,7 @@ export async function getAllCountries() {
   try {
     const countries = await Country.findAll({
       where: { active: true },
-      attributes: ["countryName"],
+      attributes: ["countryName","IdCountry"],
     });
 
     return countries;

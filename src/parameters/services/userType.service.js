@@ -22,7 +22,7 @@ export async function createUserType(data) {
 export async function getAllUserTypes() {
   try {
     const userTypes = await UserType.findAll({
-      attributes: ["userTypeName"],
+      attributes: ["idUserType","userTypeName"],
       where: { active: true },
     });
 

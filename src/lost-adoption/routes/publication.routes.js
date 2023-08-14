@@ -53,7 +53,7 @@ router.get('/',getPublications);
 
 /**
  * @swagger
- * /publications/publication/search:
+ * /publications/publication:
  *   POST:
  *     summary: Crea una nueva publicacion.
  *     tags: [PUBLICATION]

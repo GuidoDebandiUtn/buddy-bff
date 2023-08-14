@@ -27,7 +27,7 @@ export async function getAllRegions() {
   try {
     const regions = await Region.findAll({
       where: { active: true },
-      attributes: ["regionName"],
+      attributes: ["idRegion","regionName"],
     });
 
     return regions;

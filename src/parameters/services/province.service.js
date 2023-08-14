@@ -27,7 +27,7 @@ export async function getAllProvinces() {
   try {
     const provinces = await Province.findAll({
       where: { active: true },
-      attributes: ["provinceName"],
+      attributes: ["idProvince","provinceName"],
     });
 
     return provinces;

@@ -30,7 +30,7 @@ export async function createPetBreed(data) {
 export async function getAllPetBreeds() {
   try {
     const petBreeds = await PetBreed.findAll({
-      attributes: ["petBreedName"],
+      attributes: ["idPetBreed","petBreedName"],
       where: { active: true },
     });
     return petBreeds;

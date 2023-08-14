@@ -22,7 +22,7 @@ export async function createServiceType(data) {
 export async function getAllServiceTypes() {
   try {
     const serviceTypes = await ServiceType.findAll({
-      attributes: ["serviceTypeName"],
+      attributes: ["idServiceType","serviceTypeName"],
       where: { active: true },
     });
 

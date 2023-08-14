@@ -22,7 +22,7 @@ export async function createPetColor(data) {
 export async function getAllPetColors() {
   try {
     const petColors = await PetColor.findAll({
-      attributes: ["petColorName"],
+      attributes: ["idPetColor","petColorName"],
       where: { active: true },
     });
 
