@@ -17,7 +17,7 @@ export async function userCreate(req, res) {
   try {
     const user = await getUserByMail(data.mail);
 
-    if (user) {
+    if (user[0]) {
       return res
         .status(400)
         .json({ message: "Este mail ya se necuentra en uso" });
@@ -25,7 +25,7 @@ export async function userCreate(req, res) {
 
     const newUser = await createUser(data);
 
-    await validateMail(newUser.userName, newUser.mail, newUser.idUser);
+    await validateMail(newUser.mail, newUser.idUser);
 
     return res
       .status(201)

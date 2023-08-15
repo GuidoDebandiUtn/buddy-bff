@@ -12,7 +12,7 @@ export async function localityCreate(req, res) {
   try {
     const duplicate = await getLocalityByName(req.body.localityName);
 
-    if (duplicate) {
+    if (duplicate[0]) {
       return res
         .status(400)
         .json({ message: "Ya existe una localidad con ese nombre" });
@@ -20,7 +20,7 @@ export async function localityCreate(req, res) {
 
     const region = await getRegionById(req.body.idRegion);
 
-    if (!region) {
+    if (!region[0]) {
       return res
         .status(400)
         .json({ message: "Ya existe una localidad con ese nombre" });
@@ -57,7 +57,7 @@ export async function getLocality(req, res) {
   try {
     const locality = await getLocalityById(idLocality);
 
-    if (!locality) {
+    if (!locality[0]) {
       return res
         .status(404)
         .json({ message: "No existe ninguna localidad con este id" });
@@ -76,14 +76,14 @@ export async function localityUpdate(req, res) {
   try {
     const locality = await getLocalityById(idLocality);
 
-    if (!locality) {
+    if (!locality[0]) {
       return res
         .status(404)
         .json({ message: "No existe ninguna localidad con este id" });
     }
     const duplicate = await getLocalityByName(req.body.localityName);
 
-    if (duplicate) {
+    if (duplicate[0]) {
       return res
         .status(400)
         .json({ message: "Ya existe una localidad con ese nombre" });
@@ -104,9 +104,9 @@ export async function localityUpdate(req, res) {
 export async function localityDelete(req, res) {
   const { idLocality } = req.params;
   try {
-    const locality = await getAllLocalities(idLocality);
+    const locality = await getLocalityById(idLocality);
 
-    if (!locality) {
+    if (!locality[0]) {
       return res
         .status(404)
         .json({ message: "No existe ninguna localidad con este id" });

@@ -8,26 +8,36 @@ import { findToken, insertToken } from "../services/token.service.js";
 import { resetPasswordMail } from "../../helpers/mailHelper.js";
 
 export async function login(req, res) {
+  const { password } = req.body;
+
   try {
     const user = await getUserByMail(req.body.mail);
 
-    if (!user) {
+    if (!user[0]) {
       return res
         .status(404)
         .json({ message: "No existe un usuario con ese mail" });
     }
 
-    if (!user.validated) {
+    if (!user[0].validated) {
       return res.status(400).json({ message: "Aun no ha validado el usuario" });
     }
 
-    const token = jwt.sign(
-      { idUser: user.idUser, mail: user.mail },
-      process.env.TOKEN_SECRET,
-      {
-        expiresIn: "30d",
-      }
-    );
+    let token;
+
+    if (password == user[0].password) {
+      token = jwt.sign(
+        { idUser: user[0].idUser, mail: user[0].mail },
+        process.env.TOKEN_SECRET,
+        {
+          expiresIn: "30d",
+        }
+      );
+    } else {
+      return res.status(400).json({
+        message: "Contraseña incorrecta",
+      });
+    }
 
     return res.status(200).header("auth-token", token).json({
       data: { token },
@@ -82,7 +92,7 @@ export async function validateUser(req, res) {
 
   try {
     const checkUser = await getUserById(idUser);
-
+    console.log(checkUser);
     if (!checkUser[0]) {
       return res
         .status(404)
@@ -103,13 +113,13 @@ export async function resetPassword(req, res) {
   try {
     const user = await getUserByMail(mail);
 
-    if (!user) {
+    if (!user[0]) {
       return res.status(404).json({
-        message: "No existe ningun usuario con ese id",
+        message: "No existe ningun usuario con ese mail",
       });
     }
 
-    await resetPasswordMail(user.userName, user.mail, user.idUser);
+    await resetPasswordMail(user[0].mail, user[0].idUser);
 
     res.status(200).json({ message: "Se ha enviado el mail" });
   } catch (error) {

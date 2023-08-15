@@ -17,7 +17,7 @@ export async function establishmentCreate(req, res) {
   try {
     const establishment = await getEstablishmentByMail(data.mail);
 
-    if (establishment) {
+    if (establishment[0]) {
       return res
         .status(400)
         .json({ message: "Este mail ya se necuentra en uso" });
@@ -25,11 +25,7 @@ export async function establishmentCreate(req, res) {
 
     const newEstablishment = await createEstablishment(data);
 
-    await validateMail(
-      newEstablishment.establishmentName,
-      newEstablishment.mail,
-      newEstablishment.idUser
-    );
+    await validateMail(newEstablishment.mail, newEstablishment.idUser);
 
     return res
       .status(201)

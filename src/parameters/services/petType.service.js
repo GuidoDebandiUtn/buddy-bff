@@ -1,4 +1,4 @@
-import { PetBreed } from "../../models/PetBreed.js";
+import { sequelize } from "../../database/database.js";
 import { PetType } from "../../models/PetType.js";
 
 export async function createPetType(data) {
@@ -30,9 +30,15 @@ export async function createPetType(data) {
 
 export async function getAllPetTypes() {
   try {
-    const petTypes = await PetType.findAll({
-      attributes: ["petTypeName"],
-      where: { active: true },
+    const query = `
+    SELECT idPetType, petTypeName
+    FROM pettypes
+    WHERE active = true
+    `;
+
+    const petTypes = await sequelize.query(query, {
+      model: PetType,
+      mapToModel: true,
     });
 
     return petTypes;
@@ -43,13 +49,16 @@ export async function getAllPetTypes() {
 
 export async function getPetTypeById(idPetType) {
   try {
-    const petType = await PetType.findOne({
-      attributes: ["idPetType", "petTypeName"],
-      where: { idPetType, active: true },
-      include: {
-        model: PetBreed,
-        attributes: ["petBreedName"],
-      },
+    const query = `
+    SELECT pettypes.idPetType, pettypes.petTypeName, petbreeds.petBreedName
+    FROM pettypes
+    LEFT JOIN petbreeds ON pettypes.idPetType = petbreeds.idPetType
+    WHERE petTypes.idPetType = '${idPetType}'
+    `;
+
+    const petType = await sequelize.query(query, {
+      model: PetType,
+      mapToModel: true,
     });
 
     return petType;
@@ -60,9 +69,15 @@ export async function getPetTypeById(idPetType) {
 
 export async function getPetTypeByName(petTypeName) {
   try {
-    const petType = await PetType.findOne({
-      attributes: ["idPetType", "petTypeName"],
-      where: { petTypeName, active: true },
+    const query = `
+    SELECT idPetType, petTypeName
+    FROM pettypes
+    WHERE petTypeName = '${petTypeName.toUpperCase()}'
+    `;
+
+    const petType = await sequelize.query(query, {
+      model: PetType,
+      mapToModel: true,
     });
 
     return petType;

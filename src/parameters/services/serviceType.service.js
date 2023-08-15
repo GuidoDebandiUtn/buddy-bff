@@ -1,4 +1,5 @@
 import { ServiceType } from "../../models/ServiceType.js";
+import { sequelize } from "../../database/database.js";
 
 export async function createServiceType(data) {
   const { serviceTypeName } = data;
@@ -21,9 +22,15 @@ export async function createServiceType(data) {
 
 export async function getAllServiceTypes() {
   try {
-    const serviceTypes = await ServiceType.findAll({
-      attributes: ["serviceTypeName"],
-      where: { active: true },
+    const query = `
+    SELECT idServiceType, serviceTypeName
+    FROM servicetypes
+    WHERE active = true
+    `;
+
+    const serviceTypes = await sequelize.query(query, {
+      model: ServiceType,
+      mapToModel: true,
     });
 
     return serviceTypes;
@@ -34,9 +41,15 @@ export async function getAllServiceTypes() {
 
 export async function getServiceTypeById(idServiceType) {
   try {
-    const serviceType = await ServiceType.findOne({
-      attributes: ["idServiceType", "serviceTypeName"],
-      where: { idServiceType, active: true },
+    const query = `
+    SELECT idServiceType, serviceTypeName
+    FROM servicetypes
+    WHERE idServiceType = '${idServiceType}'
+    `;
+
+    const serviceType = await sequelize.query(query, {
+      model: ServiceType,
+      mapToModel: true,
     });
 
     return serviceType;
@@ -47,9 +60,15 @@ export async function getServiceTypeById(idServiceType) {
 
 export async function getServiceTypeByName(serviceTypeName) {
   try {
-    const serviceType = await ServiceType.findOne({
-      attributes: ["idServiceType", "serviceTypeName"],
-      where: { serviceTypeName: serviceTypeName.toUpperCase(), active: true },
+    const query = `
+    SELECT idServiceType, serviceTypeName
+    FROM servicetypes
+    WHERE serviceTypeName = '${serviceTypeName.toUpperCase()}'
+    `;
+
+    const serviceType = await sequelize.query(query, {
+      model: ServiceType,
+      mapToModel: true,
     });
 
     return serviceType;

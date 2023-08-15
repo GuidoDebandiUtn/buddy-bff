@@ -1,8 +1,8 @@
 import { Province } from "../../models/Province.js";
-import { Region } from "../../models/Region.js";
+import { sequelize } from "../../database/database.js";
 
 export async function createProvince(data) {
-  const { provinceName, idCountry } = data;
+  const { provinceName, idProvince } = data;
 
   try {
     const province = await Province.create(
@@ -10,10 +10,10 @@ export async function createProvince(data) {
         provinceName: provinceName.toUpperCase(),
         createdDate: new Date(),
         updatedDate: new Date(),
-        idCountry,
+        idProvince,
       },
       {
-        fields: ["provinceName", "createdDate", "updatedDate", "idCountry"],
+        fields: ["provinceName", "createdDate", "updatedDate", "idProvince"],
       }
     );
 
@@ -25,9 +25,15 @@ export async function createProvince(data) {
 
 export async function getAllProvinces() {
   try {
-    const provinces = await Province.findAll({
-      where: { active: true },
-      attributes: ["provinceName"],
+    const query = `
+    SELECT idProvince, provinceName
+    FROM provinces
+    WHERE active = true
+    `;
+
+    const provinces = await sequelize.query(query, {
+      model: Province,
+      mapToModel: true,
     });
 
     return provinces;
@@ -38,13 +44,16 @@ export async function getAllProvinces() {
 
 export async function getProvinceById(idProvince) {
   try {
-    const province = await Province.findOne({
-      where: { idProvince, active: true },
-      attributes: ["provinceName"],
-      include: {
-        model: Region,
-        attributes: ["regionName"],
-      },
+    const query = `
+    SELECT provinces.idProvince, provinces.provinceName, regions.regionName
+    FROM provinces
+    LEFT JOIN provinces ON provinces.idProvince = regions.idProvince
+    WHERE provinces.idProvince = '${idProvince}'
+    `;
+
+    const province = await sequelize.query(query, {
+      model: Province,
+      mapToModel: true,
     });
 
     return province;
@@ -55,9 +64,15 @@ export async function getProvinceById(idProvince) {
 
 export async function getProvinceByName(provinceName) {
   try {
-    const province = await Province.findOne({
-      where: { provinceName: provinceName.toUpperCase(), active: true },
-      attributes: ["idProvince", "provinceName"],
+    const query = `
+    SELECT idProvince, provinceName
+    FROM provinces
+    WHERE provinceName = '${provinceName.toUpperCase()}'
+    `;
+
+    const province = await sequelize.query(query, {
+      model: Province,
+      mapToModel: true,
     });
 
     return province;

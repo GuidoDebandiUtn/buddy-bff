@@ -11,7 +11,7 @@ export async function countryCreate(req, res) {
   try {
     const duplicate = await getCountryByName(req.body.countryName);
 
-    if (duplicate) {
+    if (duplicate[0]) {
       return res
         .status(400)
         .json({ message: "Ya existe un pais con este nombre" });
@@ -49,7 +49,7 @@ export async function getCountry(req, res) {
   try {
     const country = await getCountryById(idCountry);
 
-    if (!country) {
+    if (!country[0]) {
       return res
         .status(404)
         .json({ message: "No existe ningun país con este id" });
@@ -68,7 +68,7 @@ export async function countryUpdate(req, res) {
 
   try {
     const country = await getCountryById(idCountry);
-    if (!country) {
+    if (!country[0]) {
       return res
         .status(404)
         .json({ message: "No existe ningun país con este id" });
@@ -98,7 +98,7 @@ export async function countryDelete(req, res) {
   try {
     const country = await getCountryById(idCountry);
 
-    if (!country) {
+    if (!country[0]) {
       return res
         .status(404)
         .json({ message: "No existe ningun país con este id" });

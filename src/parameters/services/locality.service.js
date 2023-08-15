@@ -1,4 +1,5 @@
 import { Locality } from "../../models/Locality.js";
+import { sequelize } from "../../database/database.js";
 
 export async function createLocality(data) {
   const { localityName, idRegion } = data;
@@ -24,9 +25,15 @@ export async function createLocality(data) {
 
 export async function getAllLocalities() {
   try {
-    const localities = await Locality.findAll({
-      where: { active: true },
-      attributes: ["localityName"],
+    const query = `
+    SELECT idLocality, localityName
+    FROM countries
+    WHERE active = true
+    `;
+
+    const localities = await sequelize.query(query, {
+      model: Locality,
+      mapToModel: true,
     });
 
     return localities;
@@ -37,10 +44,17 @@ export async function getAllLocalities() {
 
 export async function getLocalityById(idLocality) {
   try {
-    const locality = await Locality.findOne({
-      where: { idLocality, active: true },
-      attributes: ["localityName"],
+    const query = `
+    SELECT idLocality, localityName
+    FROM countries
+    WHERE idLocality = '${idLocality}'
+    `;
+
+    const locality = await sequelize.query(query, {
+      model: Locality,
+      mapToModel: true,
     });
+
     return locality;
   } catch (error) {
     throw error;
@@ -49,9 +63,15 @@ export async function getLocalityById(idLocality) {
 
 export async function getLocalityByName(localityName) {
   try {
-    const locality = await Locality.findOne({
-      where: { localityName: localityName.toUpperCase(), active: true },
-      attributes: ["idLocality", "localityName"],
+    const query = `
+    SELECT idLocality, localityName
+    FROM countries
+    WHERE localityName = '${localityName.toUpperCase()}'
+    `;
+
+    const locality = await sequelize.query(query, {
+      model: Locality,
+      mapToModel: true,
     });
 
     return locality;

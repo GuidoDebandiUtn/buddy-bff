@@ -12,7 +12,7 @@ export async function regionCreate(req, res) {
   try {
     const duplicate = await getRegionByName(req.body.regionName);
 
-    if (duplicate) {
+    if (duplicate[0]) {
       return res
         .status(400)
         .json({ message: "Ya existe una region con ese nombre" });
@@ -20,7 +20,7 @@ export async function regionCreate(req, res) {
 
     const province = await getProvinceById(req.body.idProvince);
 
-    if (!province) {
+    if (!province[0]) {
       return res
         .status(404)
         .json({ message: "No existe ninguna provincia con ese id" });
@@ -57,7 +57,7 @@ export async function getRegion(req, res) {
   try {
     const region = await getRegionById(idRegion);
 
-    if (!region) {
+    if (!region[0]) {
       return res
         .status(404)
         .json({ message: "No existe ninguna region con este id" });
@@ -77,7 +77,7 @@ export async function regionUpdate(req, res) {
   try {
     const region = await getRegionById(idRegion);
 
-    if (!region) {
+    if (!region[0]) {
       return res
         .status(404)
         .json({ message: "No existe ninguna region con este id" });
@@ -85,7 +85,7 @@ export async function regionUpdate(req, res) {
 
     const duplicate = await getRegionByName(req.body.regionName);
 
-    if (duplicate) {
+    if (duplicate[0]) {
       return res
         .status(400)
         .json({ message: "Ya existe una region con ese nombre" });
@@ -108,7 +108,7 @@ export async function regionDelete(req, res) {
   try {
     const region = await getRegionById(idRegion);
 
-    if (!region) {
+    if (!region[0]) {
       return res
         .status(404)
         .json({ message: "No existe ninguna region con este id" });

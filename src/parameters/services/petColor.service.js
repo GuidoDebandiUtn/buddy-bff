@@ -1,4 +1,5 @@
 import { PetColor } from "../../models/PetColor.js";
+import { sequelize } from "../../database/database.js";
 
 export async function createPetColor(data) {
   const { petColorName } = data;
@@ -21,9 +22,15 @@ export async function createPetColor(data) {
 
 export async function getAllPetColors() {
   try {
-    const petColors = await PetColor.findAll({
-      attributes: ["petColorName"],
-      where: { active: true },
+    const query = `
+    SELECT idPetColor, petColorName
+    FROM petcolors
+    WHERE active = true
+    `;
+
+    const petColors = await sequelize.query(query, {
+      model: PetColor,
+      mapToModel: true,
     });
 
     return petColors;
@@ -34,9 +41,15 @@ export async function getAllPetColors() {
 
 export async function getPetColorById(idPetColor) {
   try {
-    const petColor = await PetColor.findOne({
-      attributes: ["petColorName", "idPetColor"],
-      where: { idPetColor, active: true },
+    const query = `
+    SELECT idPetColor, petColorName
+    FROM petcolors
+    WHERE idPetColor = '${idPetColor}'
+    `;
+
+    const petColor = await sequelize.query(query, {
+      model: PetColor,
+      mapToModel: true,
     });
 
     return petColor;
@@ -47,9 +60,15 @@ export async function getPetColorById(idPetColor) {
 
 export async function getPetColorByName(petColorName) {
   try {
-    const petColor = await PetColor.findOne({
-      attributes: ["petColorName", "idPetColor"],
-      where: { petColorName: petColorName.toUpperCase(), active: true },
+    const query = `
+    SELECT idPetColor, petColorName
+    FROM petcolors
+    WHERE petColorName = '${petColorName.toUpperCase()}'
+    `;
+
+    const petColor = await sequelize.query(query, {
+      model: PetColor,
+      mapToModel: true,
     });
 
     return petColor;

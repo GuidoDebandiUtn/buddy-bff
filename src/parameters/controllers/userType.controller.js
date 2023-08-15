@@ -11,7 +11,7 @@ export async function userTypeCreate(req, res) {
   try {
     const duplicate = await getUserTypeByName(req.body.userTypeName);
 
-    if (duplicate) {
+    if (duplicate[0]) {
       return res
         .status(400)
         .json({ message: "Ya existe un tipo de usuario con este nombre" });
@@ -31,7 +31,7 @@ export async function getUserTypes(req, res) {
   try {
     const userTypes = await getAllUserTypes();
 
-    if (!userTypes) {
+    if (!userTypes[0]) {
       return res.status(404).json({ message: "No existen tipos de usuario" });
     }
 
@@ -49,7 +49,7 @@ export async function getUserType(req, res) {
   try {
     const userType = await getUserTypeById(idUserType);
 
-    if (!userType) {
+    if (!userType[0]) {
       return res
         .status(404)
         .json({ message: "No existe un tipo de usuario con este id" });
@@ -69,7 +69,7 @@ export async function userTypeUpdate(req, res) {
   try {
     const userType = await getUserTypeById(idUserType);
 
-    if (!userType) {
+    if (!userType[0]) {
       return res
         .status(404)
         .json({ message: "No existe un tipo de usuario con este id" });
@@ -77,7 +77,7 @@ export async function userTypeUpdate(req, res) {
 
     const duplicate = await getUserTypeByName(req.body.userTypeName);
 
-    if (duplicate) {
+    if (duplicate[0]) {
       return res
         .status(400)
         .json({ message: "Ya existe un tipo de usuario con este nombre" });
@@ -101,7 +101,7 @@ export async function userTypeDelete(req, res) {
   try {
     const userType = await getUserTypeById(idUserType);
 
-    if (!userType) {
+    if (!userType[0]) {
       return res
         .status(404)
         .json({ message: "No existe un tipo de usuario con este id" });

@@ -11,7 +11,7 @@ export async function petColorCreate(req, res) {
   try {
     const duplicate = await getPetColorByName(req.body.petColorName);
 
-    if (duplicate) {
+    if (duplicate[0]) {
       return res.status(400).json({
         message: "Ya existe un color de mascota con ese nombre",
       });
@@ -31,7 +31,7 @@ export async function getPetColors(req, res) {
   try {
     const petColors = await getAllPetColors();
 
-    if (!petColors) {
+    if (!petColors[0]) {
       return res.status(404).json({
         message: "No existe ningún color de mascota",
       });
@@ -50,7 +50,7 @@ export async function getPetColor(req, res) {
   try {
     const petColor = await getPetColorById(idPetColor);
 
-    if (!petColor) {
+    if (!petColor[0]) {
       return res.status(404).json({
         message: "No existe ningún color de mascota con ese id",
       });
@@ -69,7 +69,7 @@ export async function petColorUpdate(req, res) {
   try {
     const petColor = await getPetColorById(idPetColor);
 
-    if (!petColor) {
+    if (!petColor[0]) {
       return res.status(404).json({
         message: "No existe ningún color de mascota con ese id",
       });
@@ -77,7 +77,7 @@ export async function petColorUpdate(req, res) {
 
     const duplicate = await getPetColorByName(req.body.petColorName);
 
-    if (duplicate) {
+    if (duplicate[0]) {
       return res.status(400).json({
         message: "Ya existe un color de mascota con ese nombre",
       });
@@ -100,7 +100,7 @@ export async function petColorDelete(req, res) {
   try {
     const petColor = await getPetColorById(idPetColor);
 
-    if (!petColor) {
+    if (!petColor[0]) {
       return res.status(404).json({
         message: "No existe ningún color de mascota con ese id",
       });
