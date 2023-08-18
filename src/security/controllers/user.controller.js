@@ -84,7 +84,7 @@ export async function userUpdate(req, res) {
 
     await updateUser(idUser, req.body);
 
-    res
+    return res
       .status(200)
       .json({ message: "Se ha actualizado correctamente el usuario" });
   } catch (error) {
@@ -110,7 +110,7 @@ export async function userDelete(req, res) {
 
     await changeStateUser(idUser, userState.idUserState, idUserAuthor);
 
-    res.status(200).json({ message: "El usuario se ha dado de baja" });
+    return res.status(200).json({ message: "El usuario se ha dado de baja" });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -142,27 +142,9 @@ export async function changeState(req, res) {
 
     await changeStateUser(idUser, userState.idUserState, idUserAuthor);
 
-    res.status(200).json({ message: "Se ha cambiado el estado del usuario" });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-}
-
-export async function changePassword(req, res) {
-  const { idUser } = req.params;
-
-  try {
-    const user = await getUserById(idUser);
-
-    if (!user[0]) {
-      return res.status(404).json({
-        message: "No existe ningun usuario con ese id",
-      });
-    }
-
-    await updateUser(idUser, req.body);
-
-    res.status(200).json({ message: "Se ha actualizado la contraseña" });
+    return res
+      .status(200)
+      .json({ message: "Se ha cambiado el estado del usuario" });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

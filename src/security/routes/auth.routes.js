@@ -4,6 +4,8 @@ import {
   logout,
   validateUser,
   resetPassword,
+  changePassword,
+  changePasswordPage,
 } from "../controllers/auth.controller.js";
 
 const router = Router();
@@ -106,5 +108,46 @@ router.get("/validateAccount/:idUser", validateUser);
  *        description: Hubo un error
  */
 router.post("/resetPassword", resetPassword);
+
+/**
+ * @swagger
+ * /security/auth/changeState/{idUser}:
+ *  put:
+ *    summary: Dar de baja un usuario
+ *    tags: [AUTH]
+ *    requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               password:
+ *                 type: string
+ *    responses:
+ *      200:
+ *        description: Se ha cambiado la contraseña
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *      404:
+ *        description: No se encuentra el usuario al que se le va a cambiar el estado ni el ususario autor
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *      500:
+ *        description: Hubo un error
+ */
+router.put("/changePassword/:idUser", changePassword);
+
+router.get("/changePassword/:idUser", changePasswordPage);
 
 export default router;

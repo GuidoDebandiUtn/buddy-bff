@@ -36,7 +36,7 @@ export async function resetPasswordMail(mail, idUser) {
             <p>Genera una contraseña nueva con este link: 
             <a href="${process.env.BACKEND_URL}:${
       process.env.PORT ?? 4000
-    }/auth/resetPassword/${idUser}">Reestablecer contraseña</a> </p>
+    }/security/auth/changePassword/${idUser}">Reestablecer contraseña</a> </p>
 
             <p>Si no pediste cambiar la contraseña, ignora el mensaje</p>
             <p>Equipo de BUDDY!<p>

@@ -151,23 +151,3 @@ export async function changeState(req, res) {
     return res.status(500).json({ error: error.message });
   }
 }
-
-export async function changePassword(req, res) {
-  const { idUser } = req.params;
-
-  try {
-    const user = await getEstablishmentById(idUser);
-
-    if (!user[0]) {
-      return res.status(404).json({
-        message: "No existe ningun establecimiento con ese id",
-      });
-    }
-
-    await updateEstablishment(idUser, req.body);
-
-    res.status(200).json({ message: "Se ha actualizado la contraseña" });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-}
