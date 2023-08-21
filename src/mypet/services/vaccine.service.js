@@ -2,13 +2,14 @@ import { Vaccine } from "../../models/Vaccine.js";
 import { sequelize } from "../../database/database.js";
 
 export async function createVaccine(data, idPet) {
-  const { titleVaccine, descriptionVaccine } = data;
+  const { titleVaccine, descriptionVaccine, vaccineDate } = data;
 
   try {
     const newVaccine = await Vaccine.create(
       {
         titleVaccine,
         descriptionVaccine,
+        vaccineDate,
         active: true,
         archive: false,
         createdDate: new Date(),
@@ -37,7 +38,7 @@ export async function createVaccine(data, idPet) {
 export async function getAllVaccines(idPet) {
   try {
     const query = `
-        SELECT idVaccine, titleVaccine, descriptionVaccine
+        SELECT idVaccine, titleVaccine, descriptionVaccine, vaccineDate
         FROM vaccines
         WHERE idPet = "${idPet}" and active = true`;
 
@@ -55,7 +56,7 @@ export async function getAllVaccines(idPet) {
 export async function getVaccineById(idVaccine) {
   try {
     const query = `
-        SELECT idVaccine, titleVaccine, descriptionVaccine
+        SELECT idVaccine, titleVaccine, descriptionVaccine, vaccineDate
         FROM vaccines
         WHERE idVaccine = "${idVaccine}"`;
 
