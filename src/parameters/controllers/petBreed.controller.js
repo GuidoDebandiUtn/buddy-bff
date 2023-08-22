@@ -13,7 +13,7 @@ export async function petBreedCreate(req, res) {
   try {
     const duplicate = await getPetBreedByName(req.body.petBreedName);
 
-    if (duplicate) {
+    if (duplicate[0]) {
       return res
         .status(400)
         .json({ message: "Ya existe una raza de mascota con ese nombre" });
@@ -21,7 +21,7 @@ export async function petBreedCreate(req, res) {
 
     const petType = await getPetTypeById(req.body.idPetType);
 
-    if (!petType) {
+    if (!petType[0]) {
       return res
         .status(404)
         .json({ message: "No existe ningun tipo de mascota con ese id" });
@@ -31,7 +31,7 @@ export async function petBreedCreate(req, res) {
 
     return res.status(201).json({ petBreed });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -40,7 +40,8 @@ export async function petBreedCreate(req, res) {
 export async function getPetBreeds(req, res) {
   try {
     const petBreeds = await getAllPetBreeds();
-    if (!petBreeds) {
+
+    if (!petBreeds[0]) {
       return res
         .status(404)
         .json({ message: "No existe ninguna raza de mascota" });
@@ -48,7 +49,7 @@ export async function getPetBreeds(req, res) {
 
     return res.status(200).json({ petBreeds });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -60,7 +61,7 @@ export async function getPetBreed(req, res) {
   try {
     const petBreed = await getPetBreedById(idPetBreed);
 
-    if (!petBreed) {
+    if (!petBreed[0]) {
       return res
         .status(404)
         .json({ message: "No existe ninguna raza de mascota con este id" });
@@ -68,7 +69,7 @@ export async function getPetBreed(req, res) {
 
     return res.status(200).json({ petBreed });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -80,7 +81,7 @@ export async function petBreedUpdate(req, res) {
   try {
     const petBreed = await getPetBreedById(idPetBreed);
 
-    if (!petBreed) {
+    if (!petBreed[0]) {
       return res
         .status(404)
         .json({ message: "No existe la raza de mascota con ese id" });
@@ -88,7 +89,7 @@ export async function petBreedUpdate(req, res) {
 
     const duplicate = await getPetBreedByName(req.body.petBreedName);
 
-    if (duplicate) {
+    if (duplicate[0]) {
       return res
         .status(400)
         .json({ message: "Ya existe una Raza de mascota con este nombre" });
@@ -100,7 +101,7 @@ export async function petBreedUpdate(req, res) {
       .status(200)
       .json({ message: "Se ha actualizado correctamente la raza de mascota" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -112,7 +113,7 @@ export async function petBreedDelete(req, res) {
   try {
     const petBreed = await getPetBreedById(idPetBreed);
 
-    if (!petBreed) {
+    if (!petBreed[0]) {
       return res
         .status(404)
         .json({ message: "No existe la raza de mascota con ese id" });
@@ -124,7 +125,7 @@ export async function petBreedDelete(req, res) {
       .status(200)
       .json({ message: "Se ha dado de baja correctamente la raza de mascota" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }

@@ -5,8 +5,8 @@ import {
   getEstablishmentByMail,
   updateEstablishment,
 } from "../services/establishment.service.js";
-import { getIdToken } from "../helpers/authHelper.js";
-import { validateMail } from "../helpers/mailHelper.js";
+import { getIdToken } from "../../helpers/authHelper.js";
+import { validateMail } from "../../helpers/mailHelper.js";
 import { changeStateUser } from "../services/stateUser.service.js";
 import { getUserStateByName } from "../services/userState.service.js";
 import { destroyUser, getUserById } from "../services/user.service.js";
@@ -17,7 +17,7 @@ export async function establishmentCreate(req, res) {
   try {
     const establishment = await getEstablishmentByMail(data.mail);
 
-    if (establishment) {
+    if (establishment[0]) {
       return res
         .status(400)
         .json({ message: "Este mail ya se necuentra en uso" });
@@ -25,18 +25,14 @@ export async function establishmentCreate(req, res) {
 
     const newEstablishment = await createEstablishment(data);
 
-    await validateMail(
-      newEstablishment.establishmentName,
-      newEstablishment.mail,
-      newEstablishment.idUser
-    );
+    await validateMail(newEstablishment.mail, newEstablishment.idUser);
 
     return res
       .status(201)
       .json({ message: "Se creó correctamente el establecimiento" });
   } catch (error) {
     await destroyUser(data.mail);
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -72,7 +68,7 @@ export async function getEstablishment(req, res) {
 
     return res.status(200).json(establishment);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -94,7 +90,7 @@ export async function establishmentUpdate(req, res) {
       .status(200)
       .json({ message: "Se ha actualizado correctamente el establecimiento" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -118,7 +114,7 @@ export async function establishmentDelete(req, res) {
 
     res.status(200).json({ message: "El establecimiento se ha dado de baja" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -152,26 +148,6 @@ export async function changeState(req, res) {
       .status(200)
       .json({ message: "Se ha cambiado el estado del establecimiento" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-export async function changePassword(req, res) {
-  const { idUser } = req.params;
-
-  try {
-    const user = await getEstablishmentById(idUser);
-
-    if (!user[0]) {
-      return res.status(404).json({
-        message: "No existe ningun establecimiento con ese id",
-      });
-    }
-
-    await updateEstablishment(idUser, req.body);
-
-    res.status(200).json({ message: "Se ha actualizado la contraseña" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 }

@@ -21,7 +21,7 @@ export async function userStateCreate(req, res) {
 
     return res.status(201).json(newUserState);
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -37,7 +37,7 @@ export async function getUserStates(req, res) {
 
     return res.status(200).json(userStates);
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -57,7 +57,7 @@ export async function getUserState(req, res) {
 
     return res.status(200).json(userState);
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -88,7 +88,7 @@ export async function userStateUpdate(req, res) {
       .status(200)
       .json({ message: "Se ha actualizado el UserState correctamente" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -108,7 +108,7 @@ export async function userStateDelete(req, res) {
       .status(200)
       .json({ message: "Se ha dado de baja este UserState" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }

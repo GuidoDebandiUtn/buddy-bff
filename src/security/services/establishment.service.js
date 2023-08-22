@@ -44,7 +44,7 @@ export async function createEstablishment(data) {
 export async function getAllEstablishments() {
   try {
     const query = `
-      SELECT users.mail, users.userName
+      SELECT users.idUser, users.mail, users.userName
       FROM users
       INNER JOIN (
         SELECT idUser, idUserState, MAX(createdDate) AS ultimaFecha
@@ -70,16 +70,9 @@ export async function getAllEstablishments() {
 export async function getEstablishmentById(idUser) {
   try {
     const query = `
-      SELECT users.idUser, users.mail, users.userName
+      SELECT idUser, mail, userName
       FROM users
-      INNER JOIN (
-        SELECT idUser, idUserState, MAX(createdDate) AS ultimaFecha
-        FROM stateUsers 
-        GROUP BY idUser
-      ) AS ultimosEstados ON users.idUser = ultimosEstados.idUser
-      INNER JOIN userStates ON ultimosEstados.idUserState = userStates.idUserState
-      INNER JOIN userTypes ON users.idUserType = userTypes.idUserType
-      WHERE userStates.userStateName IN ('ACTIVO','EN REVISIÓN') and userTypes.userTypeName = 'ESTABLECIMIENTO' and users.idUser = '${idUser}'
+      WHERE idUser = '${idUser}'
       `;
     const user = await sequelize.query(query, {
       model: User,
@@ -94,9 +87,15 @@ export async function getEstablishmentById(idUser) {
 
 export async function getEstablishmentByMail(mail) {
   try {
-    const user = await User.findOne({
-      attributes: ["idUser", "mail", "userName", "validated"],
-      where: { mail },
+    const query = `
+      SELECT idUser, mail, userName, validated
+      FROM users
+      WHERE mail = '${mail}'
+      `;
+
+    const user = await sequelize.query(query, {
+      model: User,
+      mapToModel: true,
     });
 
     return user;

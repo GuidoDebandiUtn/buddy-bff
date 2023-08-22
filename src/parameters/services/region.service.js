@@ -1,8 +1,8 @@
 import { Region } from "../../models/Region.js";
-import { Locality } from "../../models/Locality.js";
+import { sequelize } from "../../database/database.js";
 
 export async function createRegion(data) {
-  const { regionName, idProvince } = data;
+  const { regionName, idRegion } = data;
 
   try {
     const region = await Region.create(
@@ -10,10 +10,10 @@ export async function createRegion(data) {
         regionName: regionName.toUpperCase(),
         createdDate: new Date(),
         updatedDate: new Date(),
-        idProvince,
+        idRegion,
       },
       {
-        fields: ["regionName", "createdDate", "updatedDate", "idProvince"],
+        fields: ["regionName", "createdDate", "updatedDate", "idRegion"],
       }
     );
 
@@ -25,9 +25,15 @@ export async function createRegion(data) {
 
 export async function getAllRegions() {
   try {
-    const regions = await Region.findAll({
-      where: { active: true },
-      attributes: ["idRegion","regionName"],
+    const query = `
+    SELECT idRegion, regionName
+    FROM regions
+    WHERE active = true
+    `;
+
+    const regions = await sequelize.query(query, {
+      model: Region,
+      mapToModel: true,
     });
 
     return regions;
@@ -38,14 +44,18 @@ export async function getAllRegions() {
 
 export async function getRegionById(idRegion) {
   try {
-    const region = await Region.findOne({
-      where: { idRegion, active: true },
-      attributes: ["regionName"],
-      include: {
-        model: Locality,
-        attributes: ["localityName"],
-      },
+    const query = `
+    SELECT regions.idRegion, regions.regionName, localities.localityName
+    FROM regions
+    LEFT JOIN localities ON regions.idRegion = localities.idRegion
+    WHERE regions.idRegion = '${idRegion}'
+    `;
+
+    const region = await sequelize.query(query, {
+      model: Region,
+      mapToModel: true,
     });
+
     return region;
   } catch (error) {
     throw error;
@@ -54,10 +64,17 @@ export async function getRegionById(idRegion) {
 
 export async function getRegionByName(regionName) {
   try {
-    const region = await Region.findOne({
-      where: { regionName: regionName.toUpperCase(), active: true },
-      attributes: ["idRegion", "regionName"],
+    const query = `
+    SELECT idRegion, regionName
+    FROM regions
+    WHERE regionName = '${regionName.toUpperCase()}'
+    `;
+
+    const region = await sequelize.query(query, {
+      model: Region,
+      mapToModel: true,
     });
+
     return region;
   } catch (error) {
     throw error;

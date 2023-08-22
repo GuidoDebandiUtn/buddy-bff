@@ -11,7 +11,7 @@ export async function petTypeCreate(req, res) {
   try {
     const duplicate = await getPetTypeByName(req.body.petTypeName);
 
-    if (duplicate) {
+    if (duplicate[0]) {
       return res
         .status(400)
         .json({ message: "Ya existe un Tipo de mascota con este nombre" });
@@ -21,7 +21,7 @@ export async function petTypeCreate(req, res) {
 
     return res.status(201).json({ petType });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -31,7 +31,7 @@ export async function getPetTypes(req, res) {
   try {
     const petTypes = await getAllPetTypes();
 
-    if (!petTypes) {
+    if (!petTypes[0]) {
       return res
         .status(404)
         .json({ message: "No existe ningun tipo de mascota" });
@@ -39,7 +39,7 @@ export async function getPetTypes(req, res) {
 
     return res.status(200).json({ petTypes });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -51,7 +51,7 @@ export async function getPetType(req, res) {
   try {
     const petType = await getPetTypeById(idPetType);
 
-    if (!petType) {
+    if (!petType[0]) {
       return res
         .status(404)
         .json({ message: "No existe el tipo de mascota con ese id" });
@@ -59,7 +59,7 @@ export async function getPetType(req, res) {
 
     return res.status(200).json({ petType });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -71,7 +71,7 @@ export async function petTypeUpdate(req, res) {
   try {
     const petType = await getPetTypeById(idPetType);
 
-    if (!petType) {
+    if (!petType[0]) {
       return res
         .status(404)
         .json({ message: "No existe el tipo de mascota con ese id" });
@@ -79,7 +79,7 @@ export async function petTypeUpdate(req, res) {
 
     const duplicate = await getPetTypeByName(req.body.petTypeName);
 
-    if (duplicate) {
+    if (duplicate[0]) {
       return res
         .status(400)
         .json({ message: "Ya existe un Tipo de mascota con este nombre" });
@@ -91,7 +91,7 @@ export async function petTypeUpdate(req, res) {
       .status(200)
       .json({ message: "Se ha actualizado correctamente el tipo de mascota" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -103,7 +103,7 @@ export async function petTypeDelete(req, res) {
   try {
     const petType = await getPetTypeById(idPetType);
 
-    if (!petType) {
+    if (!petType[0]) {
       return res
         .status(404)
         .json({ message: "No existe el tipo de mascota con ese id" });
@@ -115,7 +115,7 @@ export async function petTypeDelete(req, res) {
       .status(200)
       .json({ message: "Se ha dado de baja correctamente el tipo de mascota" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }

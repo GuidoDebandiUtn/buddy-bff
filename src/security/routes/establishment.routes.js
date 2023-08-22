@@ -1,6 +1,5 @@
 import { Router } from "express";
 import {
-  changePassword,
   changeState,
   establishmentCreate,
   establishmentDelete,
@@ -219,44 +218,5 @@ router.delete("/:idUser", verifyToken, establishmentDelete);
  *        description: Hubo un error
  */
 router.post("/changeState/:idUser/:userStateName", verifyToken, changeState);
-
-/**
- * @swagger
- * /security/establishment/changeState/{idUser}:
- *  put:
- *    summary: Dar de baja un establecimiento
- *    tags: [ESTABLISHMENT]
- *    requestBody:
- *       required: false
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               password:
- *                 type: string
- *    responses:
- *      200:
- *        description: Se ha cambiado la contraseña
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *      404:
- *        description: No se encuentra el establecimiento al que se le va a cambiar el estado ni el ususario autor
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *      500:
- *        description: Hubo un error
- */
-router.put("/changePassword/:idUser", changePassword);
 
 export default router;

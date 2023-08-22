@@ -1,5 +1,5 @@
 import { Country } from "../../models/Country.js";
-import { Province } from "../../models/Province.js";
+import { sequelize } from "../../database/database.js";
 
 export async function createCountry(data) {
   const { countryName } = data;
@@ -22,9 +22,15 @@ export async function createCountry(data) {
 
 export async function getAllCountries() {
   try {
-    const countries = await Country.findAll({
-      where: { active: true },
-      attributes: ["countryName","IdCountry"],
+    const query = `
+    SELECT idCountry, countryName
+    FROM countries
+    WHERE active = true
+    `;
+
+    const countries = await sequelize.query(query, {
+      model: Country,
+      mapToModel: true,
     });
 
     return countries;
@@ -35,13 +41,21 @@ export async function getAllCountries() {
 
 export async function getCountryById(idCountry) {
   try {
-    const country = await Country.findOne({
-      where: { idCountry, active: true },
-      attributes: ["countryName"],
-      include: {
-        model: Province,
-        attributes: ["provinceName"],
-      },
+    const query = `
+    SELECT countries.idCountry, countries.countryName, provinces.provinceName
+    FROM countries
+    LEFT JOIN provinces ON countries.idCountry = provinces.idCountry
+    WHERE countries.idCountry = '${idCountry}'
+    `;
+    // const query = `
+    // SELECT idCountry, countryName
+    // FROM countries
+    // WHERE idCountry = '${idCountry}'
+    // `;
+
+    const country = await sequelize.query(query, {
+      model: Country,
+      mapToModel: true,
     });
 
     return country;
@@ -52,9 +66,15 @@ export async function getCountryById(idCountry) {
 
 export async function getCountryByName(countryName) {
   try {
-    const country = await Country.findOne({
-      where: { countryName: countryName.toUpperCase(), active: true },
-      attributes: ["idCountry", "countryName"],
+    const query = `
+    SELECT idCountry, countryName
+    FROM countries
+    WHERE countryName = '${countryName.toUpperCase()}'
+    `;
+
+    const country = await sequelize.query(query, {
+      model: Country,
+      mapToModel: true,
     });
 
     return country;
@@ -81,7 +101,7 @@ export async function deleteCountry(idCountry) {
   try {
     await Country.update(
       { active: false, updatedDate: new Date() },
-      { where: { idCountry: idCountry }, returning: true }
+      { where: { idCountry }, returning: true }
     );
 
     return;

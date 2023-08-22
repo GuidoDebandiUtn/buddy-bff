@@ -12,7 +12,7 @@ export async function provinceCreate(req, res) {
   try {
     const duplicate = await getProvinceByName(req.body.provinceName);
 
-    if (duplicate) {
+    if (duplicate[0]) {
       return res
         .status(400)
         .json({ message: "Ya existe una provincia con este nombre" });
@@ -20,7 +20,7 @@ export async function provinceCreate(req, res) {
 
     const country = await getCountryById(req.body.idCountry);
 
-    if (!country) {
+    if (!country[0]) {
       return res
         .status(404)
         .json({ message: "No existe ningún país con ese nombre" });
@@ -30,7 +30,7 @@ export async function provinceCreate(req, res) {
 
     return res.status(201).json({ province });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -46,7 +46,7 @@ export async function getProvinces(req, res) {
 
     return res.status(200).json({ provinces });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -58,7 +58,7 @@ export async function getProvince(req, res) {
   try {
     const province = await getProvinceById(idProvince);
 
-    if (!province) {
+    if (!province[0]) {
       return res
         .status(404)
         .json({ message: "No existe ninguna provincia con este id" });
@@ -66,7 +66,7 @@ export async function getProvince(req, res) {
 
     return res.status(200).json({ province });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -74,12 +74,11 @@ export async function getProvince(req, res) {
 
 export async function provinceUpdate(req, res) {
   const { idProvince } = req.params;
-  const { provinceName } = req.body;
 
   try {
     const province = await getProvinceById(idProvince);
 
-    if (!province) {
+    if (!province[0]) {
       return res
         .status(400)
         .json({ message: "No existe ninguna provincia con este id" });
@@ -87,7 +86,7 @@ export async function provinceUpdate(req, res) {
 
     const duplicate = await getProvinceByName(req.body.provinceName);
 
-    if (duplicate) {
+    if (duplicate[0]) {
       return res
         .status(400)
         .json({ message: "Ya existe una provincia con este nombre" });
@@ -99,7 +98,7 @@ export async function provinceUpdate(req, res) {
       .status(200)
       .json({ message: "Se ha actualizado correctamente la provincia" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -111,7 +110,7 @@ export async function provinceDelete(req, res) {
   try {
     const province = await getProvinceById(idProvince);
 
-    if (!province) {
+    if (!province[0]) {
       return res
         .status(404)
         .json({ message: "No existe ninguna provincia con este id" });
@@ -121,7 +120,7 @@ export async function provinceDelete(req, res) {
 
     return res.status(200).json({ message: "Se dio de baja la provincia" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }

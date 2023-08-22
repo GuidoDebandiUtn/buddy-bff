@@ -11,7 +11,7 @@ export async function serviceTypeCreate(req, res) {
   try {
     const duplicate = await getServiceTypeByName(req.body.serviceTypeName);
 
-    if (duplicate) {
+    if (duplicate[0]) {
       return res
         .status(400)
         .json({ message: "Ya existe un tipo de servicio con este nombre" });
@@ -21,7 +21,7 @@ export async function serviceTypeCreate(req, res) {
 
     return res.status(201).json({ serviceType });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -31,13 +31,13 @@ export async function getServiceTypes(req, res) {
   try {
     const serviceTypes = await getAllServiceTypes();
 
-    if (!serviceTypes) {
+    if (!serviceTypes[0]) {
       return res.status(404).json({ message: "No existen tipos de servicio" });
     }
 
     return res.status(200).json({ serviceTypes });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -49,7 +49,7 @@ export async function getServiceType(req, res) {
   try {
     const serviceType = await getServiceTypeById(idServiceType);
 
-    if (!serviceType) {
+    if (!serviceType[0]) {
       return res
         .status(404)
         .json({ message: "No existe un tipo de servicio con este id" });
@@ -57,7 +57,7 @@ export async function getServiceType(req, res) {
 
     return res.status(200).json({ serviceType });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -69,7 +69,7 @@ export async function serviceTypeUpdate(req, res) {
   try {
     const serviceType = await getServiceTypeById(idServiceType);
 
-    if (!serviceType) {
+    if (!serviceType[0]) {
       return res
         .status(404)
         .json({ message: "No existe un tipo de servicio con este id" });
@@ -77,7 +77,7 @@ export async function serviceTypeUpdate(req, res) {
 
     const duplicate = await getServiceTypeByName(req.body.serviceTypeName);
 
-    if (duplicate) {
+    if (duplicate[0]) {
       return res
         .status(400)
         .json({ message: "Ya existe un tipo de servicio con este nombre" });
@@ -89,7 +89,7 @@ export async function serviceTypeUpdate(req, res) {
       .status(200)
       .json({ message: "Se ha actualizado correctamente el tipo de servicio" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -101,7 +101,7 @@ export async function serviceTypeDelete(req, res) {
   try {
     const serviceType = await getServiceTypeById(idServiceType);
 
-    if (!serviceType) {
+    if (!serviceType[0]) {
       return res
         .status(404)
         .json({ message: "No existe un tipo de servicio con este id" });
@@ -113,7 +113,7 @@ export async function serviceTypeDelete(req, res) {
       message: "Se ha dade de baja correctamente el tipo de servicio",
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }

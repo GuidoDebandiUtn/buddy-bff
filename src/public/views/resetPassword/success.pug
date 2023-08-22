@@ -1,0 +1,22 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title Reestablecer Contraseña
+        link(rel="stylesheet", href="/css/resetPassword.css")
+
+    body
+        .container
+            .content-box
+                h1 Reestablecer Contraseña
+                form#reset-form(action="/api/resetPassword", method="PUT")
+                    input(type="hidden", id="idUser", name="idUser", value=idUser) 
+                    label(for="password") Nueva Contraseña:
+                    input(type="password", id="password", name="password", required)
+                    label(for="confirm-password") Repita la Contraseña:
+                    input(type="password", id="confirm-password", name="confirm-password", required)
+                    button#show-password-btn(type="button") Mostrar Contraseña
+                    button(type="submit") Confirmar
+
+        script(src="/js/resetPassword.js")

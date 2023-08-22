@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 
-export async function validateMail(userName, mail, idUser) {
+export async function validateMail(mail, idUser) {
   const transport = await infoTransport();
 
   await transport.sendMail({
@@ -9,7 +9,7 @@ export async function validateMail(userName, mail, idUser) {
     subject: "Valida tu usario",
     text: "",
     html: `
-            <p>Hola ${userName}, valida tu usuario</p>
+            <p>Hola! Valida tu usuario:</p>
 
             <p>Tu cuenta esta lista para ser validada, dale click al siguiente enlace 
             <a href="${process.env.BACKEND_URL}:${
@@ -17,11 +17,12 @@ export async function validateMail(userName, mail, idUser) {
     }/security/auth/validateAccount/${idUser}">Validar cuenta</a> </p>
 
             <p>Si no creaste esta cuenta en BUDDY!, ignora el mensaje</p>
-        `,
+            <p>Equipo de BUDDY!<p>
+            `,
   });
 }
 
-export async function resetPasswordMail(userName, mail, idUser) {
+export async function resetPasswordMail(mail, idUser) {
   const transport = await infoTransport();
 
   await transport.sendMail({
@@ -30,14 +31,15 @@ export async function resetPasswordMail(userName, mail, idUser) {
     subject: "Restablecer contraseña",
     text: "",
     html: `
-            <p>Hola ${userName}, estas restableciendo tu contraseña</p>
+            <p>Hola! Estas restableciendo tu contraseña:</p>
 
             <p>Genera una contraseña nueva con este link: 
             <a href="${process.env.BACKEND_URL}:${
       process.env.PORT ?? 4000
-    }/auth/resetPassword/${idUser}">Reestablecer contraseña</a> </p>
+    }/security/auth/changePassword/${idUser}">Reestablecer contraseña</a> </p>
 
             <p>Si no pediste cambiar la contraseña, ignora el mensaje</p>
+            <p>Equipo de BUDDY!<p>
         `,
   });
 }

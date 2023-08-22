@@ -1,8 +1,10 @@
 import { PetBreed } from "../../models/PetBreed.js";
 import { PetType } from "../../models/PetType.js";
+import { sequelize } from "../../database/database.js";
 
 export async function createPetBreed(data) {
   const { petBreedName, idPetType } = data;
+
   try {
     const petBreed = await PetBreed.create(
       {
@@ -30,10 +32,17 @@ export async function createPetBreed(data) {
 
 export async function getAllPetBreeds() {
   try {
-    const petBreeds = await PetBreed.findAll({
-      attributes: ["idPetBreed","petBreedName"],
-      where: { active: true },
+    const query = `
+    SELECT idPetBreed, petBreedName
+    FROM petbreeds
+    WHERE active = true
+    `;
+
+    const petBreeds = await sequelize.query(query, {
+      model: PetBreed,
+      mapToModel: true,
     });
+
     return petBreeds;
   } catch (error) {
     throw error;
@@ -42,9 +51,15 @@ export async function getAllPetBreeds() {
 
 export async function getPetBreedById(idPetBreed) {
   try {
-    const petBreed = await PetBreed.findOne({
-      attributes: ["petBreedName", "idPetBreed"],
-      where: { idPetBreed, active: true },
+    const query = `
+    SELECT idPetBreed, petBreedName
+    FROM petbreeds
+    WHERE idPetBreed = '${idPetBreed}'
+    `;
+
+    const petBreed = await sequelize.query(query, {
+      model: PetBreed,
+      mapToModel: true,
     });
 
     return petBreed;
@@ -52,13 +67,19 @@ export async function getPetBreedById(idPetBreed) {
     throw error;
   }
 }
-
 
 export async function getPetBreedsByPetType(petTypeName) {
   try {
     const petBreed = await PetBreed.findAll({
       attributes: ["petBreedName", "idPetBreed"],
-      include: [{model:PetType, as:'type', attributes: [],where: {petTypeName, active: true }}],
+      include: [
+        {
+          model: PetType,
+          as: "type",
+          attributes: [],
+          where: { petTypeName, active: true },
+        },
+      ],
     });
 
     return petBreed;
@@ -67,13 +88,17 @@ export async function getPetBreedsByPetType(petTypeName) {
   }
 }
 
-
-
 export async function getPetBreedByName(petBreedName) {
   try {
-    const petBreed = await PetBreed.findOne({
-      attributes: ["petBreedName", "idPetBreed"],
-      where: { petBreedName: petBreedName.toUpperCase(), active: true },
+    const query = `
+    SELECT idPetBreed, petBreedName
+    FROM petbreeds
+    WHERE petBreedName = '${petBreedName.toUpperCase()}'
+    `;
+
+    const petBreed = await sequelize.query(query, {
+      model: PetBreed,
+      mapToModel: true,
     });
 
     return petBreed;
@@ -84,7 +109,7 @@ export async function getPetBreedByName(petBreedName) {
 
 export async function updatePetBreed(data, idPetBreed) {
   const { petBreedName } = data;
-  console.log("object");
+
   try {
     await PetBreed.update(
       { petBreedName: petBreedName.toUpperCase(), updatedDate: new Date() },

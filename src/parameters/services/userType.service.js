@@ -1,4 +1,5 @@
 import { UserType } from "../../models/UserType.js";
+import { sequelize } from "../../database/database.js";
 
 export async function createUserType(data) {
   const { userTypeName } = data;
@@ -21,9 +22,15 @@ export async function createUserType(data) {
 
 export async function getAllUserTypes() {
   try {
-    const userTypes = await UserType.findAll({
-      attributes: ["idUserType","userTypeName"],
-      where: { active: true },
+    const query = `
+    SELECT idUserType, userTypeName
+    FROM usertypes
+    WHERE active = true
+    `;
+
+    const userTypes = await sequelize.query(query, {
+      model: UserType,
+      mapToModel: true,
     });
 
     return userTypes;
@@ -34,9 +41,15 @@ export async function getAllUserTypes() {
 
 export async function getUserTypeById(idUserType) {
   try {
-    const userType = await UserType.findOne({
-      attributes: ["idUserType", "userTypeName"],
-      where: { idUserType, active: true },
+    const query = `
+    SELECT idUserType, userTypeName
+    FROM usertypes
+    WHERE idUserType = '${idUserType}'
+    `;
+
+    const userType = await sequelize.query(query, {
+      model: UserType,
+      mapToModel: true,
     });
 
     return userType;
@@ -47,9 +60,15 @@ export async function getUserTypeById(idUserType) {
 
 export async function getUserTypeByName(userTypeName) {
   try {
-    const userType = await UserType.findOne({
-      attributes: ["idUserType", "userTypeName"],
-      where: { userTypeName: userTypeName.toUpperCase(), active: true },
+    const query = `
+    SELECT idUserType, userTypeName
+    FROM usertypes
+    WHERE userTypeName = '${userTypeName.toUpperCase()}'
+    `;
+
+    const userType = await sequelize.query(query, {
+      model: UserType,
+      mapToModel: true,
     });
 
     return userType;

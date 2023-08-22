@@ -11,7 +11,7 @@ export async function countryCreate(req, res) {
   try {
     const duplicate = await getCountryByName(req.body.countryName);
 
-    if (duplicate) {
+    if (duplicate[0]) {
       return res
         .status(400)
         .json({ message: "Ya existe un pais con este nombre" });
@@ -21,7 +21,7 @@ export async function countryCreate(req, res) {
 
     return res.status(201).json({ country });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -37,7 +37,7 @@ export async function getCountries(req, res) {
 
     return res.status(200).json({ countries });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -49,7 +49,7 @@ export async function getCountry(req, res) {
   try {
     const country = await getCountryById(idCountry);
 
-    if (!country) {
+    if (!country[0]) {
       return res
         .status(404)
         .json({ message: "No existe ningun país con este id" });
@@ -57,7 +57,7 @@ export async function getCountry(req, res) {
 
     return res.status(200).json({ country });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -65,11 +65,10 @@ export async function getCountry(req, res) {
 
 export async function countryUpdate(req, res) {
   const { idCountry } = req.params;
-  const { countryName } = req.body;
 
   try {
     const country = await getCountryById(idCountry);
-    if (!country) {
+    if (!country[0]) {
       return res
         .status(404)
         .json({ message: "No existe ningun país con este id" });
@@ -87,7 +86,7 @@ export async function countryUpdate(req, res) {
 
     return res.status(200).json({ message: "Se ha actualizado correctamente" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -99,7 +98,7 @@ export async function countryDelete(req, res) {
   try {
     const country = await getCountryById(idCountry);
 
-    if (!country) {
+    if (!country[0]) {
       return res
         .status(404)
         .json({ message: "No existe ningun país con este id" });
@@ -109,7 +108,7 @@ export async function countryDelete(req, res) {
 
     return res.status(200).json({ message: "Se dio de baja el país" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
