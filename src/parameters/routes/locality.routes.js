@@ -1,0 +1,157 @@
+import { Router } from "express";
+import {
+  getLocalities,
+  getLocality,
+  localityCreate,
+  localityDelete,
+  localityUpdate,
+} from "../controllers/locality.controller.js";
+
+const router = Router();
+
+/**
+ * @swagger
+ * tags:
+ *   name: LOCALITY
+ *   description: ABM localidades
+ */
+
+/**
+ * @swagger
+ * /parameters/locality/:
+ *  post:
+ *    summary: Crea una nueva localidad
+ *    tags: [LOCALITY]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              localityName:
+ *                type: string
+ *              idRegion:
+ *                type: UUID
+ *    responses:
+ *      201:
+ *         description: Localidad creada exitosamente.
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *      400:
+ *        description: Ya existe una localidad con ese nombre
+ *      500:
+ *        description: Hubo un error
+ */
+router.post("/", localityCreate);
+
+/**
+ * @swagger
+ * /parameters/locality/:
+ *   get:
+ *     summary: Obtiene una lista de localidades activas
+ *     tags: [LOCALITY]
+ *     responses:
+ *       200:
+ *         description: Lista de localidades activas.
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  properties:
+ *                    localityName:
+ *                      type: string
+ *       404:
+ *         description: No existe ningun país.
+ *       500:
+ *          description: Hubo un error
+ */
+router.get("/", getLocalities);
+
+/**
+ * @swagger
+ * /parameters/locality/{idLocality}:
+ *   get:
+ *     summary: Obtiene la localidad por el id
+ *     tags: [LOCALITY]
+ *     responses:
+ *       200:
+ *         description: Localidad buscada por id.
+ *         content:
+ *            application/json:
+ *              schema:
+ *              type: object
+ *              properties:
+ *                localityName:
+ *                  type: string
+ *       404:
+ *         description: No existe ninguna localidad con ese id.
+ *       500:
+ *          description: Hubo un error
+ */
+router.get("/:idLocality", getLocality);
+
+/**
+ * @swagger
+ * /parameters/locality/{idLocality}:
+ *   put:
+ *     summary: Actualiza una localidad
+ *     tags: [LOCALITY]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               localityName:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Localidad actualizada exitosamente.
+ *         content:
+ *            application/json:
+ *              schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *       400:
+ *         description: Ya existe una localidad con ese nombre
+ *       404:
+ *         description: No existe ninguna localidad con ese id.
+ *       500:
+ *          description: Hubo un error
+ */
+router.put("/:idLocality", localityUpdate);
+
+/**
+ * @swagger
+ * /parameters/locality/{idLocality}:
+ *   delete:
+ *     summary: Dar de baja una localidad
+ *     tags: [LOCALITY]
+ *     responses:
+ *       200:
+ *         description: Localidad dada de baja.
+ *         content:
+ *            application/json:
+ *              schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *       404:
+ *         description: No existe ninguna localidad con es id.
+ *       500:
+ *          description: Hubo un error
+ */
+router.delete("/:idLocality", localityDelete);
+
+export default router;
