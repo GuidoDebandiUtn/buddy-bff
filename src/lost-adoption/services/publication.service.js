@@ -114,7 +114,7 @@ export async function createAdoption(adoptionDto) {
 }
 
 
-export async function deletePublication(idPetColor) {
+export async function publicationDelete(idPetColor) {
   try {
     await PetColor.update(
       { active: false, updatedDate: new Date() },

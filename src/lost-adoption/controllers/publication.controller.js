@@ -1,11 +1,12 @@
 import {
     retrivePaginatedPublications,
-    createSearch
+    createSearch,
+    publicationDelete,
   } from "../services/publication.service.js";
 
 
 export async function getPublications(req, res) {
-    const { page, size, modelType } = req.query;
+    const {  modelType ,page, size,} = req.query;
 
   try {
     const data = await retrivePaginatedPublications(page,size, modelType);
@@ -54,6 +55,30 @@ export async function postAdoption(req, res) {
     const publication = await createSearch(req.body);
 
     return res.status(201).json(publication);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+
+export async function deletePublication(req, res) {
+  const { idPublication,modelType } = req.params;
+  try {
+    const publication = await getPublicationById(idPublication,modelType);
+
+    if (!publication) {
+      return res
+        .status(404)
+        .json({ message: "No existe se ha podido encontrar la entidad a eliminar" });
+    }
+
+    await publicationDelete(publication,modelType);
+
+    return res
+      .status(200)
+      .json({ message: "Se ha dado de baja correctamente la publicacion de la mascota" });
   } catch (error) {
     res.status(500).json({
       message: error.message,

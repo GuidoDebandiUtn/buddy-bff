@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {    getPublications, postAdoption, postSearch} from "../controllers/publication.controller.js";
+import {    getPublications, postAdoption, postSearch,deletePublication} from "../controllers/publication.controller.js";
 const router = Router();
 /**
  * @swagger
@@ -65,21 +65,22 @@ router.get('/',getPublications);
  *             type: object
  *             properties:
  *               idPublicationSearch:
- *                 type: UUID
+ *                 type: uuid
  *               title:
- *                 type: STRING
+ *                 type: string
  *               images:
- *                 type: TEXT
+ *                 type: text
  *               description:
- *                 type: STRING
+ *                 type: string
  *               latitude:
- *                 type: DOUBLE
+ *                 type: double
  *               longitude:
- *                 type: DOUBLE
+ *                 type: double
  *               isFound:
- *                 type: BOOLEAN
+ *                 type: boolean
  *               lostDate:
- *                 type: DATE
+ *                 type: date
+ *                 format: "dd:mm:aaaa"
  *     responses:
  *       201:
  *         description: Publicacion creada.
@@ -168,6 +169,6 @@ router.post('/search',postSearch);
 router.post('/adoption',postAdoption);
 
 
-router.delete('/',postAdoption);
+router.delete('/',deletePublication);
 
 export default router;

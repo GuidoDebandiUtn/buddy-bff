@@ -152,7 +152,7 @@ router.put("/:idPetBreed", petBreedUpdate);
  *       500:
  *          description: Hubo un error
  */
-router.delete(":idPetBreed", petBreedDelete);
+router.delete("/:idPetBreed", petBreedDelete);
 
 
 
