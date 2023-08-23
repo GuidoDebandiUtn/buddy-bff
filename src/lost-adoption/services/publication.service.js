@@ -81,3 +81,48 @@ export async function createSearch(searchDto) {
   }
 }
 
+
+export async function createAdoption(adoptionDto) {
+  try {
+    let locality = await getLocalityById(adoptionDto.idLocality);
+    let breed = await getPetBreedById(adoptionDto.idPetBreed);
+    let color = await getPetColorById(adoptionDto.idPetColor);
+
+    if(!locality || !breed || !color){
+      console.log("locality: %s,breed: %s,color: %s",locality,breed,color)
+      throw new Error('Error on the filters values!');
+    }
+
+    const activePublicationState = await PublicationState.findOne({
+      attributes: ["idPublicationState"],
+      where: { name: 'ACTIVO' }
+    });
+
+    const newPublication = await PublicationAdoption.create(
+      {
+        createdAt: new Date(),
+        idPublicationState: activePublicationState.idPublicationState,
+        //TODO idUser: token.getUserInfo........,
+        ...adoptionDto
+      },
+    );
+
+    return newPublication;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+export async function deletePublication(idPetColor) {
+  try {
+    await PetColor.update(
+      { active: false, updatedDate: new Date() },
+      { where: { idPetColor }, returning: true }
+    );
+
+    return;
+  } catch (error) {
+    throw error;
+  }
+}
