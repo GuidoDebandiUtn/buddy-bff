@@ -109,3 +109,16 @@ export async function deleteCountry(idCountry) {
     throw error;
   }
 }
+
+export async function activeCountry(idCountry) {
+  try {
+    await Country.update(
+      { active: true, updatedDate: new Date() },
+      { where: { idCountry }, returning: true }
+    );
+
+    return;
+  } catch (error) {
+    throw error;
+  }
+}

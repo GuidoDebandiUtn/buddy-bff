@@ -104,3 +104,16 @@ export async function deletePetColor(idPetColor) {
     throw error;
   }
 }
+
+export async function activePetColor(idPetColor) {
+  try {
+    await PetColor.update(
+      { active: true, updatedDate: new Date() },
+      { where: { idPetColor }, returning: true }
+    );
+
+    return;
+  } catch (error) {
+    throw error;
+  }
+}

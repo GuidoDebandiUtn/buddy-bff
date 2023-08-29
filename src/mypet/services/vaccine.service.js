@@ -108,3 +108,37 @@ export async function deleteVaccine(idVaccine) {
     throw error;
   }
 }
+
+export async function activeVaccine(idVaccine) {
+  try {
+    await Vaccine.update(
+      { active: true, updatedDate: new Date() },
+      { where: { idVaccine }, returning: true }
+    );
+
+    return;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function archiveVaccine(idVaccine, archive) {
+  try {
+    const updates = {};
+    const updateOptions = { where: { idVaccine } };
+
+    if (archive) {
+      updates.archive = false;
+    } else {
+      updates.archive = true;
+    }
+
+    updates.updatedDate = new Date();
+
+    await Vaccine.update(updates, updateOptions);
+
+    return;
+  } catch (error) {
+    throw error;
+  }
+}

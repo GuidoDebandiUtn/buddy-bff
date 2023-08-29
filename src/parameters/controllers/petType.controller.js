@@ -1,4 +1,5 @@
 import {
+  activePetType,
   createPetType,
   deletePetType,
   getAllPetTypes,
@@ -114,6 +115,30 @@ export async function petTypeDelete(req, res) {
     return res
       .status(200)
       .json({ message: "Se ha dado de baja correctamente el tipo de mascota" });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function petTypeActive(req, res) {
+  const { idPetType } = req.params;
+
+  try {
+    const petType = await getPetTypeById(idPetType);
+
+    if (!petType[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe el tipo de mascota con ese id" });
+    }
+
+    await activePetType(idPetType);
+
+    return res
+      .status(200)
+      .json({ message: "Se ha dado de alta correctamente el tipo de mascota" });
   } catch (error) {
     return res.status(500).json({
       message: error.message,

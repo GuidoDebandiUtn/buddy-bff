@@ -121,3 +121,24 @@ export async function localityDelete(req, res) {
     });
   }
 }
+
+export async function localityActive(req, res) {
+  const { idLocality } = req.params;
+  try {
+    const locality = await getLocalityById(idLocality);
+
+    if (!locality[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna localidad con este id" });
+    }
+
+    await activeLocality(idLocality);
+
+    return res.status(200).json({ message: "Se ha dado de alta la localidad" });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+}

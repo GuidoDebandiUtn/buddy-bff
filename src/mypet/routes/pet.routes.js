@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   getPet,
   getPets,
+  petActive,
   petCreate,
   petDelete,
   petUpdate,
@@ -155,5 +156,28 @@ router.put("/:idPet", petUpdate);
  *          description: Hubo un error
  */
 router.delete("/:idPet", petDelete);
+
+/**
+ * @swagger
+ * /mypet/pet/active/{idPet}:
+ *   post:
+ *     summary: Dar de alta una mascota
+ *     tags: [PETS]
+ *     responses:
+ *       200:
+ *         description: Mascota dada de alta.
+ *         content:
+ *            application/json:
+ *              schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *       404:
+ *         description: No existe ninguna mascota con es id.
+ *       500:
+ *          description: Hubo un error
+ */
+router.post("/active/:idPet", petActive);
 
 export default router;

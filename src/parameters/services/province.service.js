@@ -107,3 +107,16 @@ export async function deleteProvince(idProvince) {
     throw error;
   }
 }
+
+export async function activeProvince(idProvince) {
+  try {
+    await Province.update(
+      { active: true, updatedDate: new Date() },
+      { where: { idProvince }, returning: true }
+    );
+
+    return;
+  } catch (error) {
+    throw error;
+  }
+}

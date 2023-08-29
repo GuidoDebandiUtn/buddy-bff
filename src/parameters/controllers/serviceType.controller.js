@@ -1,4 +1,5 @@
 import {
+  activeServiceType,
   createServiceType,
   deleteServiceType,
   getAllServiceTypes,
@@ -111,6 +112,30 @@ export async function serviceTypeDelete(req, res) {
 
     return res.status(200).json({
       message: "Se ha dade de baja correctamente el tipo de servicio",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function serviceTypeActive(req, res) {
+  const { idServiceType } = req.params;
+
+  try {
+    const serviceType = await getServiceTypeById(idServiceType);
+
+    if (!serviceType[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe un tipo de servicio con este id" });
+    }
+
+    await activeServiceType(idServiceType);
+
+    return res.status(200).json({
+      message: "Se ha dade de alta correctamente el tipo de servicio",
     });
   } catch (error) {
     return res.status(500).json({

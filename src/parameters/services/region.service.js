@@ -112,3 +112,19 @@ export async function deleteRegion(idRegion) {
     throw error;
   }
 }
+
+export async function activeRegion(idRegion) {
+  try {
+    await Region.update(
+      {
+        active: true,
+        updatedDate: new Date(),
+      },
+      { where: { idRegion }, returning: true }
+    );
+
+    return;
+  } catch (error) {
+    throw error;
+  }
+}

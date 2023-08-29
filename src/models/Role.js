@@ -1,31 +1,42 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../database/database.js";
 
-export class PublicationState extends Model {}
+export class Role extends Model {}
 
-PublicationState.init(
+Role.init(
   {
-    idPublicationState: {
+    idRole: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
     },
-    code: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    name: {
+    roleName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    expirationDate: {
+    roleDescription: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    adminRole: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+    createdDate: {
+      type: DataTypes.DATE,
+    },
+    updatedDate: {
       type: DataTypes.DATE,
     },
   },
   {
     sequelize,
     timestamps: false,
-    modelName: "publicationState",
+    modelName: "role",
   }
 );

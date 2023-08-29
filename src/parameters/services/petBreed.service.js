@@ -134,3 +134,16 @@ export async function deletePetBreed(idPetBreed) {
     throw error;
   }
 }
+
+export async function activePetBreed(idPetBreed) {
+  try {
+    await PetBreed.update(
+      { active: true, updatedDate: new Date() },
+      { where: { idPetBreed }, returning: true }
+    );
+
+    return;
+  } catch (error) {
+    throw error;
+  }
+}

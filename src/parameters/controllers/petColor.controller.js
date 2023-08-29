@@ -1,4 +1,5 @@
 import {
+  activePetColor,
   createPetColor,
   deletePetColor,
   getAllPetColors,
@@ -110,6 +111,30 @@ export async function petColorDelete(req, res) {
 
     return res.status(200).json({
       message: "Se ha dado de baja correctamente el color de mascota",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function petColorActive(req, res) {
+  const { idPetColor } = req.params;
+
+  try {
+    const petColor = await getPetColorById(idPetColor);
+
+    if (!petColor[0]) {
+      return res.status(404).json({
+        message: "No existe ningún color de mascota con ese id",
+      });
+    }
+
+    await activePetColor(idPetColor);
+
+    return res.status(200).json({
+      message: "Se ha dado de alta correctamente el color de mascota",
     });
   } catch (error) {
     return res.status(500).json({

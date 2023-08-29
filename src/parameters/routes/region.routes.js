@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   getRegion,
   getRegions,
+  regionActive,
   regionCreate,
   regionDelete,
   regionUpdate,
@@ -153,5 +154,28 @@ router.put("/:idRegion", regionUpdate);
  *          description: Hubo un error
  */
 router.delete("/:idRegion", regionDelete);
+
+/**
+ * @swagger
+ * /parameters/region/active/{idLocality}:
+ *   post:
+ *     summary: Dar de alta una región
+ *     tags: [REGION]
+ *     responses:
+ *       200:
+ *         description: Región dada de alta.
+ *         content:
+ *            application/json:
+ *              schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *       404:
+ *         description: No existe ninguna región con es id.
+ *       500:
+ *          description: Hubo un error
+ */
+router.post("/active/:idRegion", regionActive);
 
 export default router;

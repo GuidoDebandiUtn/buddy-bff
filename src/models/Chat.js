@@ -1,31 +1,34 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../database/database.js";
 
-export class PublicationState extends Model {}
+export class Chat extends Model {}
 
-PublicationState.init(
+Chat.init(
   {
-    idPublicationState: {
+    idChat: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
     },
-    code: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    archive: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
-    expirationDate: {
+    createdDate: {
+      type: DataTypes.DATE,
+    },
+    updatedDate: {
       type: DataTypes.DATE,
     },
   },
   {
     sequelize,
     timestamps: false,
-    modelName: "publicationState",
+    modelName: "chat",
   }
 );

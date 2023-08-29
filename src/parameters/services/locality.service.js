@@ -107,3 +107,16 @@ export async function deleteLocality(idLocality) {
     throw error;
   }
 }
+
+export async function activeLocality(idLocality) {
+  try {
+    await Locality.update(
+      { active: true, updatedDate: new Date() },
+      { where: { idLocality }, returning: true }
+    );
+
+    return;
+  } catch (error) {
+    throw error;
+  }
+}

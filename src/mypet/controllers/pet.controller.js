@@ -1,4 +1,5 @@
 import {
+  activePet,
   createPet,
   deletePet,
   getAllPets,
@@ -95,6 +96,28 @@ export async function petDelete(req, res) {
     return res
       .status(200)
       .json({ message: "Se ha dado de baja correctamente la mascota" });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export async function petActive(req, res) {
+  const { idPet } = req.params;
+
+  try {
+    const pet = await getPetById(idPet);
+
+    if (!pet[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
+    await activePet(idPet);
+
+    return res
+      .status(200)
+      .json({ message: "Se ha dado de alta correctamente la mascota" });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

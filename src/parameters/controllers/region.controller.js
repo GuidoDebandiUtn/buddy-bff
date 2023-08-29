@@ -1,5 +1,6 @@
 import { getProvinceById } from "../services/province.service.js";
 import {
+  activeRegion,
   createRegion,
   deleteRegion,
   getAllRegions,
@@ -117,6 +118,29 @@ export async function regionDelete(req, res) {
     await deleteRegion(idRegion);
 
     return res.status(200).json({ message: "Se ha dado de baja la region" });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function regionActive(req, res) {
+  const { idRegion } = req.params;
+  try {
+    const region = await getRegionById(idRegion);
+
+    if (!region[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna region con este id" });
+    }
+
+    await activeRegion(idRegion);
+
+    return res
+      .status(200)
+      .json({ message: "Se ha dado de alta correctamente la region" });
   } catch (error) {
     return res.status(500).json({
       message: error.message,

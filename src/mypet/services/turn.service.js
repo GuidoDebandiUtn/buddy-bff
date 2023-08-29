@@ -113,3 +113,37 @@ export async function deleteTurn(idTurn) {
     throw error;
   }
 }
+
+export async function activeTurn(idTurn) {
+  try {
+    await Turn.update(
+      { active: true, updatedDate: new Date() },
+      { where: { idTurn }, returning: true }
+    );
+
+    return;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function archiveTurn(idTurn, archive) {
+  try {
+    const updates = {};
+    const updateOptions = { where: { idTurn } };
+
+    if (archive) {
+      updates.archive = false;
+    } else {
+      updates.archive = true;
+    }
+
+    updates.updatedDate = new Date();
+
+    await Turn.update(updates, updateOptions);
+
+    return;
+  } catch (error) {
+    throw error;
+  }
+}

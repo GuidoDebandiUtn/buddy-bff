@@ -110,3 +110,19 @@ export async function deleteServiceType(idServiceType) {
     throw error;
   }
 }
+
+export async function activeServiceType(idServiceType) {
+  try {
+    await ServiceType.update(
+      {
+        active: true,
+        updatedDate: new Date(),
+      },
+      { where: { idServiceType }, returning: true }
+    );
+
+    return;
+  } catch (error) {
+    throw error;
+  }
+}

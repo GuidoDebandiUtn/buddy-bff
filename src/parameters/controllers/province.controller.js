@@ -1,4 +1,5 @@
 import {
+  activeProvince,
   createProvince,
   deleteProvince,
   getAllProvinces,
@@ -119,6 +120,30 @@ export async function provinceDelete(req, res) {
     await deleteProvince(idProvince);
 
     return res.status(200).json({ message: "Se dio de baja la provincia" });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function provinceActive(req, res) {
+  const { idProvince } = req.params;
+
+  try {
+    const province = await getProvinceById(idProvince);
+
+    if (!province[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna provincia con este id" });
+    }
+
+    await activeProvince(idProvince);
+
+    return res
+      .status(200)
+      .json({ message: "Se ha dado de alta correctamente la provincia" });
   } catch (error) {
     return res.status(500).json({
       message: error.message,

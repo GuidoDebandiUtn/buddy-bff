@@ -113,3 +113,16 @@ export async function deletePetType(idPetType) {
     throw error;
   }
 }
+
+export async function activePetType(idPetType) {
+  try {
+    await PetType.update(
+      { active: true, updatedDate: new Date() },
+      { where: { idPetType }, returning: true }
+    );
+
+    return;
+  } catch (error) {
+    throw error;
+  }
+}

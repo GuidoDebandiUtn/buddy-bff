@@ -1,4 +1,5 @@
 import {
+  activeInformation,
   archiveInformation,
   createInformation,
   deleteInformation,
@@ -94,6 +95,28 @@ export async function informationDelete(req, res) {
     return res
       .status(200)
       .json({ message: "Se ha dado de baja correctamente la información" });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export async function informationActive(req, res) {
+  const { idInformation } = req.params;
+
+  try {
+    const information = await getInformationById(idInformation);
+
+    if (!information[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe información con ese id" });
+    }
+
+    await activeInformation(idInformation);
+
+    return res
+      .status(200)
+      .json({ message: "Se ha dado de alta correctamente la información" });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

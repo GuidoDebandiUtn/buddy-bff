@@ -1,44 +1,42 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../database/database.js";
 
-export class Trace extends Model {}
+export class Permission extends Model {}
 
-Trace.init(
+Permission.init(
   {
-    idTrace: {
+    idPermission: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
     },
-    latitude: {
-      type: DataTypes.DOUBLE,
-      allowNull: false,
-    },
-    longitude: {
-      type: DataTypes.DOUBLE,
-      allowNull: false,
-    },
-    localityName: {
+    permissionName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    traceDate: {
+    permissionDescription: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    tokenClaim: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+    createdDate: {
       type: DataTypes.DATE,
     },
-    traceTime: {
-      type: DataTypes.TIME,
-    },
-    images: {
-      type: DataTypes.TIME,
-    },
-    idAuthorUser: {
-      type: DataTypes.UUID,
+    updatedDate: {
+      type: DataTypes.DATE,
     },
   },
   {
     sequelize,
     timestamps: false,
-    modelName: "trace",
+    modelName: "permission",
   }
 );

@@ -107,6 +107,19 @@ export async function deleteInformation(idInformation) {
   }
 }
 
+export async function activeInformation(idInformation) {
+  try {
+    await Information.update(
+      { active: true, updatedDate: new Date() },
+      { where: { idInformation }, returning: true }
+    );
+
+    return;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function archiveInformation(idInformation, archive) {
   try {
     const updates = {};

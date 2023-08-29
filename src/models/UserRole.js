@@ -1,23 +1,18 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../database/database.js";
 
-export class UserType extends Model {}
+export class UserRole extends Model {}
 
-UserType.init(
+UserRole.init(
   {
-    idUserType: {
+    idUserRole: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
     },
-    userTypeName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    active: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
+    idUserAuthor: {
+      type: DataTypes.UUID,
     },
     createdDate: {
       type: DataTypes.DATE,
@@ -29,6 +24,6 @@ UserType.init(
   {
     sequelize,
     timestamps: false,
-    modelName: "userType",
+    modelName: "userRole",
   }
 );

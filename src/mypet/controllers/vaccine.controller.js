@@ -1,4 +1,6 @@
 import {
+  activeVaccine,
+  archiveVaccine,
   createVaccine,
   deleteVaccine,
   getAllVaccines,
@@ -93,6 +95,50 @@ export async function vaccineDelete(req, res) {
     return res
       .status(200)
       .json({ message: "Se ha dado de baja correctamente la vacuna" });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export async function vaccineActive(req, res) {
+  const { idVaccine } = req.params;
+
+  try {
+    const vaccine = await getVaccineById(idVaccine);
+
+    if (!vaccine[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna vacuna con ese id" });
+    }
+
+    await activeVaccine(idVaccine);
+
+    return res
+      .status(200)
+      .json({ message: "Se ha dado de alta correctamente la vacuna" });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export async function vaccineArchive(req, res) {
+  const { idVaccine } = req.params;
+
+  try {
+    const vaccine = await getVaccineById(idVaccine);
+
+    if (!vaccine[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe información con ese id" });
+    }
+
+    await archiveVaccine(idVaccine, vaccine[0].archive);
+
+    return res
+      .status(200)
+      .json({ message: "Se ha actualizado correctamente la vacuna" });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

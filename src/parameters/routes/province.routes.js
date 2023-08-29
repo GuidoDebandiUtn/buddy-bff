@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   getProvince,
   getProvinces,
+  provinceActive,
   provinceCreate,
   provinceDelete,
   provinceUpdate,
@@ -153,5 +154,28 @@ router.put("/:idProvince", provinceUpdate);
  *          description: Hubo un error
  */
 router.delete("/:idProvince", provinceDelete);
+
+/**
+ * @swagger
+ * /parameters/province/active/{idLocality}:
+ *   post:
+ *     summary: Dar de alta una provincia
+ *     tags: [PROVINCE]
+ *     responses:
+ *       200:
+ *         description: Localidad dada de alta.
+ *         content:
+ *            application/json:
+ *              schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *       404:
+ *         description: No existe ninguna provincia con es id.
+ *       500:
+ *          description: Hubo un error
+ */
+router.post("/active/:idProvince", provinceActive);
 
 export default router;

@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   getPetColor,
   getPetColors,
+  petColorActive,
   petColorCreate,
   petColorDelete,
   petColorUpdate,
@@ -153,5 +154,28 @@ router.put("/:idPetColor", petColorUpdate);
  *          description: Hubo un error
  */
 router.delete("/:idPetColor", petColorDelete);
+
+/**
+ * @swagger
+ * /parameters/petColor/active/{idPetColor}:
+ *   post:
+ *     summary: Dar de alta un color de mascota
+ *     tags: [PETCOLOR]
+ *     responses:
+ *       200:
+ *         description: Color de mascota dado de alta.
+ *         content:
+ *            application/json:
+ *              schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *       404:
+ *         description: No existe ningun color de mascota con es id.
+ *       500:
+ *          description: Hubo un error
+ */
+router.post("/active/:idPetColor", petColorActive);
 
 export default router;

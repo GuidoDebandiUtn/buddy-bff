@@ -1,15 +1,12 @@
 import { User } from "../../models/User.js";
 import { getUserStateByName } from "./userState.service.js";
 import { createStateUser } from "./stateUser.service.js";
-import { getUserTypeByName } from "../../parameters/services/userType.service.js";
 import { sequelize } from "../../database/database.js";
 
 export async function createEstablishment(data) {
   const { mail, userName, password } = data;
 
   try {
-    const userType = await getUserTypeByName("ESTABLECIMIENTO");
-
     const newEstablishment = await User.create(
       {
         mail,
@@ -17,17 +14,9 @@ export async function createEstablishment(data) {
         userName,
         createdDate: new Date(),
         updatedDate: new Date(),
-        idUserType: userType.idUserType,
       },
       {
-        fields: [
-          "mail",
-          "password",
-          "userName",
-          "createdDate",
-          "updatedDate",
-          "idUserType",
-        ],
+        fields: ["mail", "password", "userName", "createdDate", "updatedDate"],
       }
     );
 
@@ -52,8 +41,7 @@ export async function getAllEstablishments() {
         GROUP BY idUser
       ) AS ultimosEstados ON users.idUser = ultimosEstados.idUser
       INNER JOIN userStates ON ultimosEstados.idUserState = userStates.idUserState
-      INNER JOIN userTypes ON users.idUserType = userTypes.idUserType
-      WHERE userStates.userStateName IN ('ACTIVO','EN REVISIÓN') and userTypes.userTypeName = "ESTABLECIMIENTO"
+      WHERE userStates.userStateName IN ('ACTIVO','EN REVISIÓN')
     `;
 
     const users = await sequelize.query(query, {

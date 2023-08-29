@@ -2,7 +2,7 @@ import { Pet } from "../../models/Pet.js";
 import { sequelize } from "../../database/database.js";
 
 export async function createPet(data, idUser) {
-  const { petName, birthDate } = data;
+  const { petName, birthDate, idPetType, idPetBreed } = data;
 
   try {
     const newPet = await Pet.create(
@@ -13,6 +13,8 @@ export async function createPet(data, idUser) {
         createdDate: new Date(),
         updatedDate: new Date(),
         idUser,
+        idPetType,
+        idPetBreed,
       },
       {
         fields: [
@@ -22,6 +24,8 @@ export async function createPet(data, idUser) {
           "createdDate",
           "updatedDate",
           "idUser",
+          "idPetType",
+          "idPetBreed",
         ],
       }
     );
@@ -96,6 +100,19 @@ export async function deletePet(idPet) {
   try {
     await Pet.update(
       { active: false, updatedDate: new Date() },
+      { where: { idPet }, returning: true }
+    );
+
+    return;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function activePet(idPet) {
+  try {
+    await Pet.update(
+      { active: true, updatedDate: new Date() },
       { where: { idPet }, returning: true }
     );
 

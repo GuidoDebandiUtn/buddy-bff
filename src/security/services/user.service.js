@@ -1,15 +1,12 @@
 import { User } from "../../models/User.js";
 import { getUserStateByName } from "./userState.service.js";
 import { createStateUser } from "./stateUser.service.js";
-import { getUserTypeByName } from "../../parameters/services/userType.service.js";
 import { sequelize } from "../../database/database.js";
 
 export async function createUser(data) {
   const { mail, password, userName } = data;
 
   try {
-    const userType = await getUserTypeByName("BÁSICO");
-
     const newUser = await User.create(
       {
         mail,
@@ -17,17 +14,9 @@ export async function createUser(data) {
         userName,
         createdDate: new Date(),
         updatedDate: new Date(),
-        idUserType: userType.idUserType,
       },
       {
-        fields: [
-          "mail",
-          "password",
-          "userName",
-          "createdDate",
-          "updatedDate",
-          "idUserType",
-        ],
+        fields: ["mail", "password", "userName", "createdDate", "updatedDate"],
       }
     );
 
@@ -52,8 +41,7 @@ export async function getAllUsers() {
       GROUP BY idUser
     ) AS ultimosEstados ON users.idUser = ultimosEstados.idUser
     INNER JOIN userStates ON ultimosEstados.idUserState = userStates.idUserState
-    INNER JOIN userTypes ON users.idUserType = userTypes.idUserType
-    WHERE userStates.userStateName = 'ACTIVO' and userTypes.userTypeName = "BÁSICO"
+    WHERE userStates.userStateName = 'ACTIVO' 
     `;
 
     const users = await sequelize.query(query, {

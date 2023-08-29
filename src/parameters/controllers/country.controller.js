@@ -1,4 +1,5 @@
 import {
+  activeCountry,
   createCountry,
   deleteCountry,
   getAllCountries,
@@ -107,6 +108,27 @@ export async function countryDelete(req, res) {
     await deleteCountry(idCountry);
 
     return res.status(200).json({ message: "Se dio de baja el país" });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function countryActive(req, res) {
+  const { idCountry } = req.params;
+  try {
+    const country = await getCountryById(idCountry);
+
+    if (!country[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ningun país con este id" });
+    }
+
+    await activeCountry(idCountry);
+
+    return res.status(200).json({ message: "Se ha dado de alta el país" });
   } catch (error) {
     return res.status(500).json({
       message: error.message,
