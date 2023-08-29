@@ -1,5 +1,6 @@
 import { getIdToken } from "../../helpers/authHelper.js";
 import { validateMail } from "../../helpers/mailHelper.js";
+import { getRoleByName } from "../services/role.service.js";
 import { changeStateUser } from "../services/stateUser.service.js";
 import {
   createUser,
@@ -9,6 +10,7 @@ import {
   getUserByMail,
   updateUser,
 } from "../services/user.service.js";
+import { changeUserRole } from "../services/userRole.service.js";
 import { getUserStateByName } from "../services/userState.service.js";
 
 export async function userCreate(req, res) {
@@ -108,7 +110,7 @@ export async function userDelete(req, res) {
 
     const idUserAuthor = await getIdToken(req.header("auth-token"));
 
-    await changeStateUser(idUser, userState.idUserState, idUserAuthor);
+    await changeStateUser(idUser, userState[0].idUserState, idUserAuthor);
 
     return res.status(200).json({ message: "El usuario se ha dado de baja" });
   } catch (error) {
@@ -140,11 +142,45 @@ export async function changeState(req, res) {
 
     const userState = await getUserStateByName(userStateName);
 
-    await changeStateUser(idUser, userState.idUserState, idUserAuthor);
+    await changeStateUser(idUser, userState[0].idUserState, idUserAuthor);
 
     return res
       .status(200)
       .json({ message: "Se ha cambiado el estado del usuario" });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export async function changeRole(req, res) {
+  const { idUser, roleName } = req.params;
+
+  try {
+    const idUserAuthor = await getIdToken(req.header("auth-token"));
+
+    const user = await getUserById(idUser);
+
+    if (!user[0]) {
+      return res.status(404).json({
+        message: "No existe ningun usuario con ese id",
+      });
+    }
+
+    const exist = await getUserById(idUserAuthor);
+
+    if (!exist) {
+      return res.status(404).json({
+        message: "No existe ningun usuario con ese id",
+      });
+    }
+
+    const role = await getRoleByName(roleName);
+
+    await changeUserRole(idUser, role[0].idRole, idUserAuthor);
+
+    return res
+      .status(200)
+      .json({ message: "Se ha cambiado el rol del usuario" });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

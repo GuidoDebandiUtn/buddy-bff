@@ -32,6 +32,10 @@ const router = Router();
  *             properties:
  *               petName:
  *                 type: string
+ *               idPetBreed:
+ *                 type: string
+ *               idPetType:
+ *                 type: string
  *               birthDate:
  *                 type: Date
  *     responses:

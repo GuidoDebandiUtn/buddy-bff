@@ -1,4 +1,5 @@
 import {
+  activeUserState,
   createUserState,
   deleteUserState,
   getAllUserState,
@@ -11,7 +12,7 @@ export async function userStateCreate(req, res) {
   try {
     const userState = await getUserStateByName(req.body.userStateName);
 
-    if (userState) {
+    if (userState[0]) {
       return res.status(400).json({
         message: "Ya existe un UserState con ese nombre",
       });
@@ -31,7 +32,7 @@ export async function getUserStates(req, res) {
   try {
     const userStates = await getAllUserState();
 
-    if (!userStates) {
+    if (!userStates[0]) {
       return res.status(404).json({ message: "No existe ningun UserState" });
     }
 
@@ -49,7 +50,7 @@ export async function getUserState(req, res) {
   try {
     const userState = await getUserStateById(idUserState);
 
-    if (!userState) {
+    if (!userState[0]) {
       return res.status(404).json({
         message: "No existe ningun UserState con ese id",
       });
@@ -68,7 +69,7 @@ export async function userStateUpdate(req, res) {
   try {
     const userState = await getUserStateById(idUserState);
 
-    if (!userState) {
+    if (!userState[0]) {
       return res.status(404).json({
         message: "No existe ningun UserState con ese id",
       });
@@ -76,13 +77,13 @@ export async function userStateUpdate(req, res) {
 
     const duplicate = await getUserStateByName(req.body.userStateName);
 
-    if (duplicate) {
+    if (duplicate[0]) {
       return res.status(400).json({
         message: "Ya existe un UserState con ese nombre",
       });
     }
 
-    await updateUserState(req.body, userState);
+    await updateUserState(req.body, idUserState);
 
     return res
       .status(200)
@@ -98,7 +99,7 @@ export async function userStateDelete(req, res) {
   const { idUserState } = req.params;
   try {
     const userState = await getUserStateById(idUserState);
-    if (!userState) {
+    if (!userState[0]) {
       return res.status(404).json({
         message: "No existe ningun UserState con ese id",
       });
@@ -107,6 +108,29 @@ export async function userStateDelete(req, res) {
     return res
       .status(200)
       .json({ message: "Se ha dado de baja este UserState" });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function userStateActive(req, res) {
+  const { idUserState } = req.params;
+  try {
+    const userState = await getUserStateById(idUserState);
+
+    if (!userState[0]) {
+      return res.status(404).json({
+        message: "No existe ningun UserState con ese id",
+      });
+    }
+
+    await activeUserState(idUserState);
+
+    return res
+      .status(200)
+      .json({ message: "Se ha dado de alta este UserState" });
   } catch (error) {
     return res.status(500).json({
       message: error.message,

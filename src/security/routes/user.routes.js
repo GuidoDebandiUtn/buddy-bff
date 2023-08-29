@@ -6,6 +6,7 @@ import {
   userDelete,
   changeState,
   userCreate,
+  changeRole,
 } from "../controllers/user.controller.js";
 import { verifyToken } from "../controllers/auth.controller.js";
 
@@ -218,5 +219,35 @@ router.delete("/:idUser", verifyToken, userDelete);
  *        description: Hubo un error
  */
 router.post("/changeState/:idUser/:userStateName", verifyToken, changeState);
+
+/**
+ * @swagger
+ * /security/user/changeRole/{idUser}/{roleName}:
+ *  post:
+ *    summary: Cambiar rol de un usuario
+ *    tags: [USER]
+ *    responses:
+ *      200:
+ *        description: Se ha cambiado de rol un usuario exitosamente
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *      404:
+ *        description: No se encuentra el usuario al que se le va a cambiar el rol ni el ususario autor
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *      500:
+ *        description: Hubo un error
+ */
+router.post("/changeRole/:idUser/:roleName", verifyToken, changeRole);
 
 export default router;

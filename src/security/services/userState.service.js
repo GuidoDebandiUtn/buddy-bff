@@ -1,4 +1,5 @@
 import { UserState } from "../../models/UserState.js";
+import { sequelize } from "../../database/database.js";
 
 export async function createUserState(data) {
   const { userStateName } = data;
@@ -22,9 +23,14 @@ export async function createUserState(data) {
 
 export async function getAllUserState() {
   try {
-    const userStates = await UserState.findAll({
-      where: { active: true },
-      attributes: ["userStateName"],
+    const query = `
+        SELECT idUserState, userStateName
+        FROM userStates
+        WHERE active = true`;
+
+    const userStates = await sequelize.query(query, {
+      model: UserState,
+      mapToModel: true,
     });
 
     return userStates;
@@ -35,7 +41,15 @@ export async function getAllUserState() {
 
 export async function getUserStateById(idUserState) {
   try {
-    const userState = await UserState.findByOne({ where: { idUserState } });
+    const query = `
+        SELECT idUserState, userStateName
+        FROM userStates
+        WHERE idUserState = "${idUserState}"`;
+
+    const userState = await sequelize.query(query, {
+      model: UserState,
+      mapToModel: true,
+    });
 
     return userState;
   } catch (error) {
@@ -45,9 +59,14 @@ export async function getUserStateById(idUserState) {
 
 export async function getUserStateByName(userStateName) {
   try {
-    const userState = await UserState.findOne({
-      where: { userStateName: userStateName.toUpperCase(), active: true },
-      attributes: ["idUserState", "userStateName"],
+    const query = `
+        SELECT idUserState, userStateName
+        FROM userStates
+        WHERE userStateName = "${userStateName}"`;
+
+    const userState = await sequelize.query(query, {
+      model: UserState,
+      mapToModel: true,
     });
 
     return userState;
@@ -75,6 +94,19 @@ export async function deleteUserState(idUserState) {
   try {
     await UserState.update(
       { active: false, updatedDate: new Date() },
+      { where: { idUserState: idUserState }, returning: true }
+    );
+
+    return;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function activeUserState(idUserState) {
+  try {
+    await UserState.update(
+      { active: true, updatedDate: new Date() },
       { where: { idUserState: idUserState }, returning: true }
     );
 

@@ -2,6 +2,8 @@ import { User } from "../../models/User.js";
 import { getUserStateByName } from "./userState.service.js";
 import { createStateUser } from "./stateUser.service.js";
 import { sequelize } from "../../database/database.js";
+import { getRoleByName } from "./role.service.js";
+import { createUserRole } from "./userRole.service.js";
 
 export async function createEstablishment(data) {
   const { mail, userName, password } = data;
@@ -22,7 +24,11 @@ export async function createEstablishment(data) {
 
     const userState = await getUserStateByName("EN REVISIÓN");
 
-    await createStateUser(newEstablishment.idUser, userState.idUserState);
+    await createStateUser(newEstablishment.idUser, userState[0].idUserState);
+
+    const role = await getRoleByName("ESTABLECIMIENTO");
+
+    await createUserRole(newEstablishment.idUser, role[0].idRole);
 
     return newEstablishment;
   } catch (error) {
@@ -41,7 +47,13 @@ export async function getAllEstablishments() {
         GROUP BY idUser
       ) AS ultimosEstados ON users.idUser = ultimosEstados.idUser
       INNER JOIN userStates ON ultimosEstados.idUserState = userStates.idUserState
-      WHERE userStates.userStateName IN ('ACTIVO','EN REVISIÓN')
+      INNER JOIN (
+        SELECT idUser, idRole, MAX(createdDate) AS ultimaFecha
+        FROM userRoles 
+        GROUP BY idUser
+      ) AS ultimosRoles ON users.idUser = ultimosRoles.idUser
+      INNER JOIN roles ON ultimosRoles.idRole = roles.idRole
+      WHERE userStates.userStateName IN ('ACTIVO','EN REVISIÓN') and roles.roleName = "ESTABLECIMIENTO"
     `;
 
     const users = await sequelize.query(query, {
