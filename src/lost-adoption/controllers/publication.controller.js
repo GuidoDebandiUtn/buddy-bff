@@ -2,6 +2,7 @@ import {
     retrivePaginatedPublications,
     createSearch,
     publicationDelete,
+    getPublicationById,
   } from "../services/publication.service.js";
 
 
@@ -64,17 +65,20 @@ export async function postAdoption(req, res) {
 
 
 export async function deletePublication(req, res) {
-  const { idPublication,modelType } = req.params;
+  const { idPublication } = req.params;
+  const { modelType } = req.query;
   try {
+
     const publication = await getPublicationById(idPublication,modelType);
+
 
     if (!publication) {
       return res
         .status(404)
-        .json({ message: "No existe se ha podido encontrar la entidad a eliminar" });
+        .json({ message: "No existe se ha podido encontrar la publicacion a eliminar" });
     }
 
-    await publicationDelete(publication,modelType);
+    await publicationDelete(idPublication,modelType);
 
     return res
       .status(200)
@@ -85,3 +89,5 @@ export async function deletePublication(req, res) {
     });
   }
 }
+
+

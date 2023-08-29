@@ -17,36 +17,15 @@ import { getPetColorById } from "../../parameters/services/petColor.service.js";
 
 export async function retrivePaginatedPublications(page = 1, recordsPerPage = 10, modelType = 'search') {
 
+  const modelParams = getModel(modelType);
   try {
     const pageNumber = parseInt(page, 10);
     const recordsPerPageNumber = parseInt(recordsPerPage, 10);
-    let orderBy;
-    let modelName;
-    let include = [
-      {model:PetColor, as:'color', attributes: ['petColorName']},
-      {model:Locality, as:'locality', attributes: ['localityName']},
-      {model:PetBreed, as:'breed',include: [{model:PetType, as:'type', attributes: ['petTypeName']}], attributes: ['petBreedName','size','intelligence','temperament','lifespan','idPetType','idPetBreed']},
-      {model:PublicationState, as:'state', attributes: ['name','code']}
-    ];
-    let attributes = ['title','images','description'];
-
-    if (modelType === 'adoption') {
-      modelName=PublicationAdoption;
-      orderBy='contactPhone';
-      attributes.push('idPublicationAdoption','contactPhone','newOwnerName','newOwnerId');
-      
-
-    }else{
-      modelName=PublicationSearch;
-      attributes.push('latitude','longitude','isFound','lostDate');
-      orderBy = 'lostDate';
-      include.push({model:Trace, as: 'traces', attributes:['latitude','longitude','traceDate','traceTime','images']});
-    }
-    console.log("Calling getPaginatedData with: pageNumber: %s, recordsPerPageNumber: %s, orderBy; %s, include: %o",pageNumber, recordsPerPageNumber,orderBy,include);
-    return  getPaginatedData(modelName, pageNumber, recordsPerPageNumber,orderBy,attributes,include);
+    console.log("Calling getPaginatedData with: pageNumber: %s, recordsPerPageNumber: %s, orderBy; %s, include: %o",pageNumber, recordsPerPageNumber,modelParams.orderBy,modelParams.include);
+    return  getPaginatedData(modelParams.model, pageNumber, recordsPerPageNumber,modelParams.orderBy,modelParams.attributes,modelParams.include);
   } catch (err) {
     console.error('Error fetching paginated data:', err);
-    throw error;
+    throw err;
   }
 };
 
@@ -77,6 +56,7 @@ export async function createSearch(searchDto) {
 
     return newPublication;
   } catch (error) {
+    console.error('Error creating a publication:', error);
     throw error;
   }
 }
@@ -109,20 +89,79 @@ export async function createAdoption(adoptionDto) {
 
     return newPublication;
   } catch (error) {
+    console.error('Error creating a publication:', error);
     throw error;
   }
 }
 
 
-export async function publicationDelete(idPetColor) {
+export async function publicationDelete(idPublication,modelType) {
+  const modelParams= getModel(modelType);
+  const whereClause = {};
+  whereClause[modelParams.attributes.pop()] = idPublication;
+
+  const inactivePublicationState = await PublicationState.findOne({
+    attributes: ["idPublicationState"],
+    where: { name: 'INACTIVO' }
+  });
   try {
-    await PetColor.update(
-      { active: false, updatedDate: new Date() },
-      { where: { idPetColor }, returning: true }
+    await modelParams.model.update(
+      { idPublicationState: inactivePublicationState.idPublicationState },
+      { where: whereClause, returning: true }
     );
 
     return;
   } catch (error) {
+    console.error('Error deleting the publication with id:', idPublication);
     throw error;
   }
+}
+
+
+export async function getPublicationById(idPublication,modelType) {
+  const modelParams = getModel(modelType);
+  const whereClause = {};
+  whereClause[modelParams.attributes.pop()] = idPublication;
+
+  try {
+    const publication = await modelParams.model.findOne({
+      attributes: modelParams.attributes,
+      include: modelParams.include,
+      where: whereClause
+    });
+
+    return publication;
+  } catch (error) {
+    console.error("Ocurrio un error durante la consulta a BD de la publicacion con ID:",idPublication);
+    console.error(error);
+    throw error;
+  }
+}
+
+
+function getModel(modelType){
+  let orderBy;
+  let model;
+  let include = [
+    {model:PetColor, as:'color', attributes: ['petColorName']},
+    {model:Locality, as:'locality', attributes: ['localityName']},
+    {model:PetBreed, as:'breed',include: [{model:PetType, as:'type', attributes: ['petTypeName']}], attributes: ['petBreedName','size','intelligence','temperament','lifespan','idPetType','idPetBreed']},
+    {model:PublicationState, as:'state', attributes: ['name','code'],where: {name:'ACTIVO'}}
+  ];
+  let attributes = ['title','images','description'];
+
+  if (modelType === 'adoption') {
+    model=PublicationAdoption;
+    orderBy='contactPhone';
+    attributes.push('contactPhone','newOwnerName','newOwnerId','idPublicationAdoption');
+    
+
+  }else{
+    model=PublicationSearch;
+    attributes.push('latitude','longitude','isFound','lostDate','idPublicationSearch');
+    orderBy = 'lostDate';
+    include.push({model:Trace, as: 'traces', attributes:['latitude','longitude','traceDate','traceTime','images']});
+  }
+
+  return {orderBy,model,attributes,include}
 }

@@ -169,6 +169,6 @@ router.post('/search',postSearch);
 router.post('/adoption',postAdoption);
 
 
-router.delete('/',deletePublication);
+router.delete('/:idPublication',deletePublication);
 
 export default router;
