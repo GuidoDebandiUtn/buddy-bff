@@ -4,6 +4,7 @@ import { createStateUser } from "./stateUser.service.js";
 import { sequelize } from "../../database/database.js";
 import { getRoleByName } from "./role.service.js";
 import { createUserRole } from "./userRole.service.js";
+import bcrypt from "bcryptjs";
 
 export async function createUser(data) {
   const { mail, password, userName } = data;
@@ -132,7 +133,8 @@ export async function updateUser(idUser, data) {
     }
 
     if (password) {
-      updates.password = password;
+      const hashedPassword = await bcrypt.hash(password, 10);
+      updates.password = hashedPassword;
     }
 
     if (phoneNumber) {

@@ -20,7 +20,7 @@ const router = Router();
  */
 /**
  * @swagger
- * /security/auth/register:
+ * /security/user/register:
  *   post:
  *     summary: Crea un nuevo usuario
  *     tags: [USER]

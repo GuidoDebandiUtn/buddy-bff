@@ -73,8 +73,8 @@ Province.belongsTo(Country, { foreignKey: "idCountry" });
 Country.hasMany(Province, { foreignKey: "idCountry" });
 
 PetType.hasMany(PetBreed, { foreignKey: "idPetType" });
-PetType.hasMany(PublicationAdoption, { foreignKey: "idPetBreed" });
-PetType.hasMany(PublicationSearch, { foreignKey: "idPetBreed" });
+PetType.hasMany(PublicationAdoption, { foreignKey: "idPetType" });
+PetType.hasMany(PublicationSearch, { foreignKey: "idPetType" });
 PetType.hasMany(Pet, { foreignKey: "idPetType" });
 
 PetBreed.belongsTo(PetType, { foreignKey: "idPetType", as: "type" });
