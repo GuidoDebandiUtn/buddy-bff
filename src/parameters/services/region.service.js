@@ -2,7 +2,7 @@ import { Region } from "../../models/Region.js";
 import { sequelize } from "../../database/database.js";
 
 export async function createRegion(data) {
-  const { regionName, idRegion } = data;
+  const { regionName, idProvince } = data;
 
   try {
     const region = await Region.create(
@@ -10,10 +10,10 @@ export async function createRegion(data) {
         regionName: regionName.toUpperCase(),
         createdDate: new Date(),
         updatedDate: new Date(),
-        idRegion,
+        idProvince,
       },
       {
-        fields: ["regionName", "createdDate", "updatedDate", "idRegion"],
+        fields: ["regionName", "createdDate", "updatedDate", "idProvince"],
       }
     );
 

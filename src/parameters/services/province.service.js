@@ -47,7 +47,7 @@ export async function getProvinceById(idProvince) {
     const query = `
     SELECT provinces.idProvince, provinces.provinceName, regions.regionName
     FROM provinces
-    LEFT JOIN provinces ON provinces.idProvince = regions.idProvince
+    LEFT JOIN regions ON provinces.idProvince = regions.idProvince
     WHERE provinces.idProvince = '${idProvince}'
     `;
 
