@@ -3,6 +3,7 @@ import {
     createSearch,
     publicationDelete,
     getPublicationById,
+    createAdoption,
   } from "../services/publication.service.js";
 
 
@@ -49,7 +50,7 @@ export async function postSearch(req, res) {
 export async function postAdoption(req, res) {
  
   try {
-    const publication = await createSearch(req.body);
+    const publication = await createAdoption(req.body);
 
     return res.status(201).json(publication);
   } catch (error) {
