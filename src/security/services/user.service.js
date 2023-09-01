@@ -186,6 +186,8 @@ export async function destroyUser(mail) {
       where: { mail },
       force: true,
     });
+
+    return;
   } catch (error) {
     throw error;
   }

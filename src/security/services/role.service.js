@@ -31,9 +31,12 @@ export async function createRole(data) {
 export async function getAllRole() {
   try {
     const query = `
-        SELECT idRole, roleName
+        SELECT roles.idRole, roles.roleName, GROUP_CONCAT(permissions.tokenClaim) AS permisos
         FROM roles
-        WHERE active = true`;
+        LEFT JOIN rolePermissions ON roles.idRole = rolePermissions.idRole
+        LEFT JOIN permissions ON rolePermissions.idPermission = permissions.idPermission
+        WHERE roles.active = true
+        GROUP BY roles.idRole, roles.roleName`;
 
     const roles = await sequelize.query(query, {
       model: Role,
@@ -49,9 +52,12 @@ export async function getAllRole() {
 export async function getRoleById(idRole) {
   try {
     const query = `
-        SELECT idRole, roleName
-        FROM roles
-        WHERE idRole = "${idRole}"`;
+      SELECT roles.idRole, roles.roleName, GROUP_CONCAT(permissions.tokenClaim) AS permisos
+      FROM roles
+      LEFT JOIN rolePermissions ON roles.idRole = rolePermissions.idRole
+      LEFT JOIN permissions ON rolePermissions.idPermission = permissions.idPermission
+      WHERE roles.idRole = "${idRole}"
+      GROUP BY roles.idRole, roles.roleName`;
 
     const role = await sequelize.query(query, {
       model: Role,
@@ -67,9 +73,9 @@ export async function getRoleById(idRole) {
 export async function getRoleByName(roleName) {
   try {
     const query = `
-        SELECT idRole, roleName
-        FROM roles
-        WHERE roleName = "${roleName}"`;
+      SELECT idRole, roleName
+      FROM roles
+      WHERE roles.roleName = "${roleName}"`;
 
     const role = await sequelize.query(query, {
       model: Role,
