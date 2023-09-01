@@ -5,15 +5,15 @@ import { sequelize } from "../../database/database.js";
 export async function countFoundsSuccess() {
   try {
     const query = `
-    SELECT COUNT(*)
+    SELECT COUNT(*) as quantity
     FROM publicationsearches AS search
     JOIN publicationstates AS state
     ON search.idPublicationState = state.IdPublicationState
     WHERE state.NAME = 'RESUELTO'`;
 
-    const quantity = await sequelize.query(query);
+    const result = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
 
-    return quantity;
+    return result[0];
   } catch (error) {
     throw error;
   }
@@ -23,15 +23,15 @@ export async function countFoundsSuccess() {
 export async function countAdoptionsSuccess() {
     try {
       const query = `
-      SELECT COUNT(*)
+      SELECT COUNT(*) as quantity
       FROM publicationadoptions AS adoption
       JOIN publicationstates AS state
       ON adoption.idPublicationState = state.IdPublicationState
       WHERE state.NAME = 'RESUELTO'`;
   
-      const quantity = await sequelize.query(query);
+      const result = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
   
-      return quantity;
+      return result[0];
     } catch (error) {
       throw error;
     }
@@ -40,15 +40,16 @@ export async function countAdoptionsSuccess() {
 export async function countLostActives() {
     try {
         const query = `
-        SELECT COUNT(*)
+        SELECT COUNT(*) as quantity
         FROM publicationsearches AS search
         JOIN publicationstates AS state
         ON search.idPublicationState = state.IdPublicationState
         WHERE state.NAME = 'ACTIVO'`;
   
-      const quantity = await sequelize.query(query);
+      const result = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
+
   
-      return quantity;
+      return result[0];
     } catch (error) {
       throw error;
     }
@@ -57,15 +58,15 @@ export async function countLostActives() {
 export async function countActiveAdoptions() {
     try {
         const query = `
-        SELECT COUNT(*)
+        SELECT COUNT(*) as quantity
         FROM publicationadoptions AS adoption
         JOIN publicationstates AS state
         ON adoption.idPublicationState = state.IdPublicationState
         WHERE state.NAME = 'ACTIVO'`;
   
-      const quantity = await sequelize.query(query);
+      const result = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
   
-      return quantity;
+      return result[0];
     } catch (error) {
       throw error;
     }
@@ -74,7 +75,7 @@ export async function countActiveAdoptions() {
 export async function countActiveUsers() {
     try {
         const query = `
-        SELECT Count(*) 
+        SELECT Count(*)  as quantity
         FROM (
             SELECT idUser 
             FROM stateusers AS state
@@ -83,9 +84,9 @@ export async function countActiveUsers() {
             GROUP BY idUser
         ) AS ActiveUsersCount`;
 
-        const quantity = await sequelize.query(query);
+        const result = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
     
-        return quantity;
+        return result[0];
     } catch (error) {
         throw error;
     }
@@ -95,7 +96,7 @@ export async function countActiveUsers() {
 export async function countActiveServices() {
     try {
         const query = `
-        SELECT Count(*) 
+        SELECT Count(*)  as quantity
         FROM (
             SELECT idService 
             FROM stateservices AS state
@@ -104,17 +105,10 @@ export async function countActiveServices() {
             GROUP BY idservice 
         ) AS ActiveServiceCount`;
     
-        const quantity = await sequelize.query(query);
+        const result = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
     
-        return quantity;
+        return result[0];
     } catch (error) {
         throw error;
     }
 }
-
-
-
-
-
-
-router.get('reports/services-actives',);
