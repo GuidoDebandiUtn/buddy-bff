@@ -113,7 +113,7 @@ export async function putPublication(req, res) {
 
 
 function checkParameters(publicationDto,modelType ){
-  const dateRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
   
   /* TODO: 
   const imagesRegex = "";
