@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {    getPublications, postAdoption, postSearch,deletePublication} from "../controllers/publication.controller.js";
+import {    getPublications, postAdoption, postSearch,deletePublication, putPublication} from "../controllers/publication.controller.js";
 const router = Router();
 /**
  * @swagger
@@ -170,5 +170,7 @@ router.post('/adoption',postAdoption);
 
 
 router.delete('/:idPublication',deletePublication);
+
+router.put('/:idPublication',putPublication);
 
 export default router;

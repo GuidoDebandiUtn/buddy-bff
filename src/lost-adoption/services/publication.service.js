@@ -7,7 +7,7 @@ import { PublicationSearch } from "../../models/PublicationSearch.js";
 import { PublicationState } from "../../models/PublicationState.js";
 import { getPaginatedData } from "../../utils/pagination.js";
 import { Trace } from "../../models/Trace.js";
-import { getLocalityById } from "../../parameters/services/locality.service.js";
+import { getLocalityById, } from "../../parameters/services/locality.service.js";
 import { getPetBreedById } from "../../parameters/services/petBreed.service.js";
 import { getPetColorById } from "../../parameters/services/petColor.service.js";
 
@@ -100,19 +100,28 @@ export async function publicationDelete(idPublication,modelType) {
   const whereClause = {};
   whereClause[modelParams.attributes.pop()] = idPublication;
 
+  let publication;
+
   const inactivePublicationState = await PublicationState.findOne({
     attributes: ["idPublicationState"],
     where: { name: 'INACTIVO' }
   });
+  console.log(`estado Inactivo obtenido correctamente. entidad obtenida: '${inactivePublicationState}'`);
+  
   try {
-    await modelParams.model.update(
-      { idPublicationState: inactivePublicationState.idPublicationState },
+    publication = await modelParams.model.update(
+      { idPublicationState: inactivePublicationState.idPublicationState,
+        updatedDate: new Date(),
+      },
       { where: whereClause, returning: true }
     );
 
-    return;
+    console.log(`Se ha modificado correctamente la publicacion. Nueva entidad: '${publication}'`);
+
+    return publication;
   } catch (error) {
     console.error('Error deleting the publication with id:', idPublication);
+    console.error(error);
     throw error;
   }
 }
@@ -124,6 +133,8 @@ export async function getPublicationById(idPublication,modelType) {
   whereClause[modelParams.attributes.pop()] = idPublication;
 
   try {
+
+    console.log(`Llamando a sequalize.findOne con: attributes='${modelParams.attributes}', include=${modelParams.include}, where=${whereClause}`);
     const publication = await modelParams.model.findOne({
       attributes: modelParams.attributes,
       include: modelParams.include,
@@ -132,11 +143,36 @@ export async function getPublicationById(idPublication,modelType) {
 
     return publication;
   } catch (error) {
-    console.error("Ocurrio un error durante la consulta a BD de la publicacion con ID:",idPublication);
-    console.error(error);
+    console.log("Ocurrio un error durante la consulta a BD de la publicacion con ID:",idPublication);
+    console.log(error);
     throw error;
   }
 }
+
+export async function updatePublication(publicationDto,idPublication, modelType) {
+  const modelParams= getModel(modelType);
+  let whereClause = {};
+  whereClause[modelParams.attributes.pop()] = idPublication;
+
+
+  try {
+    let publicationNew = await modelParams.model.update(
+      { updatedDate: new Date(),
+        ...publicationDto
+      },
+      { where: whereClause, returning: true}
+    );
+
+    return publicationNew;
+  } catch (error) {
+    console.error(error);
+    throw new Error(`Error durante la actualizacion de los datos de la publicacion. error: '${error}'.`);
+  }
+}
+
+
+
+
 
 
 function getModel(modelType){
@@ -146,22 +182,26 @@ function getModel(modelType){
     {model:PetColor, as:'color', attributes: ['petColorName']},
     {model:Locality, as:'locality', attributes: ['localityName']},
     {model:PetBreed, as:'breed',include: [{model:PetType, as:'type', attributes: ['petTypeName']}], attributes: ['petBreedName','size','intelligence','temperament','lifespan','idPetType','idPetBreed']},
-    {model:PublicationState, as:'state', attributes: ['name','code'],where: {name:'ACTIVO'}}
+    {model:PublicationState, as:'state', attributes: ['name','code'],where: {name:'ACTIVO'}},
   ];
   let attributes = ['title','images','description'];
 
-  if (modelType === 'adoption') {
+  if (modelType.toUpperCase() == 'ADOPTION') {
     model=PublicationAdoption;
     orderBy='contactPhone';
     attributes.push('contactPhone','newOwnerName','newOwnerId','idPublicationAdoption');
     
 
-  }else{
+  }else if(modelType.toUpperCase() == 'SEARCH'){
     model=PublicationSearch;
     attributes.push('latitude','longitude','isFound','lostDate','idPublicationSearch');
     orderBy = 'lostDate';
     include.push({model:Trace, as: 'traces', attributes:['latitude','longitude','traceDate','traceTime','images']});
   }
 
-  return {orderBy,model,attributes,include}
+
+  console.log(`Parametros de modelo obtenidos: orderBy='${orderBy}', model= '${model}', attributes= '${attributes}', include= '${include}'`);
+  return {orderBy,model,attributes,include};
 }
+
+
