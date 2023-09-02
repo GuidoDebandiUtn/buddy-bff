@@ -1,11 +1,11 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../database/database.js";
 
-export class Report extends Model {}
+export class Complaint extends Model {}
 
-Report.init(
+Complaint.init(
   {
-    idReport: {
+    idComplaint: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
@@ -44,6 +44,6 @@ Report.init(
   {
     sequelize,
     timestamps: false,
-    modelName: "report",
+    modelName: "complaint",
   }
 );

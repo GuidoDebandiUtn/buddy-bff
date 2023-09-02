@@ -21,7 +21,7 @@ import "./models/PublicationSearch.js";
 import "./models/PublicationState.js";
 import "./models/Rating.js";
 import "./models/Region.js";
-import "./models/Report.js";
+import "./models/Complaint.js";
 import "./models/RevokedToken.js";
 import "./models/Role.js";
 import "./models/Service.js";
