@@ -44,8 +44,8 @@ export async function getPublicationsByUser(idUser) {
     const searchs =await PublicationSearch.findAll({where: {idUser: idUser}, include: include});
     console.log ("busquedas obtenidas correctamente");
 
-    const allPublications = [...adoptions, ...searchs];
-    return  allPublications;
+    
+    return  {adoptions,searchs};
   } catch (err) {
     console.error('Error al obtener las publicaciones del usuario:', error);
     throw err;
