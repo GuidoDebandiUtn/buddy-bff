@@ -88,6 +88,24 @@ export async function getUserById(idUser) {
   }
 }
 
+export async function getUserPassword(idUser) {
+  try {
+    const query = `
+    SELECT password
+    FROM users
+    WHERE idUser = '${idUser}'
+    `;
+    const user = await sequelize.query(query, {
+      model: User,
+      mapToModel: true,
+    });
+
+    return user[0].password;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function getUserByMail(mail) {
   try {
     const query = `

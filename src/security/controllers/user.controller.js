@@ -9,6 +9,7 @@ import {
   getUserById,
   getUserByMail,
   updateUser,
+  getUserPassword
 } from "../services/user.service.js";
 import { changeUserRole } from "../services/userRole.service.js";
 import { getUserStateByName } from "../services/userState.service.js";
@@ -74,6 +75,7 @@ export async function getUser(req, res) {
 
 export async function userUpdate(req, res) {
   const { idUser } = req.params;
+  const { currentPassword } = req.body;
 
   try {
     const user = await getUserById(idUser);
@@ -82,6 +84,12 @@ export async function userUpdate(req, res) {
       return res.status(404).json({
         message: "No existe ningun usuario con ese id",
       });
+    }
+
+    if(await getUserPassword(idUser) != currentPassword){
+      return res.status(400).json({
+        error: "Ha habido un problema con la contraseña actual del usuario",
+        code: 400});
     }
 
     await updateUser(idUser, req.body);
