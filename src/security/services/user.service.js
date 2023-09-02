@@ -73,8 +73,8 @@ export async function getAllUsers() {
 export async function getUserById(idUser) {
   try {
     const query = `
-    SELECT idUser, mail, userName
-    FROM users
+    SELECT idUser, mail, userName, name, lastName
+    
     WHERE idUser = '${idUser}'
     `;
     const user = await sequelize.query(query, {

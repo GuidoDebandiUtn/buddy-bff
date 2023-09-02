@@ -1,5 +1,6 @@
 import { Router } from "express";
-import {    getPublications, postAdoption, postSearch,deletePublication, putPublication} from "../controllers/publication.controller.js";
+import {    getPublications, postAdoption, postSearch,deletePublication, putPublication, obtainPublicationsByUser} from "../controllers/publication.controller.js";
+
 const router = Router();
 /**
  * @swagger
@@ -52,6 +53,10 @@ const router = Router();
  *          description: Error interno del servicio
  */
 router.get('/',getPublications);
+
+
+
+router.get('/:idUser',obtainPublicationsByUser);
 
 
 /**

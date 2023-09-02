@@ -1,3 +1,4 @@
+import { getUserById } from "../../security/services/user.service.js";
 import {
     retrivePaginatedPublications,
     createSearch,
@@ -5,6 +6,7 @@ import {
     getPublicationById,
     createAdoption,
     updatePublication,
+    getPublicationsByUser,
   } from "../services/publication.service.js";
 
 
@@ -18,6 +20,38 @@ export async function getPublications(req, res) {
       return res
         .status(404)
         .json({ message: "Error retriving publications" });
+    }
+
+    return res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+
+}
+
+export async function obtainPublicationsByUser(req,res){
+  const { idUser } = req.params;
+
+  try {
+    const user = await  getUserById(idUser);
+
+
+    if (!user[0]) {
+      return res
+        .status(404)
+        .json({ message: "No se han encontrado el usuario indicado" });
+    }
+
+    console.log ("user obtenido correctamente");
+    const data = await getPublicationsByUser(idUser);
+
+    console.log ("publicaciones obtenidas correctamente");
+    if (!data) {
+      return res
+        .status(204)
+        .json({ message: "No se han encontrado ninguna publicacion para el usuario" });
     }
 
     return res.status(200).json(data);

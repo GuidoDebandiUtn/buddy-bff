@@ -29,6 +29,32 @@ export async function retrivePaginatedPublications(page = 1, recordsPerPage = 10
   }
 };
 
+
+export async function getPublicationsByUser(idUser) {
+  let include = [
+    {model:PetColor, as:'color', attributes: ['petColorName']},
+    {model:Locality, as:'locality', attributes: ['localityName']},
+    {model:PetBreed, as:'breed',include: [{model:PetType, as:'type', attributes: ['petTypeName']}], attributes: ['petBreedName','size','intelligence','temperament','lifespan','idPetType','idPetBreed']},
+    {model:PublicationState, as:'state', attributes: ['name','code'],where: {name:'ACTIVO'}},
+  ];
+  try {
+    const adoptions =await PublicationAdoption.findAll({where: {idUser: idUser}, include: include});
+    console.log ("adopciones obtenidas correctamente");
+    include.push({model:Trace, as: 'traces', attributes:['latitude','longitude','traceDate','traceTime','images']});
+    const searchs =await PublicationSearch.findAll({where: {idUser: idUser}, include: include});
+    console.log ("busquedas obtenidas correctamente");
+
+    const allPublications = [...adoptions, ...searchs];
+    return  allPublications;
+  } catch (err) {
+    console.error('Error al obtener las publicaciones del usuario:', error);
+    throw err;
+  }
+};
+
+
+
+
 export async function createSearch(searchDto) {
   try {
     let locality = await getLocalityById(searchDto.idLocality);
