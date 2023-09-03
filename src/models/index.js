@@ -82,16 +82,16 @@ PetBreed.hasMany(PublicationAdoption, { foreignKey: "idPetBreed" });
 PetBreed.hasMany(PublicationSearch, { foreignKey: "idPetBreed" });
 PetBreed.hasMany(Pet, { foreignKey: "idPetBreed" });
 
-Service.hasMany(StateService, { foreignKey: "idUser" });
+Service.hasMany(StateService, { foreignKey: "idService" });
 Service.belongsTo(ServiceType, { foreignKey: "idServiceType" });
 Service.hasMany(Rating, { foreignKey: "idService" });
 Service.belongsTo(User, { foreignKey: "idUser" });
 Service.hasMany(Complaint, { foreignKey: "idService" });
 
-ServiceState.hasMany(StateService, { foreignKey: "idUserState" });
+ServiceState.hasMany(StateService, { foreignKey: "idServiceState" });
 
-StateService.belongsTo(Service, { foreignKey: "idUser" });
-StateService.belongsTo(ServiceState, { foreignKey: "idUserState" });
+StateService.belongsTo(Service, { foreignKey: "idService" });
+StateService.belongsTo(ServiceState, { foreignKey: "idServiceState" });
 
 ServiceType.hasMany(Service, { foreignKey: "idServiceType" });
 
