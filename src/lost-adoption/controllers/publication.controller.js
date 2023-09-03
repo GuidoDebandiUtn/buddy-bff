@@ -147,11 +147,11 @@ export async function putPublication(req, res) {
 
 
 function checkParameters(publicationDto,modelType ){
-  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+  const dateRegex = /^\d{2}-\d{2}-\d{4}$/;
   
   /* TODO: 
   const imagesRegex = "";
-  if(!dateRegex.test(req.body.lostDate)){
+  if(!dateRegex.test(req.body.images)){
     throw new Error(`Error en el formato del nombre de las imagenes asociadas, validar servicio de amazon cloud.`);
   }
   */
