@@ -20,20 +20,15 @@ Pet.init(
     },
     active: {
       type: DataTypes.BOOLEAN,
+      defaultValue: true,
     },
     image: {
       type: DataTypes.STRING,
     },
-    createdDate: {
-      type: DataTypes.DATE,
-    },
-    updatedDate: {
-      type: DataTypes.DATE,
-    },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "pet",
   }
 );

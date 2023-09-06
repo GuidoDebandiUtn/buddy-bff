@@ -19,16 +19,14 @@ PublicationState.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    createdDate: {
-      type: DataTypes.DATE,
-    },
-    updatedDate: {
-      type: DataTypes.DATE,
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
     },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "publicationState",
   }
 );

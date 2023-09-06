@@ -48,16 +48,10 @@ PublicationSearch.init(
       type: DataTypes.DATE,
       allowNull: false,
     },
-    createdDate: {
-      type: DataTypes.DATE,
-    },
-    updatedDate: {
-      type: DataTypes.DATE,
-    },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "publicationSearch",
   }
 );

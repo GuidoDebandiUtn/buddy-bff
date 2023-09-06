@@ -47,16 +47,10 @@ PublicationAdoption.init(
     sterilized: {
       type: DataTypes.BOOLEAN,
     },
-    createdDate: {
-      type: DataTypes.DATE,
-    },
-    updatedDate: {
-      type: DataTypes.DATE,
-    },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "publicationAdoption",
   }
 );

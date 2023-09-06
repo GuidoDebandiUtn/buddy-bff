@@ -35,10 +35,14 @@ Trace.init(
     idAuthorUser: {
       type: DataTypes.UUID,
     },
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "trace",
   }
 );

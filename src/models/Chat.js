@@ -1,4 +1,4 @@
-import { DataTypes, Model, UUID } from "sequelize";
+import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../database/database.js";
 
 export class Chat extends Model {}
@@ -13,6 +13,7 @@ Chat.init(
     },
     idUserReceptor: {
       type: DataTypes.UUID,
+      allowNull: false,
     },
     active: {
       type: DataTypes.BOOLEAN,
@@ -25,16 +26,10 @@ Chat.init(
     language: {
       type: DataTypes.STRING,
     },
-    createdDate: {
-      type: DataTypes.DATE,
-    },
-    updatedDate: {
-      type: DataTypes.DATE,
-    },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "chat",
   }
 );

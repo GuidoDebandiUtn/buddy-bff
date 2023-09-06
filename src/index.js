@@ -2,14 +2,15 @@ import app from "./app.js";
 import { sequelize } from "./database/database.js";
 import { swaggerDocs } from "./swagger.js";
 import "./models/Chat.js";
+import "./models/Complaint.js";
 import "./models/Country.js";
-import "./models/Document.js";
-import "./models/Image.js";
+// import "./models/Document.js";
+// import "./models/Image.js";
 import "./models/index.js";
 import "./models/Information.js";
 import "./models/Locality.js";
 import "./models/Message.js";
-import "./models/Notification.js";
+// import "./models/Notification.js";
 import "./models/Permission.js";
 import "./models/Pet.js";
 import "./models/PetBreed.js";
@@ -38,7 +39,7 @@ import "./models/UserState.js";
 import "./models/Vaccine.js";
 
 async function main() {
-  await sequelize.sync({ alter: false });
+  await sequelize.sync({ force: false });
   app.listen(4000, () => {
     console.log("Server on port 4000");
     swaggerDocs(app, 4000);

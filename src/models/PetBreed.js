@@ -37,16 +37,10 @@ PetBreed.init(
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
-    createdDate: {
-      type: DataTypes.DATE,
-    },
-    updatedDate: {
-      type: DataTypes.DATE,
-    },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "petBreed",
   }
 );

@@ -53,16 +53,10 @@ Service.init(
         this.setDataValue("images", value ? JSON.stringify(value) : "[]");
       },
     },
-    createdDate: {
-      type: DataTypes.DATE,
-    },
-    updatedDate: {
-      type: DataTypes.DATE,
-    },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "service",
   }
 );
