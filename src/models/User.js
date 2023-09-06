@@ -58,6 +58,12 @@ User.init(
     blockedReason: {
       type: DataTypes.STRING,
     },
+    image: {
+      type: DataTypes.STRING,
+    },
+    cuitCuil: {
+      type: DataTypes.STRING,
+    },
     createdDate: {
       type: DataTypes.DATE,
     },

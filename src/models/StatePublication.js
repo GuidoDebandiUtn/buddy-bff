@@ -1,28 +1,18 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../database/database.js";
 
-export class Pet extends Model {}
+export class StatePublication extends Model {}
 
-Pet.init(
+StatePublication.init(
   {
-    idPet: {
+    idStatePublication: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
     },
-    petName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    birthDate: {
-      type: DataTypes.DATE,
-    },
-    active: {
-      type: DataTypes.BOOLEAN,
-    },
-    image: {
-      type: DataTypes.STRING,
+    idUserAuthor: {
+      type: DataTypes.UUID,
     },
     createdDate: {
       type: DataTypes.DATE,
@@ -34,6 +24,6 @@ Pet.init(
   {
     sequelize,
     timestamps: false,
-    modelName: "pet",
+    modelName: "statePublication",
   }
 );

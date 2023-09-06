@@ -30,7 +30,7 @@ Trace.init(
       type: DataTypes.TIME,
     },
     images: {
-      type: DataTypes.TIME,
+      type: DataTypes.STRING,
     },
     idAuthorUser: {
       type: DataTypes.UUID,

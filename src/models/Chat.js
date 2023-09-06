@@ -22,6 +22,9 @@ Chat.init(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    language: {
+      type: DataTypes.STRING,
+    },
     createdDate: {
       type: DataTypes.DATE,
     },

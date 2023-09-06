@@ -11,6 +11,9 @@ Message.init(
       allowNull: false,
       primaryKey: true,
     },
+    content: {
+      type: DataTypes.STRING,
+    },
     idUserEmitter: {
       type: DataTypes.UUID,
       allowNull: false,

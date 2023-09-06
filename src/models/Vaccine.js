@@ -27,6 +27,9 @@ Vaccine.init(
     nextVaccineDate: {
       type: DataTypes.DATE,
     },
+    notification: {
+      type: DataTypes.BOOLEAN,
+    },
     createdDate: {
       type: DataTypes.DATE,
     },

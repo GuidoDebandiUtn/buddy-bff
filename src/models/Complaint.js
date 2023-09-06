@@ -19,7 +19,7 @@ Complaint.init(
       type: DataTypes.UUID,
       allowNull: false,
     },
-    reportDescription: {
+    complaintDescription: {
       type: DataTypes.STRING,
       allowNull: false,
     },

@@ -19,7 +19,10 @@ PublicationState.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    expirationDate: {
+    createdDate: {
+      type: DataTypes.DATE,
+    },
+    updatedDate: {
       type: DataTypes.DATE,
     },
   },
