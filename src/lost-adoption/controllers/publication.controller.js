@@ -7,11 +7,12 @@ import {
     createAdoption,
     updatePublication,
     getPublicationsByUser,
-  } from "../services/publication.service.js";
+} from "../services/publication.service.js";
+
 
 
 export async function getPublications(req, res) {
-    const {  modelType ,page, size,} = req.query;
+  const { modelType, page, size } = req.query;
 
     if(!modelType){
       return res
@@ -20,12 +21,10 @@ export async function getPublications(req, res) {
     }
 
   try {
-    const data = await retrivePaginatedPublications(page,size, modelType);
+    const data = await retrivePaginatedPublications(page, size, modelType);
 
     if (!data) {
-      return res
-        .status(404)
-        .json({ message: "Error retriving publications" });
+      return res.status(404).json({ message: "Error retriving publications" });
     }
 
     return res.status(200).json(data);
@@ -34,7 +33,6 @@ export async function getPublications(req, res) {
       message: error.message,
     });
   }
-
 }
 
 export async function obtainPublicationsByUser(req,res){
@@ -70,10 +68,11 @@ export async function obtainPublicationsByUser(req,res){
 }
 
 
+
 export async function postSearch(req, res) {
   try {
     let publication;
-    if (req.body.lostDate || checkParameters('SEARCH',req.body)) {
+    if (req.body.lostDate || checkParameters("SEARCH", req.body)) {
       publication = await createSearch(req.body);
     }
 
@@ -84,7 +83,6 @@ export async function postSearch(req, res) {
     });
   }
 }
-
 
 export async function postAdoption(req, res) {
   try {
@@ -98,7 +96,6 @@ export async function postAdoption(req, res) {
   }
 }
 
-
 export async function deletePublication(req, res) {
   const { idPublication } = req.params;
   const { modelType } = req.query;
@@ -111,20 +108,28 @@ export async function deletePublication(req, res) {
   }
 
   console.log(`Iniciado proceso de eliminacion de publicacion - Parametros modelType='${modelType}', idPublication= '${idPublication}'`);
+
   try {
-    const publication = await getPublicationById(idPublication,modelType);
-    console.log(`publicacion obtenida correctamente. entidad obtenida: '${publication}'`);
+    const publication = await getPublicationById(idPublication, modelType);
+    console.log(
+      `publicacion obtenida correctamente. entidad obtenida: '${publication}'`
+    );
     if (!publication) {
       return res
         .status(404)
-        .json({ message: `No se ha podido encontrar la publicacion a eliminar` });
+        .json({
+          message: `No se ha podido encontrar la publicacion a eliminar`,
+        });
     }
 
-    await publicationDelete(idPublication,modelType);
+    await publicationDelete(idPublication, modelType);
 
     return res
       .status(200)
-      .json({ message: "Se ha dado de baja correctamente la publicacion de la mascota" });
+      .json({
+        message:
+          "Se ha dado de baja correctamente la publicacion de la mascota",
+      });
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -132,30 +137,34 @@ export async function deletePublication(req, res) {
   }
 }
 
-
-
 export async function putPublication(req, res) {
   const { modelType } = req.query;
   const { idPublication } = req.params;
+
   
   if(!modelType){
     return res
     .status(400)
     .json({ message: `El parametro modelType es obligatorio`, code: 400 });
   }
-
+  
   checkParameters(req.body,modelType);
-
+  
   try {
-    let publication = await getPublicationById(idPublication,modelType);
+    
+    let publication = await getPublicationById(idPublication, modelType);
     if (!publication) {
       return res
         .status(404)
-        .json({ message: `No se ha podido encontrar la publicacion de Id: '${idPublication}'.` });
+        .json({
+          message: `No se ha podido encontrar la publicacion de Id: '${idPublication}'.`,
+        });
     }
-   publication = await updatePublication(req.body,idPublication,modelType);
+    publication = await updatePublication(req.body, idPublication, modelType);
 
-    return res.status(200).json({message: "Se ha modificado la publicacion Correctamente"});
+    return res
+      .status(200)
+      .json({ message: "Se ha modificado la publicacion Correctamente" });
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -169,6 +178,7 @@ export async function putPublication(req, res) {
 function checkParameters(publicationDto,modelType ){
   const dateRegex = /^\d{2}-\d{2}-\d{4}$/;
   
+
   /* TODO: 
   const imagesRegex = "";
   if(!dateRegex.test(req.body.images)){
@@ -176,20 +186,17 @@ function checkParameters(publicationDto,modelType ){
   }
   */
 
-  switch(modelType.toUpperCase()){
-   case "SEARCH":
-      if(!dateRegex.test(publicationDto.lostDate)){
-        throw new Error(`Error en el formato del campo lostDate, el formato esperado es AAAA-mm-dd HH-mm-ss. valor recibido: '${req.body.lostDate}'.`);
+  switch (modelType.toUpperCase()) {
+    case "SEARCH":
+      if (!dateRegex.test(publicationDto.lostDate)) {
+        throw new Error(
+          `Error en el formato del campo lostDate, el formato esperado es AAAA-mm-dd HH-mm-ss. valor recibido: '${publicationDto.lostDate}'.`
+        );
       }
-    
-   return true;
-   
-   
-   
-   case "ADOPTION":
-    
-   return true;
+
+      return true;
+
+    case "ADOPTION":
+      return true;
   }
-
-
 }

@@ -11,6 +11,9 @@ Message.init(
       allowNull: false,
       primaryKey: true,
     },
+    content: {
+      type: DataTypes.STRING,
+    },
     idUserEmitter: {
       type: DataTypes.UUID,
       allowNull: false,
@@ -23,16 +26,10 @@ Message.init(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    createdDate: {
-      type: DataTypes.DATE,
-    },
-    updatedDate: {
-      type: DataTypes.DATE,
-    },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "message",
   }
 );

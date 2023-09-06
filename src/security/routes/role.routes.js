@@ -1,11 +1,13 @@
 import { Router } from "express";
 import {
+  addPermission,
   getRole,
   getRoles,
   roleActive,
   roleCreate,
   roleDelete,
   roleUpdate,
+  takePermission,
 } from "../controllers/role.controller.js";
 import { verifyToken } from "../controllers/auth.controller.js";
 
@@ -32,6 +34,8 @@ const router = Router();
  *             type: object
  *             properties:
  *               roleName:
+ *                 type: string
+ *               roleDescription:
  *                 type: string
  *     responses:
  *       201:
@@ -113,6 +117,10 @@ router.get("/:idRole", verifyToken, getRole);
  *             properties:
  *               roleName:
  *                 type: string
+ *               roleDescription:
+ *                 type: string
+ *               adminRole:
+ *                 type: bool
  *     responses:
  *       200:
  *         description: rol modificado exitosamente
@@ -177,5 +185,69 @@ router.delete("/:idRole", verifyToken, roleDelete);
  *          description: Hubo un error
  */
 router.post("/active/:idRole", verifyToken, roleActive);
+
+/**
+ * @swagger
+ * /security/role/add/{idRole}:
+ *   post:
+ *     summary: Añade un permiso al rol
+ *     tags: [ROLE]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               idPermission:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Permiso añadido exitosamente
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *       404:
+ *         description: No existe ningun rol con este id
+ *       500:
+ *         description: Hubo un error
+ */
+router.post("/add/:idRole", verifyToken, addPermission);
+
+/**
+ * @swagger
+ * /security/role/take/{idRole}:
+ *   delete:
+ *     summary: Quita un permiso al rol
+ *     tags: [ROLE]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               idPermission:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Permiso quitado exitosamente
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *       404:
+ *         description: No existe ningun rol con este id
+ *       500:
+ *         description: Hubo un error
+ */
+router.delete("/take/:idRole", verifyToken, takePermission);
 
 export default router;

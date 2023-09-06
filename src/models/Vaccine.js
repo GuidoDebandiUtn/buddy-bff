@@ -20,20 +20,23 @@ Vaccine.init(
     },
     active: {
       type: DataTypes.BOOLEAN,
+      defaultValue: true,
     },
     vaccineDate: {
       type: DataTypes.DATE,
+      allowNull: false,
     },
-    createdDate: {
+    nextVaccineDate: {
       type: DataTypes.DATE,
     },
-    updatedDate: {
-      type: DataTypes.DATE,
+    notification: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "vaccine",
   }
 );

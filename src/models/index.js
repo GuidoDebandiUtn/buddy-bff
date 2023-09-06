@@ -1,11 +1,12 @@
 import { Chat } from "./Chat.js";
+import { Complaint } from "./Complaint.js";
 import { Country } from "./Country.js";
-import {} from "./Document.js";
-import {} from "./Image.js";
+// import {} from "./Document.js";
+// import {} from "./Image.js";
 import { Information } from "./Information.js";
 import { Locality } from "./Locality.js";
 import { Message } from "./Message.js";
-import { Notification } from "./Notification.js";
+// import { Notification } from "./Notification.js";
 import { Permission } from "./Permission.js";
 import { Pet } from "./Pet.js";
 import { PetBreed } from "./PetBreed.js";
@@ -17,13 +18,14 @@ import { PublicationSearch } from "./PublicationSearch.js";
 import { PublicationState } from "./PublicationState.js";
 import { Rating } from "./Rating.js";
 import { Region } from "./Region.js";
-import { Complaint } from "./Complaint.js";
 // import { RevokedToken } from "./RevokedToken.js";
 import { Role } from "./Role.js";
 import { RolePermission } from "./RolePermission.js";
 import { Service } from "./Service.js";
+import { ServicePet } from "./ServicePet.js";
 import { ServiceState } from "./ServiceState.js";
 import { ServiceType } from "./ServiceType.js";
+import { StatePublication } from "./StatePublication.js";
 import { StateService } from "./StateService.js";
 import { StateUser } from "./StateUser.js";
 import { Trace } from "./Trace.js";
@@ -41,6 +43,12 @@ User.hasMany(PublicationAdoption, { foreignKey: "idUser" });
 User.hasMany(PublicationSearch, { foreignKey: "idUser" });
 User.hasMany(UserRole, { foreignKey: "idUser" });
 User.hasMany(Service, { foreignKey: "idUser" });
+User.hasMany(Chat, { foreignKey: "idUserEmitter" });
+
+Chat.belongsTo(User, { foreignKey: "idUserEmitter" });
+Chat.hasMany(Message, { foreignKey: "idUserEmitter" });
+
+Message.belongsTo(Chat, { foreignKey: "idChat" });
 
 UserRole.belongsTo(User, { foreignKey: "idUser" });
 UserRole.belongsTo(Role, { foreignKey: "idRole" });
@@ -76,8 +84,9 @@ PetType.hasMany(PetBreed, { foreignKey: "idPetType" });
 PetType.hasMany(PublicationAdoption, { foreignKey: "idPetType" });
 PetType.hasMany(PublicationSearch, { foreignKey: "idPetType" });
 PetType.hasMany(Pet, { foreignKey: "idPetType" });
+PetType.hasMany(ServicePet, { foreignKey: "idPetType" });
 
-PetBreed.belongsTo(PetType, { foreignKey: "idPetType", as: "type" });
+PetBreed.belongsTo(PetType, { foreignKey: "idPetType" });
 PetBreed.hasMany(PublicationAdoption, { foreignKey: "idPetBreed" });
 PetBreed.hasMany(PublicationSearch, { foreignKey: "idPetBreed" });
 PetBreed.hasMany(Pet, { foreignKey: "idPetBreed" });
@@ -87,6 +96,10 @@ Service.belongsTo(ServiceType, { foreignKey: "idServiceType" });
 Service.hasMany(Rating, { foreignKey: "idService" });
 Service.belongsTo(User, { foreignKey: "idUser" });
 Service.hasMany(Complaint, { foreignKey: "idService" });
+Service.hasMany(ServicePet, { foreignKey: "idService" });
+
+ServicePet.belongsTo(Service, { foreignKey: "idService" });
+ServicePet.belongsTo(PetType, { foreignKey: "idPetType" });
 
 ServiceState.hasMany(StateService, { foreignKey: "idServiceState" });
 
@@ -100,68 +113,76 @@ Rating.belongsTo(Service, { foreignKey: "idService" });
 
 PublicationAdoption.belongsTo(PetColor, {
   foreignKey: "idPetColor",
-  as: "color",
 });
 PublicationAdoption.belongsTo(PetBreed, {
   foreignKey: "idPetBreed",
-  as: "breed",
 });
 PublicationAdoption.belongsTo(PetType, {
   foreignKey: "idPetType",
-  as: "type",
 });
 PublicationAdoption.belongsTo(Locality, {
   foreignKey: "idLocality",
-  as: "locality",
 });
+PublicationAdoption.hasMany(StatePublication, {
+  foreignKey: "idPublicationAdoption",
+});
+PublicationAdoption.belongsTo(User, { foreignKey: "idUser" });
+PublicationAdoption.hasMany(Complaint, { foreignKey: "idPublicationAdoption" });
 PublicationAdoption.belongsTo(PublicationState, {
   foreignKey: "idPublicationState",
-  as: "state",
 });
-PublicationAdoption.belongsTo(User, { foreignKey: "idUser", as: "user" });
-PublicationAdoption.hasMany(Complaint, { foreignKey: "idPublicationAdoption" });
 
 PublicationSearch.belongsTo(PetColor, {
   foreignKey: "idPetColor",
-  as: "color",
 });
 PublicationSearch.belongsTo(PetBreed, {
   foreignKey: "idPetBreed",
-  as: "breed",
 });
 PublicationSearch.belongsTo(PetType, {
   foreignKey: "idPetType",
-  as: "type",
 });
 PublicationSearch.belongsTo(Locality, {
   foreignKey: "idLocality",
-  as: "locality",
+});
+PublicationSearch.hasMany(StatePublication, {
+  foreignKey: "idPublicationSearch",
+});
+
+PublicationSearch.belongsTo(User, { foreignKey: "idUser" });
+PublicationSearch.hasMany(Complaint, { foreignKey: "idPublicationSearch" });
+PublicationSearch.hasMany(Trace, {
+  foreignKey: "idPublicationSearch",
 });
 PublicationSearch.belongsTo(PublicationState, {
   foreignKey: "idPublicationState",
-  as: "state",
-});
-PublicationSearch.belongsTo(User, { foreignKey: "idUser", as: "user" });
-PublicationSearch.hasMany(Complaint, { foreignKey: "idPublicationAdoption" });
-PublicationSearch.hasMany(Trace, {
-  foreignKey: "idPublicationSearch",
-  as: "traces",
 });
 
 PetColor.hasMany(PublicationSearch, { foreignKey: "idPetColor" });
 PetColor.hasMany(PublicationAdoption, { foreignKey: "idPetColor" });
 PetColor.hasMany(Pet, { foreignKey: "idPetColor" });
 
-PublicationState.hasMany(PublicationSearch, {
+PublicationState.hasMany(StatePublication, {
   foreignKey: "idPublicationState",
 });
 PublicationState.hasMany(PublicationAdoption, {
   foreignKey: "idPublicationState",
 });
+PublicationState.hasMany(PublicationSearch, {
+  foreignKey: "idPublicationState",
+});
+
+StatePublication.belongsTo(PublicationAdoption, {
+  foreignKey: "idPublicationAdoption",
+});
+StatePublication.belongsTo(PublicationSearch, {
+  foreignKey: "idPublicationSearch",
+});
+StatePublication.belongsTo(PublicationState, {
+  foreignKey: "idPublicationState",
+});
 
 Trace.belongsTo(PublicationSearch, {
   foreignKey: "idPublicationSearch",
-  as: "publication",
 });
 
 Pet.hasMany(Information, { foreignKey: "idPet" });
@@ -177,5 +198,7 @@ Vaccine.belongsTo(Pet, { foreignKey: "idPet" });
 Turn.belongsTo(Pet, { foreignKey: "idPet" });
 
 Complaint.belongsTo(Service, { foreignKey: "idService" });
-Complaint.belongsTo(PublicationAdoption, { foreignKey: "idPublicationAdoption" });
+Complaint.belongsTo(PublicationAdoption, {
+  foreignKey: "idPublicationAdoption",
+});
 Complaint.belongsTo(PublicationSearch, { foreignKey: "idPublicationSearch" });

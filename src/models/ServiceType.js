@@ -19,16 +19,13 @@ ServiceType.init(
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
-    createdDate: {
-      type: DataTypes.DATE,
-    },
-    updatedDate: {
-      type: DataTypes.DATE,
+    enablingInfo: {
+      type: DataTypes.STRING,
     },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "serviceType",
   }
 );

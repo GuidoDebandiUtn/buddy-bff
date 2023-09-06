@@ -15,20 +15,20 @@ Region.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    surface: {
+      type: DataTypes.DOUBLE,
+    },
+    population: {
+      type: DataTypes.DOUBLE,
+    },
     active: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
-    createdDate: {
-      type: DataTypes.DATE,
-    },
-    updatedDate: {
-      type: DataTypes.DATE,
-    },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "region",
   }
 );

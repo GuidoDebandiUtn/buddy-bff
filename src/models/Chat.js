@@ -11,6 +11,10 @@ Chat.init(
       allowNull: false,
       primaryKey: true,
     },
+    idUserReceptor: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
     active: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
@@ -19,16 +23,13 @@ Chat.init(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    createdDate: {
-      type: DataTypes.DATE,
-    },
-    updatedDate: {
-      type: DataTypes.DATE,
+    language: {
+      type: DataTypes.STRING,
     },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "chat",
   }
 );

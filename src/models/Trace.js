@@ -30,15 +30,19 @@ Trace.init(
       type: DataTypes.TIME,
     },
     images: {
-      type: DataTypes.TIME,
+      type: DataTypes.STRING,
     },
     idAuthorUser: {
       type: DataTypes.UUID,
     },
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "trace",
   }
 );

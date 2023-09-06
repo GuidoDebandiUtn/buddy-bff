@@ -4,6 +4,7 @@ import { createStateUser } from "./stateUser.service.js";
 import { sequelize } from "../../database/database.js";
 import { getRoleByName } from "./role.service.js";
 import { createUserRole } from "./userRole.service.js";
+import bcrypt from "bcryptjs";
 
 export async function createUser(data) {
   const { mail, password, userName } = data;
@@ -14,11 +15,9 @@ export async function createUser(data) {
         mail,
         password,
         userName,
-        createdDate: new Date(),
-        updatedDate: new Date(),
       },
       {
-        fields: ["mail", "password", "userName", "createdDate", "updatedDate"],
+        fields: ["mail", "password", "userName"],
       }
     );
 
@@ -45,13 +44,13 @@ export async function getAllUsers() {
     SELECT users.mail, users.userName
     FROM users
     INNER JOIN (
-      SELECT idUser, idUserState, MAX(createdDate) AS ultimaFecha
+      SELECT idUser, idUserState, MAX(createdAt) AS ultimaFecha
       FROM stateUsers 
       GROUP BY idUser
     ) AS ultimosEstados ON users.idUser = ultimosEstados.idUser
     INNER JOIN userStates ON ultimosEstados.idUserState = userStates.idUserState
     INNER JOIN (
-      SELECT idUser, idRole, MAX(createdDate) AS ultimaFecha
+      SELECT idUser, idRole, MAX(createdAt) AS ultimaFecha
       FROM userRoles 
       GROUP BY idUser
     ) AS ultimosRoles ON users.idUser = ultimosRoles.idUser
@@ -150,7 +149,8 @@ export async function updateUser(idUser, data) {
     }
 
     if (password) {
-      updates.password = password;
+      const hashedPassword = await bcrypt.hash(password, 10);
+      updates.password = hashedPassword;
     }
 
     if (phoneNumber) {
@@ -202,6 +202,8 @@ export async function destroyUser(mail) {
       where: { mail },
       force: true,
     });
+
+    return;
   } catch (error) {
     throw error;
   }

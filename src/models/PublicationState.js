@@ -11,21 +11,18 @@ PublicationState.init(
       allowNull: false,
       primaryKey: true,
     },
-    code: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    expirationDate: {
-      type: DataTypes.DATE,
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
     },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "publicationState",
   }
 );
