@@ -13,6 +13,12 @@ import {
 export async function getPublications(req, res) {
     const {  modelType ,page, size,} = req.query;
 
+    if(!modelType){
+      return res
+      .status(400)
+      .json({ message: `El parametro modelType es obligatorio`, code: 400 });
+    }
+
   try {
     const data = await retrivePaginatedPublications(page,size, modelType);
 
@@ -96,6 +102,14 @@ export async function postAdoption(req, res) {
 export async function deletePublication(req, res) {
   const { idPublication } = req.params;
   const { modelType } = req.query;
+
+
+  if(!modelType){
+    return res
+    .status(400)
+    .json({ message: `El parametro modelType es obligatorio`, code: 400 });
+  }
+
   console.log(`Iniciado proceso de eliminacion de publicacion - Parametros modelType='${modelType}', idPublication= '${idPublication}'`);
   try {
     const publication = await getPublicationById(idPublication,modelType);
@@ -124,6 +138,12 @@ export async function putPublication(req, res) {
   const { modelType } = req.query;
   const { idPublication } = req.params;
   
+  if(!modelType){
+    return res
+    .status(400)
+    .json({ message: `El parametro modelType es obligatorio`, code: 400 });
+  }
+
   checkParameters(req.body,modelType);
 
   try {
