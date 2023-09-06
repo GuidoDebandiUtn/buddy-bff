@@ -105,6 +105,7 @@ export async function aproveComplaint(idComplaint) {
 
 //recuperar denuncia
 //update de la denuncia con revision = true
+//delete de la publicacion/servicio
 //buscar denuncias activas y verificadas del idUser
 //bloquear al usuario si cuenta con 3 o mas denuncias activas y verificadas
 }
