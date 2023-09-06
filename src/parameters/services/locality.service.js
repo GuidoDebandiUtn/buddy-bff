@@ -27,7 +27,7 @@ export async function getAllLocalities() {
   try {
     const query = `
     SELECT idLocality, localityName
-    FROM countries
+    FROM localities
     WHERE active = true
     `;
 
@@ -46,7 +46,7 @@ export async function getLocalityById(idLocality) {
   try {
     const query = `
     SELECT idLocality, localityName
-    FROM countries
+    FROM localities
     WHERE idLocality = '${idLocality}'
     `;
 
@@ -65,7 +65,7 @@ export async function getLocalityByName(localityName) {
   try {
     const query = `
     SELECT idLocality, localityName
-    FROM countries
+    FROM localities
     WHERE localityName = '${localityName.toUpperCase()}'
     `;
 

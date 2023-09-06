@@ -74,7 +74,7 @@ export async function getAllUsers() {
 export async function getUserById(idUser) {
   try {
     const query = `
-    SELECT idUser, mail, userName
+    SELECT idUser, mail, userName,name,lastName
     FROM users
     WHERE idUser = '${idUser}'
     `;

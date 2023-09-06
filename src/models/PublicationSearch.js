@@ -21,7 +21,7 @@ PublicationSearch.init(
       },
       images: {
         type: DataTypes.TEXT, 
-        allowNull: false,
+        allowNull: true,
         get() {
           // This getter will parse the JSON data stored in the database into a JavaScript array
           const value = this.getDataValue("images");
@@ -38,11 +38,11 @@ PublicationSearch.init(
       },
       latitude: {
         type: DataTypes.DOUBLE,
-        allowNull: false
+        allowNull: true
       },
       longitude: {
         type: DataTypes.DOUBLE,
-        allowNull: false
+        allowNull: true
       },
       isFound: {
         type: DataTypes.BOOLEAN,
@@ -70,7 +70,8 @@ PublicationSearch.init(
       },
       idUser: {
         type: DataTypes.UUID,
-        allowNull: false
+        allowNull: true
+        //TODO cambiar valor de allowNull cuando se integre el token
       }
     },
     {
