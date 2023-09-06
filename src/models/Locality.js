@@ -24,7 +24,7 @@ Locality.init(
     },
     neighborhoods: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
       get() {
         // This getter will parse the JSON data stored in the database into a JavaScript array
         const value = this.getDataValue("neighborhoods");

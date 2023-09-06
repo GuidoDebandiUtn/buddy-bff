@@ -1,12 +1,12 @@
 import { Chat } from "./Chat.js";
 import { Complaint } from "./Complaint.js";
 import { Country } from "./Country.js";
-import {} from "./Document.js";
-import {} from "./Image.js";
+// import {} from "./Document.js";
+// import {} from "./Image.js";
 import { Information } from "./Information.js";
 import { Locality } from "./Locality.js";
 import { Message } from "./Message.js";
-import { Notification } from "./Notification.js";
+// import { Notification } from "./Notification.js";
 import { Permission } from "./Permission.js";
 import { Pet } from "./Pet.js";
 import { PetBreed } from "./PetBreed.js";
@@ -128,6 +128,9 @@ PublicationAdoption.hasMany(StatePublication, {
 });
 PublicationAdoption.belongsTo(User, { foreignKey: "idUser" });
 PublicationAdoption.hasMany(Complaint, { foreignKey: "idPublicationAdoption" });
+PublicationAdoption.belongsTo(PublicationState, {
+  foreignKey: "idPublicationState",
+});
 
 PublicationSearch.belongsTo(PetColor, {
   foreignKey: "idPetColor",
@@ -150,12 +153,21 @@ PublicationSearch.hasMany(Complaint, { foreignKey: "idPublicationSearch" });
 PublicationSearch.hasMany(Trace, {
   foreignKey: "idPublicationSearch",
 });
+PublicationSearch.belongsTo(PublicationState, {
+  foreignKey: "idPublicationState",
+});
 
 PetColor.hasMany(PublicationSearch, { foreignKey: "idPetColor" });
 PetColor.hasMany(PublicationAdoption, { foreignKey: "idPetColor" });
 PetColor.hasMany(Pet, { foreignKey: "idPetColor" });
 
 PublicationState.hasMany(StatePublication, {
+  foreignKey: "idPublicationState",
+});
+PublicationState.hasMany(PublicationAdoption, {
+  foreignKey: "idPublicationState",
+});
+PublicationState.hasMany(PublicationSearch, {
   foreignKey: "idPublicationState",
 });
 
