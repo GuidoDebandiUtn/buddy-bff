@@ -73,7 +73,7 @@ export async function getVaccineById(idVaccine) {
 }
 
 export async function updateVaccine(idVaccine, data) {
-  const { titleVaccine, descriptionVaccine } = data;
+  const { titleVaccine, descriptionVaccine, vaccineDate } = data;
 
   try {
     const updates = {};
@@ -85,6 +85,10 @@ export async function updateVaccine(idVaccine, data) {
 
     if (descriptionVaccine) {
       updates.descriptionVaccine = descriptionVaccine;
+    }
+
+    if (vaccineDate) {
+      updates.vaccineDate = vaccineDate;
     }
 
     updates.updatedDate = new Date();

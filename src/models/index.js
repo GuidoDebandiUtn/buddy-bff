@@ -22,6 +22,7 @@ import { Report } from "./Report.js";
 import { Role } from "./Role.js";
 import { RolePermission } from "./RolePermission.js";
 import { Service } from "./Service.js";
+import { ServicePet } from "./ServicePet.js";
 import { ServiceState } from "./ServiceState.js";
 import { ServiceType } from "./ServiceType.js";
 import { StateService } from "./StateService.js";
@@ -41,6 +42,12 @@ User.hasMany(PublicationAdoption, { foreignKey: "idUser" });
 User.hasMany(PublicationSearch, { foreignKey: "idUser" });
 User.hasMany(UserRole, { foreignKey: "idUser" });
 User.hasMany(Service, { foreignKey: "idUser" });
+User.hasMany(Chat, { foreignKey: "idUserEmitter" });
+
+Chat.belongsTo(User, { foreignKey: "idUserEmitter" });
+Chat.hasMany(Message, { foreignKey: "idUserEmitter" });
+
+Message.belongsTo(Chat, { foreignKey: "idChat" });
 
 UserRole.belongsTo(User, { foreignKey: "idUser" });
 UserRole.belongsTo(Role, { foreignKey: "idRole" });
@@ -76,6 +83,7 @@ PetType.hasMany(PetBreed, { foreignKey: "idPetType" });
 PetType.hasMany(PublicationAdoption, { foreignKey: "idPetType" });
 PetType.hasMany(PublicationSearch, { foreignKey: "idPetType" });
 PetType.hasMany(Pet, { foreignKey: "idPetType" });
+PetType.hasMany(ServicePet, { foreignKey: "idPetType" });
 
 PetBreed.belongsTo(PetType, { foreignKey: "idPetType", as: "type" });
 PetBreed.hasMany(PublicationAdoption, { foreignKey: "idPetBreed" });
@@ -87,10 +95,14 @@ Service.belongsTo(ServiceType, { foreignKey: "idServiceType" });
 Service.hasMany(Rating, { foreignKey: "idService" });
 Service.belongsTo(User, { foreignKey: "idUser" });
 Service.hasMany(Report, { foreignKey: "idService" });
+Service.hasMany(ServicePet, { foreignKey: "idService" });
+
+ServicePet.belongsTo(Service, { foreignKey: "idService" });
+ServicePet.belongsTo(PetType, { foreignKey: "idPetType" });
 
 ServiceState.hasMany(StateService, { foreignKey: "idUserState" });
 
-StateService.belongsTo(Service, { foreignKey: "idUser" });
+StateService.belongsTo(Service, { foreignKey: "idService" });
 StateService.belongsTo(ServiceState, { foreignKey: "idUserState" });
 
 ServiceType.hasMany(Service, { foreignKey: "idServiceType" });

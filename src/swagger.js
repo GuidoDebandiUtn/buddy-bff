@@ -16,6 +16,7 @@ const options = {
     "src/parameters/routes/*.routes.js",
     "src/lost-adoption/routes/*.routes.js",
     "src/mypet/routes/*.routes.js",
+    "src/services/routes/*.routes.js",
   ],
 };
 

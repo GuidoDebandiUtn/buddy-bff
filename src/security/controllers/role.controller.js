@@ -2,7 +2,7 @@ import {
   activeRole,
   createRole,
   deleteRole,
-  getAllRole,
+  getAllRoles,
   getRoleById,
   getRoleByName,
   updateRole,
@@ -34,7 +34,7 @@ export async function roleCreate(req, res) {
 
 export async function getRoles(req, res) {
   try {
-    const roles = await getAllRole();
+    const roles = await getAllRoles();
 
     if (!roles[0]) {
       return res.status(404).json({ message: "No existe ningun rol" });

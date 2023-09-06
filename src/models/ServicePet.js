@@ -1,25 +1,15 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../database/database.js";
 
-export class Region extends Model {}
+export class ServicePet extends Model {}
 
-Region.init(
+ServicePet.init(
   {
-    idRegion: {
+    idServicePet: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
-    },
-    regionName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    surface: {
-      type: DataTypes.DOUBLE,
-    },
-    population: {
-      type: DataTypes.DOUBLE,
     },
     active: {
       type: DataTypes.BOOLEAN,
@@ -35,6 +25,6 @@ Region.init(
   {
     sequelize,
     timestamps: false,
-    modelName: "region",
+    modelName: "servicePet",
   }
 );

@@ -15,7 +15,7 @@ Service.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    descriptionService: {
+    serviceDescription: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -29,6 +29,15 @@ Service.init(
       type: DataTypes.DECIMAL,
     },
     address: {
+      type: DataTypes.STRING,
+    },
+    open24hs: {
+      type: DataTypes.BOOLEAN,
+    },
+    numberQueries: {
+      type: DataTypes.INTEGER,
+    },
+    emailService: {
       type: DataTypes.STRING,
     },
     createdDate: {

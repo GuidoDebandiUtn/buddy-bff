@@ -138,10 +138,10 @@ export async function getPetBreedsByType(req, res) {
   try {
     const petBreeds = await getPetBreedsByPetType(petTypeName);
 
-    if (!petBreeds) {
+    if (!petBreeds[0]) {
       return res
         .status(404)
-        .json({ message: "No existen razas asociadas a ese Animal" });
+        .json({ message: "No existen razas asociadas a ese tipo de animal" });
     }
 
     return res.status(200).json(petBreeds);

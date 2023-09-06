@@ -77,7 +77,7 @@ export async function countryUpdate(req, res) {
 
     const duplicate = await getCountryByName(req.body.countryName);
 
-    if (duplicate) {
+    if (duplicate[0]) {
       return res
         .status(400)
         .json({ message: "Ya existe un pais con este nombre" });

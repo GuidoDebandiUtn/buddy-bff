@@ -28,7 +28,7 @@ export async function createRole(data) {
   }
 }
 
-export async function getAllRole() {
+export async function getAllRoles() {
   try {
     const query = `
         SELECT roles.idRole, roles.roleName, GROUP_CONCAT(permissions.tokenClaim) AS permisos

@@ -24,6 +24,9 @@ Turn.init(
     turnDate: {
       type: DataTypes.DATE,
     },
+    alertType: {
+      type: DataTypes.STRING,
+    },
     createdDate: {
       type: DataTypes.DATE,
     },

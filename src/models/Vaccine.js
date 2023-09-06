@@ -24,6 +24,9 @@ Vaccine.init(
     vaccineDate: {
       type: DataTypes.DATE,
     },
+    nextVaccineDate: {
+      type: DataTypes.DATE,
+    },
     createdDate: {
       type: DataTypes.DATE,
     },

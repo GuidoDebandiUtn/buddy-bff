@@ -15,6 +15,18 @@ Province.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    weather: {
+      type: DataTypes.STRING,
+    },
+    population: {
+      type: DataTypes.DOUBLE,
+    },
+    surface: {
+      type: DataTypes.DOUBLE,
+    },
+    populationDensity: {
+      type: DataTypes.DOUBLE,
+    },
     active: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,

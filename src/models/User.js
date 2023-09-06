@@ -42,9 +42,21 @@ User.init(
     birthDate: {
       type: DataTypes.DATE,
     },
+    job: {
+      type: DataTypes.STRING,
+    },
+    language: {
+      type: DataTypes.STRING,
+    },
     validated: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
+    },
+    blocked: {
+      type: DataTypes.BOOLEAN,
+    },
+    blockedReason: {
+      type: DataTypes.STRING,
     },
     createdDate: {
       type: DataTypes.DATE,

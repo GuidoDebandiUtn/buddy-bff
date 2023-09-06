@@ -25,6 +25,7 @@ import "./models/Report.js";
 import "./models/RevokedToken.js";
 import "./models/Role.js";
 import "./models/Service.js";
+import "./models/ServicePet.js";
 import "./models/ServiceState.js";
 import "./models/ServiceType.js";
 import "./models/StateService.js";
@@ -37,7 +38,7 @@ import "./models/UserState.js";
 import "./models/Vaccine.js";
 
 async function main() {
-  await sequelize.sync({ force: false });
+  await sequelize.sync({ alter: false });
   app.listen(4000, () => {
     console.log("Server on port 4000");
     swaggerDocs(app, 4000);

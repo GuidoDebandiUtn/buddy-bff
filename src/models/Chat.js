@@ -1,4 +1,4 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, UUID } from "sequelize";
 import { sequelize } from "../database/database.js";
 
 export class Chat extends Model {}
@@ -10,6 +10,9 @@ Chat.init(
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
+    },
+    idUserReceptor: {
+      type: DataTypes.UUID,
     },
     active: {
       type: DataTypes.BOOLEAN,
