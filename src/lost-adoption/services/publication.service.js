@@ -67,7 +67,7 @@ export async function getPublicationsByUser(idUser) {
 
 
 
-export async function createSearch(searchDto) {
+export async function createSearch(searchDto,idUser) {
   try {
     let locality = await getLocalityById(searchDto.idLocality);
     let breed = await getPetBreedById(searchDto.idPetBreed);
@@ -85,7 +85,7 @@ export async function createSearch(searchDto) {
 
     const newPublication = await PublicationSearch.create({
       idPublicationState: activePublicationState.idPublicationState,
-      //TODO idUser: token.getUserInfo........,
+      idUser: idUser,
       ...searchDto,
     });
 
@@ -96,7 +96,7 @@ export async function createSearch(searchDto) {
   }
 }
 
-export async function createAdoption(adoptionDto) {
+export async function createAdoption(adoptionDto,idUser) {
   try {
     let locality = await getLocalityById(adoptionDto.idLocality);
     let breed = await getPetBreedById(adoptionDto.idPetBreed);
@@ -114,7 +114,7 @@ export async function createAdoption(adoptionDto) {
 
     const newPublication = await PublicationAdoption.create({
       idPublicationState: activePublicationState.idPublicationState,
-      //TODO idUser: token.getUserInfo........,
+      idUser:idUser,
       ...adoptionDto,
     });
 
