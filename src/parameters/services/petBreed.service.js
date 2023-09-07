@@ -75,7 +75,6 @@ export async function getPetBreedsByPetType(petTypeName) {
       include: [
         {
           model: PetType,
-          as: "type",
           attributes: [],
           where: { petTypeName, active: true },
         },

@@ -44,15 +44,15 @@ export async function retrivePaginatedPublications(
 
 export async function getPublicationsByUser(idUser) {
   let include = [
-    {model:PetColor, as:'color', attributes: ['petColorName']},
-    {model:Locality, as:'locality', attributes: ['localityName']},
-    {model:PetBreed, as:'breed',include: [{model:PetType, as:'type', attributes: ['petTypeName']}], attributes: ['petBreedName','size','intelligence','temperament','lifespan','idPetType','idPetBreed']},
-    {model:PublicationState, as:'state', attributes: ['name','code'],where: {name:'ACTIVO'}},
+    {model:PetColor, attributes: ['petColorName']},
+    {model:Locality, attributes: ['localityName']},
+    {model:PetBreed,include: [{model:PetType, attributes: ['petTypeName']}], attributes: ['petBreedName','size','intelligence','temperament','lifespan','idPetType','idPetBreed']},
+    {model:PublicationState, attributes: ['name'],where: {name:'ACTIVO'}},
   ];
   try {
     const adoptions =await PublicationAdoption.findAll({where: {idUser: idUser}, include: include});
     console.log ("adopciones obtenidas correctamente");
-    include.push({model:Trace, as: 'traces', attributes:['latitude','longitude','traceDate','traceTime','images']});
+    include.push({model:Trace, attributes:['latitude','longitude','traceDate','traceTime','images']});
     const searchs =await PublicationSearch.findAll({where: {idUser: idUser}, include: include});
     console.log ("busquedas obtenidas correctamente");
 
@@ -84,7 +84,6 @@ export async function createSearch(searchDto) {
     });
 
     const newPublication = await PublicationSearch.create({
-      createdAt: new Date(),
       idPublicationState: activePublicationState.idPublicationState,
       //TODO idUser: token.getUserInfo........,
       ...searchDto,
@@ -114,7 +113,6 @@ export async function createAdoption(adoptionDto) {
     });
 
     const newPublication = await PublicationAdoption.create({
-      createdAt: new Date(),
       idPublicationState: activePublicationState.idPublicationState,
       //TODO idUser: token.getUserInfo........,
       ...adoptionDto,
@@ -170,7 +168,7 @@ export async function getPublicationById(idPublication, modelType) {
 
   try {
     console.log(
-      `Llamando a sequalize.findOne con: attributes='${modelParams.attributes}', include=${modelParams.include}, where=${whereClause}`
+      `Llamando a sequalize.findOne con: attributes='${modelParams.attributes}', include=${JSON.stringify(modelParams.include)}, where=${JSON.stringify(whereClause)}`
     );
     const publication = await modelParams.model.findOne({
       attributes: modelParams.attributes,
@@ -189,18 +187,15 @@ export async function getPublicationById(idPublication, modelType) {
   }
 }
 
-export async function updatePublication(
-  publicationDto,
-  idPublication,
-  modelType
-) {
+export async function updatePublication(  publicationDto,  idPublication,  modelType) {
   const modelParams = getModel(modelType);
   let whereClause = {};
   whereClause[modelParams.attributes.pop()] = idPublication;
 
+  console.log(`Llamando a update de '${modelType}', where Clause: ${whereClause}, con el dto: ${publicationDto}`);
   try {
     let publicationNew = await modelParams.model.update(
-      { updatedDate: new Date(), ...publicationDto },
+      { ...publicationDto },
       { where: whereClause, returning: true }
     );
 
@@ -261,7 +256,6 @@ function getModel(modelType) {
     orderBy = "lostDate";
     include.push({
       model: Trace,
-      as: "traces",
       attributes: ["latitude", "longitude", "traceDate", "traceTime", "images"],
     });
   }
