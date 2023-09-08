@@ -8,17 +8,9 @@ export async function createPetType(data) {
       {
         petTypeName: petTypeName.toUpperCase(),
         legsNumber,
-        createdDate: new Date(),
-        updatedDate: new Date(),
       },
       {
-        fields: [
-          "petTypeName",
-          "legsNumber",
-          "active",
-          "createdDate",
-          "updatedDate",
-        ],
+        fields: ["petTypeName", "legsNumber"],
       }
     );
 
@@ -50,10 +42,11 @@ export async function getAllPetTypes() {
 export async function getPetTypeById(idPetType) {
   try {
     const query = `
-    SELECT pettypes.idPetType, pettypes.petTypeName, petbreeds.petBreedName
+    SELECT pettypes.idPetType, pettypes.petTypeName, GROUP_CONCAT(petbreeds.petBreedName) AS razas
     FROM pettypes
     LEFT JOIN petbreeds ON pettypes.idPetType = petbreeds.idPetType
     WHERE petTypes.idPetType = '${idPetType}'
+    GROUP BY pettypes.idPetType, pettypes.petTypeName
     `;
 
     const petType = await sequelize.query(query, {
@@ -87,13 +80,37 @@ export async function getPetTypeByName(petTypeName) {
 }
 
 export async function updatePetType(data, idPetType) {
-  const { petTypeName } = data;
+  const { petTypeName, legsNumber, diet, enviroment, coat, weather } = data;
 
   try {
-    await PetType.update(
-      { petTypeName: petTypeName.toUpperCase(), updatedDate: new Date() },
-      { where: { idPetType }, returning: true }
-    );
+    const updates = {};
+    const updateOptions = { where: { idPetType } };
+
+    if (petTypeName) {
+      updates.petTypeName = petTypeName.toUpperCase();
+    }
+
+    if (legsNumber) {
+      updates.legsNumber = legsNumber;
+    }
+
+    if (diet) {
+      updates.diet = diet;
+    }
+
+    if (enviroment) {
+      updates.enviroment = enviroment;
+    }
+
+    if (coat) {
+      updates.coat = coat;
+    }
+
+    if (weather) {
+      updates.weather = weather;
+    }
+
+    await PetType.update(updates, updateOptions);
 
     return;
   } catch (error) {
@@ -104,7 +121,7 @@ export async function updatePetType(data, idPetType) {
 export async function deletePetType(idPetType) {
   try {
     await PetType.update(
-      { active: false, updatedDate: new Date() },
+      { active: false },
       { where: { idPetType }, returning: true }
     );
 
@@ -117,7 +134,7 @@ export async function deletePetType(idPetType) {
 export async function activePetType(idPetType) {
   try {
     await PetType.update(
-      { active: true, updatedDate: new Date() },
+      { active: true },
       { where: { idPetType }, returning: true }
     );
 

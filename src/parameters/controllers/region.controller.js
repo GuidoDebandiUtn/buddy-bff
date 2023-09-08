@@ -11,7 +11,10 @@ import {
 
 export async function regionCreate(req, res) {
   try {
-    const duplicate = await getRegionByName(req.body.regionName);
+    const duplicate = await getRegionByName(
+      req.body.regionName,
+      req.body.idProvince
+    );
 
     if (duplicate[0]) {
       return res
@@ -84,7 +87,10 @@ export async function regionUpdate(req, res) {
         .json({ message: "No existe ninguna region con este id" });
     }
 
-    const duplicate = await getRegionByName(req.body.regionName);
+    const duplicate = await getRegionByName(
+      req.body.regionName,
+      region[0].idProvince
+    );
 
     if (duplicate[0]) {
       return res

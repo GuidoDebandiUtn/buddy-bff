@@ -9,18 +9,10 @@ export async function createPetBreed(data) {
     const petBreed = await PetBreed.create(
       {
         petBreedName: petBreedName.toUpperCase(),
-        createdDate: new Date(),
-        updatedDate: new Date(),
         idPetType,
       },
       {
-        fields: [
-          "petBreedName",
-          "active",
-          "createdDate",
-          "updatedDate",
-          "idPetType",
-        ],
+        fields: ["petBreedName", "idPetType"],
       }
     );
 
@@ -107,13 +99,49 @@ export async function getPetBreedByName(petBreedName) {
 }
 
 export async function updatePetBreed(data, idPetBreed) {
-  const { petBreedName } = data;
+  const {
+    petBreedName,
+    size,
+    intelligence,
+    temperament,
+    lifespan,
+    specialProperty,
+    fur,
+  } = data;
 
   try {
-    await PetBreed.update(
-      { petBreedName: petBreedName.toUpperCase(), updatedDate: new Date() },
-      { where: { idPetBreed }, returning: true }
-    );
+    const updates = {};
+    const updateOptions = { where: { idPetBreed } };
+
+    if (petBreedName) {
+      updates.petBreedName = petBreedName.toUpperCase();
+    }
+
+    if (size) {
+      updates.size = size;
+    }
+
+    if (intelligence) {
+      updates.intelligence = intelligence;
+    }
+
+    if (temperament) {
+      updates.temperament = temperament;
+    }
+
+    if (lifespan) {
+      updates.lifespan = lifespan;
+    }
+
+    if (specialProperty) {
+      updates.specialProperty = specialProperty;
+    }
+
+    if (fur) {
+      updates.fur = fur;
+    }
+
+    await PetBreed.update(updates, updateOptions);
 
     return;
   } catch (error) {
@@ -124,7 +152,7 @@ export async function updatePetBreed(data, idPetBreed) {
 export async function deletePetBreed(idPetBreed) {
   try {
     await PetBreed.update(
-      { active: false, updatedDate: new Date() },
+      { active: false },
       { where: { idPetBreed }, returning: true }
     );
 
@@ -137,7 +165,7 @@ export async function deletePetBreed(idPetBreed) {
 export async function activePetBreed(idPetBreed) {
   try {
     await PetBreed.update(
-      { active: true, updatedDate: new Date() },
+      { active: true },
       { where: { idPetBreed }, returning: true }
     );
 

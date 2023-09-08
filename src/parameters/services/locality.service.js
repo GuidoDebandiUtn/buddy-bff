@@ -8,12 +8,10 @@ export async function createLocality(data) {
     const locality = await Locality.create(
       {
         localityName: localityName.toUpperCase(),
-        createdDate: new Date(),
-        updatedDate: new Date(),
         idRegion,
       },
       {
-        fields: ["localityName", "createdDate", "updatedDate", "idRegion"],
+        fields: ["localityName", "idRegion"],
       }
     );
 
@@ -26,9 +24,10 @@ export async function createLocality(data) {
 export async function getAllLocalities() {
   try {
     const query = `
-    SELECT idLocality, localityName
+    SELECT localities.idLocality, localities.localityName, regions.regionName
     FROM localities
-    WHERE active = true
+    INNER JOIN regions ON regions.idRegion = localities.idRegion
+    WHERE localities.active = true
     `;
 
     const localities = await sequelize.query(query, {
@@ -45,7 +44,7 @@ export async function getAllLocalities() {
 export async function getLocalityById(idLocality) {
   try {
     const query = `
-    SELECT idLocality, localityName
+    SELECT idLocality, localityName, idRegion
     FROM localities
     WHERE idLocality = '${idLocality}'
     `;
@@ -61,12 +60,12 @@ export async function getLocalityById(idLocality) {
   }
 }
 
-export async function getLocalityByName(localityName) {
+export async function getLocalityByName(localityName, idRegion) {
   try {
     const query = `
     SELECT idLocality, localityName
     FROM localities
-    WHERE localityName = '${localityName.toUpperCase()}'
+    WHERE localityName = '${localityName.toUpperCase()}' and idRegion = '${idRegion}'
     `;
 
     const locality = await sequelize.query(query, {
@@ -85,7 +84,7 @@ export async function updateLocality(data, idLocality) {
 
   try {
     await Locality.update(
-      { localityName: localityName.toUpperCase(), updatedDate: new Date() },
+      { localityName: localityName.toUpperCase() },
       { where: { idLocality }, returning: true }
     );
 
@@ -98,7 +97,7 @@ export async function updateLocality(data, idLocality) {
 export async function deleteLocality(idLocality) {
   try {
     await Locality.update(
-      { active: false, updatedDate: new Date() },
+      { active: false },
       { where: { idLocality }, returning: true }
     );
 
@@ -111,7 +110,7 @@ export async function deleteLocality(idLocality) {
 export async function activeLocality(idLocality) {
   try {
     await Locality.update(
-      { active: true, updatedDate: new Date() },
+      { active: true },
       { where: { idLocality }, returning: true }
     );
 

@@ -26,7 +26,7 @@ export async function createVaccine(data, idPet) {
 export async function getAllVaccines(idPet) {
   try {
     const query = `
-        SELECT idVaccine, titleVaccine, descriptionVaccine, DATE_FORMAT(vaccineDate, '%H:%i') AS vaccineHour, DATE_FORMAT(vaccineDate, '%d-%m-%Y') AS vaccineDate
+        SELECT idVaccine, titleVaccine, descriptionVaccine, archive, DATE_FORMAT(vaccineDate, '%H:%i') AS vaccineHour, DATE_FORMAT(vaccineDate, '%d-%m-%Y') AS vaccineDate
         FROM vaccines
         WHERE idPet = "${idPet}" and active = true`;
 
