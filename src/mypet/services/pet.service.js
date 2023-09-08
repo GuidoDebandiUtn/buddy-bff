@@ -80,7 +80,8 @@ export async function getPetByName(idUser, petName) {
 }
 
 export async function updatePet(idPet, data) {
-  const { petName, birthDate, idPetBreed, idPetType } = data;
+  const { petName, birthDate, image, idPetBreed, idPetType, idPetColor } = data;
+
   try {
     const updates = {};
     const updateOptions = { where: { idPet } };
@@ -89,8 +90,8 @@ export async function updatePet(idPet, data) {
       updates.petName = petName;
     }
 
-    if (birthDate) {
-      updates.birthDate = new Date(birthDate);
+    if (image) {
+      updates.image = image;
     }
 
     if (idPetBreed) {
@@ -99,6 +100,14 @@ export async function updatePet(idPet, data) {
 
     if (idPetType) {
       updates.idPetType = idPetType;
+    }
+
+    if (idPetColor) {
+      updates.idPetColor = idPetColor;
+    }
+
+    if (birthDate) {
+      updates.birthDate = new Date(birthDate);
     }
 
     await Pet.update(updates, updateOptions);
