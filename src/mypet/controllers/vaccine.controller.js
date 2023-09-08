@@ -7,11 +7,20 @@ import {
   getVaccineById,
   updateVaccine,
 } from "../services/vaccine.service.js";
+import { getPetById } from "../services/pet.service.js";
 
 export async function vaccineCreate(req, res) {
   const { idPet } = req.params;
 
   try {
+    const pet = await getPetById(idPet);
+
+    if (!pet[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
     const newVaccine = await createVaccine(req.body, idPet);
 
     return res
@@ -26,6 +35,14 @@ export async function getVaccines(req, res) {
   const { idPet } = req.params;
 
   try {
+    const pet = await getPetById(idPet);
+
+    if (!pet[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
     const vaccines = await getAllVaccines(idPet);
 
     if (!vaccines[0]) {
@@ -39,9 +56,17 @@ export async function getVaccines(req, res) {
 }
 
 export async function getVaccine(req, res) {
-  const { idVaccine } = req.params;
+  const { idVaccine, idPet } = req.params;
 
   try {
+    const pet = await getPetById(idPet);
+
+    if (!pet[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
     const vaccine = await getVaccineById(idVaccine);
 
     if (!vaccine[0]) {
@@ -57,9 +82,17 @@ export async function getVaccine(req, res) {
 }
 
 export async function vaccineUpdate(req, res) {
-  const { idVaccine } = req.params;
+  const { idVaccine, idPet } = req.params;
 
   try {
+    const pet = await getPetById(idPet);
+
+    if (!pet[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
     const vaccine = await getVaccineById(idVaccine);
 
     if (!vaccine[0]) {
@@ -79,9 +112,17 @@ export async function vaccineUpdate(req, res) {
 }
 
 export async function vaccineDelete(req, res) {
-  const { idVaccine } = req.params;
+  const { idVaccine, idPet } = req.params;
 
   try {
+    const pet = await getPetById(idPet);
+
+    if (!pet[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
     const vaccine = await getVaccineById(idVaccine);
 
     if (!vaccine[0]) {
@@ -101,9 +142,17 @@ export async function vaccineDelete(req, res) {
 }
 
 export async function vaccineActive(req, res) {
-  const { idVaccine } = req.params;
+  const { idVaccine, idPet } = req.params;
 
   try {
+    const pet = await getPetById(idPet);
+
+    if (!pet[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
     const vaccine = await getVaccineById(idVaccine);
 
     if (!vaccine[0]) {
@@ -123,9 +172,17 @@ export async function vaccineActive(req, res) {
 }
 
 export async function vaccineArchive(req, res) {
-  const { idVaccine } = req.params;
+  const { idVaccine, idPet } = req.params;
 
   try {
+    const pet = await getPetById(idPet);
+
+    if (!pet[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
     const vaccine = await getVaccineById(idVaccine);
 
     if (!vaccine[0]) {

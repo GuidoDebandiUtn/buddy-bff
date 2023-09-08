@@ -22,6 +22,10 @@ Turn.init(
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
+    archive: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     turnDate: {
       type: DataTypes.DATE,
       allowNull: false,
