@@ -5,36 +5,26 @@ import { PetType } from "../../models/PetType.js";
 import { PublicationAdoption } from "../../models/PublicationAdoption.js";
 import { PublicationSearch } from "../../models/PublicationSearch.js";
 import { PublicationState } from "../../models/PublicationState.js";
-import { getPaginatedData } from "../../utils/pagination.js";
 import { Trace } from "../../models/Trace.js";
 import { getLocalityById } from "../../parameters/services/locality.service.js";
 import { getPetBreedById } from "../../parameters/services/petBreed.service.js";
 import { getPetColorById } from "../../parameters/services/petColor.service.js";
+import { User } from "../../models/User.js";
 
-export async function retrivePaginatedPublications(
-  page = 1,
-  recordsPerPage = 10,
-  modelType = "search"
-) {
+export async function retrivePaginatedPublications(  page = 1,  recordsPerPage = 10,  modelType = "search") {
+  
   const modelParams = getModel(modelType);
   try {
-    const pageNumber = parseInt(page, 10);
-    const recordsPerPageNumber = parseInt(recordsPerPage, 10);
-    console.log(
-      "Calling getPaginatedData with: pageNumber: %s, recordsPerPageNumber: %s, orderBy; %s, include: %o",
-      pageNumber,
-      recordsPerPageNumber,
-      modelParams.orderBy,
-      modelParams.include
-    );
-    return getPaginatedData(
-      modelParams.model,
-      pageNumber,
-      recordsPerPageNumber,
-      modelParams.orderBy,
-      modelParams.attributes,
-      modelParams.include
-    );
+    const limit = parseInt(recordsPerPage, 10);
+    const offset = (parseInt(page, 10) - 1) * recordsPerPage;
+    const order = [[modelParams.orderBy, 'DESC']];
+    const attributes = modelParams.attributes;
+    const include = modelParams.include;
+
+    let publications =  modelParams.model.findAll({ offset, limit, order, attributes ,include})
+    
+    console.log("Se obtuvieron las publicaciones: %s",publications);
+    return publications;
   } catch (err) {
     console.error("Error fetching paginated data:", err);
     throw err;
@@ -213,26 +203,15 @@ function getModel(modelType) {
   let orderBy;
   let model;
   let include = [
+    {model: User,attributes:["userName"],},
     { model: PetColor, attributes: ["petColorName"] },
     { model: Locality, attributes: ["localityName"] },
-    {
-      model: PetBreed,
+    { model: PetBreed,
       include: [{ model: PetType, attributes: ["petTypeName"] }],
-      attributes: [
-        "petBreedName",
-        "size",
-        "intelligence",
-        "temperament",
-        "lifespan",
-        "idPetType",
-        "idPetBreed",
-      ],
+      attributes: ["petBreedName","size","intelligence","temperament","lifespan","idPetType","idPetBreed",],
     },
-    {
-      model: PublicationState,
-      attributes: ["name"],
-      where: { name: "ACTIVO" },
-    },
+    {model: PublicationState,attributes: ["name"],where: { name: "ACTIVO" },},
+
   ];
   let attributes = ["title", "images", "description"];
 
