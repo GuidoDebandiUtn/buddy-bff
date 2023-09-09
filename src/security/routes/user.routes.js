@@ -56,7 +56,7 @@ router.post("/register", userCreate);
 
 /**
  * @swagger
- * /security/user/:
+ * /security/user/all:
  *  get:
  *    summary: Obtener todos los usuarios
  *    tags: [USER]
@@ -90,14 +90,18 @@ router.post("/register", userCreate);
  *      500:
  *        description: Hubo un error
  */
-router.get("/", verifyToken, getUsers);
+router.get("/all", verifyToken, getUsers);
 
 /**
  * @swagger
- * /security/user/{idUser}:
+ * /security/user/:
  *   get:
  *     summary: Traer el ususario por id
  *     tags: [USER]
+ *     header:
+ *       auth-token:
+ *         required: true
+ *         description: token conteniendo al usuario a encontrar
  *     responses:
  *       200:
  *         description: Devuleve el ususario buscado
@@ -120,7 +124,7 @@ router.get("/", verifyToken, getUsers);
  *       500:
  *          description: Hubo un eror
  */
-router.get("/:idUser", verifyToken, getUser);
+router.get("/", verifyToken, getUser);
 
 /**
  * @swagger

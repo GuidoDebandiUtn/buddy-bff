@@ -56,10 +56,9 @@ export async function getUsers(req, res) {
 }
 
 export async function getUser(req, res) {
-  const { idUser } = req.params;
-
+  const userReq = req.user;
   try {
-    const user = await getUserById(idUser);
+    const user = await getUserById(userReq.idUser);
 
     if (!user[0]) {
       return res.status(404).json({
