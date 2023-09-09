@@ -76,8 +76,8 @@ export async function postSearch(req, res) {
 
   try {
     let publication;
-    if (req.body.lostDate || checkParameters("SEARCH", req.body)) {
-      publication = await createSearch(req.body,idUser);
+    if (req.body.lostDate) {
+      publication = await createSearch(req.body);
     }
 
     return res.status(201).json(publication);
@@ -155,16 +155,6 @@ export async function putPublication(req, res) {
     .json({ message: `El parametro modelType es obligatorio`, code: 400 });
   }
   
-  try{
-    checkParameters(req.body,modelType);
-  }catch(error){
-    console.log("error en los parametros del request");
-    return res
-    .status(400)
-    .json({
-      message: `Error en los parametros del request: '${req.body}'.`,
-    });
-  }
  
   
   try {

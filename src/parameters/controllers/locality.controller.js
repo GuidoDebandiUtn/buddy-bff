@@ -10,7 +10,10 @@ import { getRegionById } from "../services/region.service.js";
 
 export async function localityCreate(req, res) {
   try {
-    const duplicate = await getLocalityByName(req.body.localityName);
+    const duplicate = await getLocalityByName(
+      req.body.localityName,
+      req.body.idRegion
+    );
 
     if (duplicate[0]) {
       return res
@@ -23,7 +26,7 @@ export async function localityCreate(req, res) {
     if (!region[0]) {
       return res
         .status(400)
-        .json({ message: "Ya existe una localidad con ese nombre" });
+        .json({ message: "Ya existe una localidad con ese id" });
     }
 
     const locality = await createLocality(req.body);
@@ -81,7 +84,10 @@ export async function localityUpdate(req, res) {
         .status(404)
         .json({ message: "No existe ninguna localidad con este id" });
     }
-    const duplicate = await getLocalityByName(req.body.localityName);
+    const duplicate = await getLocalityByName(
+      req.body.localityName,
+      locality[0].idRegion
+    );
 
     if (duplicate[0]) {
       return res

@@ -8,10 +8,8 @@ export async function createPetColor(data) {
     const petColor = await PetColor.create(
       {
         petColorName: petColorName.toUpperCase(),
-        createdDate: new Date(),
-        updatedDate: new Date(),
       },
-      { fields: ["petColorName", "active", "createdDate", "updatedDate"] }
+      { fields: ["petColorName"] }
     );
 
     return petColor;
@@ -82,7 +80,7 @@ export async function updatePetColor(data, idPetColor) {
 
   try {
     await PetColor.update(
-      { petColorName: petColorName.toUpperCase(), updatedDate: new Date() },
+      { petColorName: petColorName.toUpperCase() },
       { where: { idPetColor }, returning: true }
     );
 
@@ -95,7 +93,7 @@ export async function updatePetColor(data, idPetColor) {
 export async function deletePetColor(idPetColor) {
   try {
     await PetColor.update(
-      { active: false, updatedDate: new Date() },
+      { active: false },
       { where: { idPetColor }, returning: true }
     );
 
@@ -108,7 +106,7 @@ export async function deletePetColor(idPetColor) {
 export async function activePetColor(idPetColor) {
   try {
     await PetColor.update(
-      { active: true, updatedDate: new Date() },
+      { active: true },
       { where: { idPetColor }, returning: true }
     );
 

@@ -22,6 +22,10 @@ Vaccine.init(
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
+    archive: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     vaccineDate: {
       type: DataTypes.DATE,
       allowNull: false,

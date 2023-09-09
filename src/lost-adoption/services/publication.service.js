@@ -83,6 +83,7 @@ export async function createSearch(searchDto,idUser) {
       where: { name: "ACTIVO" },
     });
 
+    console.log(`Calling PublicationSearch.create with: ${JSON.stringify(searchDto)}`);
     const newPublication = await PublicationSearch.create({
       idPublicationState: activePublicationState.idPublicationState,
       idUser: idUser,

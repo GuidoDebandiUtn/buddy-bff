@@ -7,11 +7,20 @@ import {
   getInformationById,
   updateInformation,
 } from "../services/information.service.js";
+import { getPetById } from "../services/pet.service.js";
 
 export async function informationCreate(req, res) {
   const { idPet } = req.params;
 
   try {
+    const pet = await getPetById(idPet);
+
+    if (!pet[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
     const newInformation = await createInformation(req.body, idPet);
 
     return res
@@ -26,6 +35,14 @@ export async function getInformations(req, res) {
   const { idPet } = req.params;
 
   try {
+    const pet = await getPetById(idPet);
+
+    if (!pet[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
     const information = await getAllInformation(idPet);
 
     if (!information[0]) {
@@ -39,9 +56,17 @@ export async function getInformations(req, res) {
 }
 
 export async function getInformation(req, res) {
-  const { idInformation } = req.params;
+  const { idInformation, idPet } = req.params;
 
   try {
+    const pet = await getPetById(idPet);
+
+    if (!pet[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
     const information = await getInformationById(idInformation);
 
     if (!information[0]) {
@@ -57,9 +82,17 @@ export async function getInformation(req, res) {
 }
 
 export async function informationUpdate(req, res) {
-  const { idInformation } = req.params;
+  const { idInformation, idPet } = req.params;
 
   try {
+    const pet = await getPetById(idPet);
+
+    if (!pet[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
     const information = await getInformationById(idInformation);
 
     if (!information[0]) {
@@ -79,9 +112,17 @@ export async function informationUpdate(req, res) {
 }
 
 export async function informationDelete(req, res) {
-  const { idInformation } = req.params;
+  const { idInformation, idPet } = req.params;
 
   try {
+    const pet = await getPetById(idPet);
+
+    if (!pet[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
     const information = await getInformationById(idInformation);
 
     if (!information[0]) {
@@ -101,9 +142,17 @@ export async function informationDelete(req, res) {
 }
 
 export async function informationActive(req, res) {
-  const { idInformation } = req.params;
+  const { idInformation, idPet } = req.params;
 
   try {
+    const pet = await getPetById(idPet);
+
+    if (!pet[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
     const information = await getInformationById(idInformation);
 
     if (!information[0]) {
@@ -123,9 +172,17 @@ export async function informationActive(req, res) {
 }
 
 export async function informationArchive(req, res) {
-  const { idInformation } = req.params;
+  const { idInformation, idPet } = req.params;
 
   try {
+    const pet = await getPetById(idPet);
+
+    if (!pet[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
     const information = await getInformationById(idInformation);
 
     if (!information[0]) {

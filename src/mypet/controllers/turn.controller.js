@@ -7,10 +7,19 @@ import {
   getTurnById,
   updateTurn,
 } from "../services/turn.service.js";
+import { getPetById } from "../services/pet.service.js";
 
 export async function turnCreate(req, res) {
   const { idPet } = req.params;
   try {
+    const pet = await getPetById(idPet);
+
+    if (!pet[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
     const newTurn = await createTurn(req.body, idPet);
 
     return res
@@ -25,6 +34,14 @@ export async function getTurns(req, res) {
   const { idPet } = req.params;
 
   try {
+    const pet = await getPetById(idPet);
+
+    if (!pet[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
     const turns = await getAllTurns(idPet);
 
     if (!turns[0]) {
@@ -38,10 +55,18 @@ export async function getTurns(req, res) {
 }
 
 export async function getTurn(req, res) {
-  const { idTurn } = req.params;
+  const { idTurn, idPet } = req.params;
 
   try {
-    const turn = await getTurnById(idTurn);
+    const pet = await getPetById(idPet);
+
+    if (!pet[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
+    const turn = await getTurnById(idTurn, idPet);
 
     if (!turn[0]) {
       return res
@@ -56,10 +81,18 @@ export async function getTurn(req, res) {
 }
 
 export async function turnUpdate(req, res) {
-  const { idTurn } = req.params;
+  const { idTurn, idPet } = req.params;
 
   try {
-    const turn = await getTurnById(idTurn);
+    const pet = await getPetById(idPet);
+
+    if (!pet[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
+    const turn = await getTurnById(idTurn, idPet);
 
     if (!turn[0]) {
       return res
@@ -78,10 +111,18 @@ export async function turnUpdate(req, res) {
 }
 
 export async function turnDelete(req, res) {
-  const { idTurn } = req.params;
+  const { idTurn, idPet } = req.params;
 
   try {
-    const turn = await getTurnById(idTurn);
+    const pet = await getPetById(idPet);
+
+    if (!pet[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
+    const turn = await getTurnById(idTurn, idPet);
 
     if (!turn[0]) {
       return res
@@ -100,10 +141,18 @@ export async function turnDelete(req, res) {
 }
 
 export async function turnActive(req, res) {
-  const { idTurn } = req.params;
+  const { idTurn, idPet } = req.params;
 
   try {
-    const turn = await getTurnById(idTurn);
+    const pet = await getPetById(idPet);
+
+    if (!pet[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
+    const turn = await getTurnById(idTurn, idPet);
 
     if (!turn[0]) {
       return res
@@ -122,17 +171,25 @@ export async function turnActive(req, res) {
 }
 
 export async function turnArchive(req, res) {
-  const { idTurn } = req.params;
+  const { idTurn, idPet } = req.params;
 
   try {
-    const turn = await getTurnById(idTurn);
+    const pet = await getPetById(idPet);
+
+    if (!pet[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
+    const turn = await getTurnById(idTurn, idPet);
 
     if (!turn[0]) {
       return res
         .status(404)
         .json({ message: "No existe información con ese id" });
     }
-
+    console.log(turn[0].archive);
     await archiveTurn(idTurn, turn[0].archive);
 
     return res

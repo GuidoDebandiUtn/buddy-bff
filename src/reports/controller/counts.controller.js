@@ -67,7 +67,7 @@ export async function getActiveAdoptions(req, res) {
     try {
       const data = await countActiveAdoptions();
   
-      return res.status(200).json({ datquantity: data.quantity, message:`Se han encontrado ${data.quantity} adopciones de mascotas activas dentro de la aplicacion`});
+      return res.status(200).json({ quantity: data.quantity, message:`Se han encontrado ${data.quantity} adopciones de mascotas activas dentro de la aplicacion`});
     } catch (error) {
       res.status(500).json({
         message: error.message,

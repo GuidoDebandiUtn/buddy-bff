@@ -82,7 +82,7 @@ export async function logout(req, res) {
   try {
     await insertToken(token);
 
-    res.status(200);
+    return res.status(200).json({message: "Se ha revocado el token del usuario"});
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
