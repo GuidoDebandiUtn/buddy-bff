@@ -74,7 +74,7 @@ export async function postSearch(req, res) {
     let publication;
 
     if (req.body.lostDate) {
-      publication = await createSearch(req.body,idUser);
+      publication = await createSearch(req.body);
     }
 
     return res.status(201).json(publication);
