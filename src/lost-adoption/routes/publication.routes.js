@@ -57,7 +57,7 @@ router.get('/',getPublications);
 
 
 
-router.get('/:idUser',obtainPublicationsByUser);
+router.get('/ByUser',verifyToken,obtainPublicationsByUser);
 
 
 /**

@@ -37,7 +37,7 @@ export async function getPublications(req, res) {
 }
 
 export async function obtainPublicationsByUser(req,res){
-  const { idUser } = req.params;
+  const idUser = req.user.idUser;
 
   try {
     const user = await  getUserById(idUser);
