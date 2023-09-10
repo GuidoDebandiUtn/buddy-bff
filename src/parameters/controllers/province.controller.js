@@ -10,29 +10,36 @@ import {
 import { getCountryById } from "../services/country.service.js";
 
 export async function provinceCreate(req, res) {
+
+  const country = await getCountryById(req.body.idCountry);
+
+  if (!country[0]) {
+    return res
+      .status(404)
+      .json({ message: "No existe ningún país con ese id" });
+  }
+
+
   try {
+    let province;
     const duplicate = await getProvinceByName(
       req.body.provinceName,
       req.body.idCountry
     );
 
     if (duplicate[0]) {
-      return res
-        .status(400)
-        .json({ message: "Ya existe una provincia con este nombre" });
+       province = await activeProvince(duplicate[0].idCountry);
+       return res.status(201).json({ message: "Se ha reactivado la provincia" });
+    }else{
+       province = await createProvince(req.body);
+       return res.status(201).json({ province });
     }
 
-    const country = await getCountryById(req.body.idCountry);
 
-    if (!country[0]) {
-      return res
-        .status(404)
-        .json({ message: "No existe ningún país con ese id" });
-    }
 
-    const province = await createProvince(req.body);
+    
 
-    return res.status(201).json({ province });
+    
   } catch (error) {
     return res.status(500).json({
       message: error.message,

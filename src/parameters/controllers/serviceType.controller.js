@@ -10,17 +10,18 @@ import {
 
 export async function serviceTypeCreate(req, res) {
   try {
+    let serviceType;
     const duplicate = await getServiceTypeByName(req.body.serviceTypeName);
 
     if (duplicate[0]) {
-      return res
-        .status(400)
-        .json({ message: "Ya existe un tipo de servicio con este nombre" });
+      serviceType = await activeServiceType(duplicate[0].idServiceType);
+      return res.status(201).json({ message:"Se ha reactivado el tipo de Servicio" });
+    }else{
+      serviceType = await createServiceType(req.body);
+      return res.status(201).json({ serviceType });
     }
 
-    const serviceType = await createServiceType(req.body);
 
-    return res.status(201).json({ serviceType });
   } catch (error) {
     return res.status(500).json({
       message: error.message,

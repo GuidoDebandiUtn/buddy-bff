@@ -10,17 +10,16 @@ import {
 
 export async function petColorCreate(req, res) {
   try {
+    let petColor;
     const duplicate = await getPetColorByName(req.body.petColorName);
 
     if (duplicate[0]) {
-      return res.status(400).json({
-        message: "Ya existe un color de mascota con ese nombre",
-      });
-    }
-
-    const petColor = await createPetColor(req.body);
-
-    return res.status(201).json({ petColor });
+      petColor = await activePetColor(duplicate[0].idPetColor);
+      return res.status(201).json({ message: "Se ha reactivado el color" });
+    }else{
+      petColor = await createPetColor(req.body);
+      return res.status(201).json({ petColor });
+    }    
   } catch (error) {
     return res.status(500).json({
       message: error.message,

@@ -10,17 +10,20 @@ import {
 
 export async function countryCreate(req, res) {
   try {
+    let country;
     const duplicate = await getCountryByName(req.body.countryName);
 
     if (duplicate[0]) {
-      return res
-        .status(400)
-        .json({ message: "Ya existe un pais con este nombre" });
+      country = await activeCountry(duplicate.idCountry);
+      return res.status(201).json({ message: "Se ha reactivado el pais" });
+    }else{
+      country = await createCountry(req.body);
+      return res.status(201).json({ country });
     }
 
-    const country = await createCountry(req.body);
+     
 
-    return res.status(201).json({ country });
+    
   } catch (error) {
     return res.status(500).json({
       message: error.message,
