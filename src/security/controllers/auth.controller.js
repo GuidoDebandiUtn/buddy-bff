@@ -70,6 +70,7 @@ export async function verifyToken(req, res, next) {
 
     next();
   } catch (error) {
+    console.log(error)
     return res.status(500).json({
       error: "El token no es válido",
     });
