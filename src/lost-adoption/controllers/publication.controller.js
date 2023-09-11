@@ -76,7 +76,7 @@ export async function postSearch(req, res) {
 
   try {
     let publication;
-    if (req.body.lostDate) {
+    if (req.body.lostDate && checkParameters(req.body,'SEARCH')) {
       publication = await createSearch(req.body,idUser);
     }
 
@@ -93,6 +93,7 @@ export async function postAdoption(req, res) {
   const idUser = await getIdToken(req.header("auth-token"));
 
   try {
+    checkParameters(req.body,'ADOPTION');
     const publication = await createAdoption(req.body,idUser);
 
     return res.status(201).json(publication);
@@ -158,6 +159,7 @@ export async function putPublication(req, res) {
  
   
   try {
+    checkParameters(req.body,modelType);
     
     let publication = await getPublicationById(idPublication, modelType);
     if (!publication) {
@@ -183,7 +185,7 @@ export async function putPublication(req, res) {
 
 
 function checkParameters(publicationDto,modelType ){
-  const dateRegex = /^\d{2}-\d{2}-\d{4}$/;
+  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
   
 
   /* TODO: 
@@ -193,11 +195,17 @@ function checkParameters(publicationDto,modelType ){
   }
   */
 
+  if(!publicationDto.idPetType || !publicationDto.idLocality || !publicationDto.idPetColor ){
+    throw new Error(
+      `Error en el atributos de las relaciones de la publicacion, esperados: petTypee, petColor y Locality. Valores obtenidos: petType: ${publicationDto.idPetType}, petColor: ${publicationDto.idPetColor}, Locality:${publicationDto.idLocality}.`
+    );
+  }
+
   switch (modelType.toUpperCase()) {
     case "SEARCH":
       if (!dateRegex.test(publicationDto.lostDate)) {
         throw new Error(
-          `Error en el formato del campo lostDate, el formato esperado es AAAA-mm-dd HH-mm-ss. valor recibido: '${publicationDto.lostDate}'.`
+          `Error en el formato del campo lostDate, el formato esperado es AAAA-mm-dd. valor recibido: '${publicationDto.lostDate}'.`
         );
       }
 

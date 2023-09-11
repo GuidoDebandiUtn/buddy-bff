@@ -7,14 +7,17 @@ import { createUserRole } from "./userRole.service.js";
 import bcrypt from "bcryptjs";
 
 export async function createUser(data) {
-  const { mail, password, userName } = data;
+  const { mail, password, userName, name } = data;
 
   try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = await User.create(
       {
         mail,
-        password,
+        password: hashedPassword,       
         userName,
+        name,
       },
       {
         fields: ["mail", "password", "userName"],
@@ -94,6 +97,7 @@ export async function getUserPassword(idUser) {
     FROM users
     WHERE idUser = '${idUser}'
     `;
+
     const user = await sequelize.query(query, {
       model: User,
       mapToModel: true,

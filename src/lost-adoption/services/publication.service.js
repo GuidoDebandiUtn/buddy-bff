@@ -213,7 +213,8 @@ export async function updatePublication(  publicationDto,  idPublication,  model
     throw new Error("Error en las relaciones de la mascota");
   }
 
-  console.log(`Llamando a update de '${modelType}', where Clause: ${whereClause}, con el dto: ${publicationDto}`);
+  console.log(`Llamando a update de '${JSON.stringify(modelType)}', where Clause: ${JSON.stringify(whereClause)}, con el dto: ${JSON.stringify(publicationDto)}`);
+
   try {
     let publicationNew = await modelParams.model.update(
       { ...publicationDto },

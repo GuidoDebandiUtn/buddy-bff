@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const response = await fetch(
-        `${process.env.BACKEND_URL}/security/auth/changePassword/${idUser}`,
+        `https://buddy-app1.loca.lt/security/auth/changePassword/${idUser}`,
         {
           method: "PUT",
           headers: {
@@ -59,7 +59,10 @@ document.addEventListener("DOMContentLoaded", () => {
         alert(`Error al cambiar la contraseña: ${errorData.message}`);
       }
     } catch (error) {
-      alert("Ha ocurrido un error. Por favor, inténtalo nuevamente más tarde.");
+      console.log(error)
+      alert(
+        "Ha ocurrido un error. Por favor, inténtalo nuevamente más tarde.",
+      );
     }
   });
 });

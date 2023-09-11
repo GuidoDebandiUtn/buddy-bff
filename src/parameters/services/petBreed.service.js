@@ -71,6 +71,7 @@ export async function getPetBreedsByPetType(petTypeName) {
           where: { petTypeName, active: true },
         },
       ],
+      where: {active: true}
     });
 
     return petBreed;

@@ -7,6 +7,7 @@ import {
 } from "../services/user.service.js";
 import { findToken, insertToken } from "../services/token.service.js";
 import { resetPasswordMail } from "../../helpers/mailHelper.js";
+import bcrypt from "bcryptjs";
 
 export async function login(req, res) {
   const { password } = req.body;
@@ -26,7 +27,9 @@ export async function login(req, res) {
 
     let token;
 
-    if (password == user[0].password) {
+    const passwordMatch = await bcrypt.compare(password, user[0].password)
+
+    if (passwordMatch) {
       token = jwt.sign(
         { idUser: user[0].idUser, mail: user[0].mail },
         process.env.TOKEN_SECRET,
@@ -145,6 +148,7 @@ export async function changePassword(req, res) {
       .json({
         message:
           "Ha ocurrido un problema. No hemos podido verificar tu cuenta. Intenta nuevamente más tarde.",
+          error
       });
   }
 }
@@ -152,6 +156,12 @@ export async function changePassword(req, res) {
 export async function changePasswordPage(req, res) {
   const { idUser } = req.params;
   try {
+    const user = await getUserById(idUser);
+
+    if (!user[0]) {
+      return res.status(404).render("resetPassword/noFound");
+    }
+
     return res.status(200).render("resetPassword/success", { idUser });
   } catch (error) {
     return res.status(500).render("resetPassword/error");
