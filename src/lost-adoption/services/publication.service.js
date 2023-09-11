@@ -9,6 +9,7 @@ import { Trace } from "../../models/Trace.js";
 import { getLocalityById } from "../../parameters/services/locality.service.js";
 import { getPetBreedById } from "../../parameters/services/petBreed.service.js";
 import { getPetColorById } from "../../parameters/services/petColor.service.js";
+import { getPetTypeById } from "../../parameters/services/petType.service.js";
 import { User } from "../../models/User.js";
 
 export async function retrivePaginatedPublications(  page = 1,  recordsPerPage = 10,  modelType = "search") {
@@ -96,17 +97,17 @@ export async function createSearch(searchDto,idUser) {
 
 export async function createAdoption(adoptionDto,idUser) {
   try {
-    let locality = await getLocalityById(searchDto.idLocality);
-    let breed = await getPetBreedById(searchDto.idPetBreed);
-    let petType = await getPetTypeById(searchDto.idPetType);
-    let color = await getPetColorById(searchDto.idPetColor);
+    let locality = await getLocalityById(adoptionDto.idLocality);
+    let breed = await getPetBreedById(adoptionDto.idPetBreed);
+    let petType = await getPetTypeById(adoptionDto.idPetType);
+    let color = await getPetColorById(adoptionDto.idPetColor);
 
     if (!locality || !petType || !color) {
       console.log("locality: %s,petType: %s,color: %s", locality, petType, color);
       throw new Error("Error en las relaciones de la mascota");
     }
 
-    if(searchDto.idPetBreed && !breed){
+    if(adoptionDto.idPetBreed && !breed){
       console.log("Pet Breed: %s", breed);
       throw new Error("Error en la raza enviada para la mascota");
     }
@@ -201,14 +202,14 @@ export async function updatePublication(  publicationDto,  idPublication,  model
   let petType; 
   let color;
 
-  if(publicationDto.idLocality) locality = await getLocalityById(searchDto.idLocality);
-  if(searchDto.idPetBreed) breed = await getPetBreedById(searchDto.idPetBreed);
-  if(searchDto.idPetType) petType = await getPetTypeById(searchDto.idPetType);
-  if(searchDto.idPetColor) color = await getPetColorById(searchDto.idPetColor);
+  if(publicationDto.idLocality) locality = await getLocalityById(publicationDto.idLocality);
+  if(publicationDto.idPetBreed) breed = await getPetBreedById(publicationDto.idPetBreed);
+  if(publicationDto.idPetType) petType = await getPetTypeById(publicationDto.idPetType);
+  if(publicationDto.idPetColor) color = await getPetColorById(publicationDto.idPetColor);
  
 
-  if (searchDto.idLocality && !locality || searchDto.idPetType  && !petType 
-    ||searchDto.idPetColor && !color || searchDto.idPetBreed && !breed) {
+  if (publicationDto.idLocality && !locality || publicationDto.idPetType  && !petType 
+    ||publicationDto.idPetColor && !color || publicationDto.idPetBreed && !breed) {
     console.log("locality: %s,petType: %s,color: %s, breed: %s", locality, petType, color, breed);
     throw new Error("Error en las relaciones de la mascota");
   }
