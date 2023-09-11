@@ -1,3 +1,4 @@
+import { getIdToken } from "../../helpers/authHelper.js";
 import { getUserById } from "../../security/services/user.service.js";
 import {
     retrivePaginatedPublications,
@@ -36,7 +37,7 @@ export async function getPublications(req, res) {
 }
 
 export async function obtainPublicationsByUser(req,res){
-  const { idUser } = req.params;
+  const idUser = req.user.idUser;
 
   try {
     const user = await  getUserById(idUser);
@@ -70,11 +71,13 @@ export async function obtainPublicationsByUser(req,res){
 
 
 export async function postSearch(req, res) {
+
+  const idUser = await getIdToken(req.header("auth-token"));
+
   try {
     let publication;
-
     if (req.body.lostDate) {
-      publication = await createSearch(req.body);
+      publication = await createSearch(req.body,idUser);
     }
 
     return res.status(201).json(publication);
@@ -86,8 +89,11 @@ export async function postSearch(req, res) {
 }
 
 export async function postAdoption(req, res) {
+
+  const idUser = await getIdToken(req.header("auth-token"));
+
   try {
-    const publication = await createAdoption(req.body);
+    const publication = await createAdoption(req.body,idUser);
 
     return res.status(201).json(publication);
   } catch (error) {
