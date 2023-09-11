@@ -66,7 +66,7 @@ export async function createSearch(searchDto,idUser) {
 
     if (!locality || !breed || !color) {
       console.log("locality: %s,breed: %s,color: %s", locality, breed, color);
-      throw new Error("Error on the filters values!");
+      throw new Error("No se ha podido obtener una de la relaciones de la publicacion!");
     }
 
     const activePublicationState = await PublicationState.findOne({
@@ -184,7 +184,7 @@ export async function updatePublication(  publicationDto,  idPublication,  model
   let whereClause = {};
   whereClause[modelParams.attributes.pop()] = idPublication;
 
-  console.log(`Llamando a update de '${modelType}', where Clause: ${whereClause}, con el dto: ${publicationDto}`);
+  console.log(`Llamando a update de '${JSON.stringify(modelType)}', where Clause: ${JSON.stringify(whereClause)}, con el dto: ${JSON.stringify(publicationDto)}`);
   try {
     let publicationNew = await modelParams.model.update(
       { ...publicationDto },
