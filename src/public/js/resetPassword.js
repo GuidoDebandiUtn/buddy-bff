@@ -59,7 +59,10 @@ document.addEventListener("DOMContentLoaded", () => {
         alert(`Error al cambiar la contraseña: ${errorData.message}`);
       }
     } catch (error) {
-      alert("Ha ocurrido un error. Por favor, inténtalo nuevamente más tarde.");
+      alert(
+        "Ha ocurrido un error. Por favor, inténtalo nuevamente más tarde.",
+        error
+      );
     }
   });
 });
