@@ -62,11 +62,17 @@ export async function createSearch(searchDto,idUser) {
   try {
     let locality = await getLocalityById(searchDto.idLocality);
     let breed = await getPetBreedById(searchDto.idPetBreed);
+    let petType = await getPetTypeById(searchDto.idPetType);
     let color = await getPetColorById(searchDto.idPetColor);
 
-    if (!locality || !breed || !color) {
-      console.log("locality: %s,breed: %s,color: %s", locality, breed, color);
-      throw new Error("Error on the filters values!");
+    if (!locality || !petType || !color) {
+      console.log("locality: %s,petType: %s,color: %s", locality, petType, color);
+      throw new Error("Error en las relaciones de la mascota");
+    }
+
+    if(searchDto.idPetBreed && !breed){
+      console.log("Pet Breed: %s", breed);
+      throw new Error("Error en la raza enviada para la mascota");
     }
 
     const activePublicationState = await PublicationState.findOne({
@@ -90,13 +96,19 @@ export async function createSearch(searchDto,idUser) {
 
 export async function createAdoption(adoptionDto,idUser) {
   try {
-    let locality = await getLocalityById(adoptionDto.idLocality);
-    let breed = await getPetBreedById(adoptionDto.idPetBreed);
-    let color = await getPetColorById(adoptionDto.idPetColor);
+    let locality = await getLocalityById(searchDto.idLocality);
+    let breed = await getPetBreedById(searchDto.idPetBreed);
+    let petType = await getPetTypeById(searchDto.idPetType);
+    let color = await getPetColorById(searchDto.idPetColor);
 
-    if (!locality || !breed || !color) {
-      console.log("locality: %s,breed: %s,color: %s", locality, breed, color);
-      throw new Error("Error on the filters values!");
+    if (!locality || !petType || !color) {
+      console.log("locality: %s,petType: %s,color: %s", locality, petType, color);
+      throw new Error("Error en las relaciones de la mascota");
+    }
+
+    if(searchDto.idPetBreed && !breed){
+      console.log("Pet Breed: %s", breed);
+      throw new Error("Error en la raza enviada para la mascota");
     }
 
     const activePublicationState = await PublicationState.findOne({
@@ -183,6 +195,23 @@ export async function updatePublication(  publicationDto,  idPublication,  model
   const modelParams = getModel(modelType);
   let whereClause = {};
   whereClause[modelParams.attributes.pop()] = idPublication;
+
+  let locality ;
+  let breed ;
+  let petType; 
+  let color;
+
+  if(publicationDto.idLocality) locality = await getLocalityById(searchDto.idLocality);
+  if(searchDto.idPetBreed) breed = await getPetBreedById(searchDto.idPetBreed);
+  if(searchDto.idPetType) petType = await getPetTypeById(searchDto.idPetType);
+  if(searchDto.idPetColor) color = await getPetColorById(searchDto.idPetColor);
+ 
+
+  if (searchDto.idLocality && !locality || searchDto.idPetType  && !petType 
+    ||searchDto.idPetColor && !color || searchDto.idPetBreed && !breed) {
+    console.log("locality: %s,petType: %s,color: %s, breed: %s", locality, petType, color, breed);
+    throw new Error("Error en las relaciones de la mascota");
+  }
 
   console.log(`Llamando a update de '${modelType}', where Clause: ${whereClause}, con el dto: ${publicationDto}`);
   try {
