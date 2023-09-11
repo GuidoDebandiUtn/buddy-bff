@@ -85,10 +85,11 @@ export async function userUpdate(req, res) {
       });
     }
 
-    if(await getUserPassword(idUser) != currentPassword){
+    const passwordMatch = await bcrypt.compare(currentPassword, await getUserPassword(idUser))
+
+    if(!passwordMatch){
       return res.status(400).json({
-        error: "Ha habido un problema con la contraseña actual del usuario",
-        code: 400});
+        error: "Ha habido un problema con la contraseña actual del usuario"});
     }
 
     await updateUser(idUser, req.body);
