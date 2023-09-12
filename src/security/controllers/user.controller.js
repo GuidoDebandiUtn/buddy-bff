@@ -14,6 +14,8 @@ import {
 import { changeUserRole } from "../services/userRole.service.js";
 import { getUserStateByName } from "../services/userState.service.js";
 
+import bcrypt from "bcryptjs";
+
 export async function userCreate(req, res) {
   const data = req.body;
 
@@ -85,7 +87,9 @@ export async function userUpdate(req, res) {
       });
     }
 
-    const passwordMatch = await bcrypt.compare(currentPassword, await getUserPassword(idUser))
+    const userPassword = await getUserPassword(idUser);
+  
+    const passwordMatch = await bcrypt.compare(currentPassword, userPassword);
 
     if(!passwordMatch){
       return res.status(400).json({
