@@ -56,12 +56,14 @@ export async function verifyToken(req, res, next) {
 
   try {
     if (!token) {
+      console.log("error en la obtencion del token en el header");
       return res.status(401).json({
         error: "Aún no ha iniciado sesión",
       });
     }
 
     if (await findToken(token)) {
+      console.log("se ha encontrado el token en la lista de invalidados");
       return res.status(401).json({
         error: "Token expirado",
       });

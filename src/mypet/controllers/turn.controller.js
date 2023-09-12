@@ -9,8 +9,20 @@ import {
 } from "../services/turn.service.js";
 import { getPetById } from "../services/pet.service.js";
 
+
+
+const dateRegex = /^(\d{4})-(0?[1-9]|1[0-2])-(0?[1-9]|[12]\d|3[01]) ([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
+
 export async function turnCreate(req, res) {
   const { idPet } = req.params;
+
+  if (!dateRegex.test(req.body.turnDate)) {
+    console.log ("error en el formato del turno: obtenido: %s, esperado AAAA-mm-dd HH:mm:ss",req.body.turnDate);
+    return res
+    .status(400)
+    .json({ message: "Error en el formato de fecha" });
+  }
+
   try {
     const pet = await getPetById(idPet);
 
@@ -82,6 +94,14 @@ export async function getTurn(req, res) {
 
 export async function turnUpdate(req, res) {
   const { idTurn, idPet } = req.params;
+  console.log ("error en el formato del turno: obtenido: %s, esperado AAAA-mm-dd HH:mm:ss",req.body.turnDate);
+
+  if (!dateRegex.test(req.body.turnDate)) {
+    console.log ("error en el formato del turno: obtenido: %s, esperado AAAA-mm-dd HH:mm:ss",req.body.turnDate);
+    return res
+    .status(400)
+    .json({ message: "Error en el formato de fecha" });
+  }
 
   try {
     const pet = await getPetById(idPet);
