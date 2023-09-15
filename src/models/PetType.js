@@ -18,20 +18,26 @@ PetType.init(
     legsNumber: {
       type: DataTypes.SMALLINT,
     },
+    diet: {
+      type: DataTypes.STRING,
+    },
+    enviroment: {
+      type: DataTypes.STRING,
+    },
+    coat: {
+      type: DataTypes.STRING,
+    },
+    weather: {
+      type: DataTypes.STRING,
+    },
     active: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
-    createdDate: {
-      type: DataTypes.DATE,
-    },
-    updatedDate: {
-      type: DataTypes.DATE,
-    },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "petType",
   }
 );

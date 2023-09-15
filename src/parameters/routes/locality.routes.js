@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   getLocalities,
   getLocality,
+  localityActive,
   localityCreate,
   localityDelete,
   localityUpdate,
@@ -153,5 +154,28 @@ router.put("/:idLocality", localityUpdate);
  *          description: Hubo un error
  */
 router.delete("/:idLocality", localityDelete);
+
+/**
+ * @swagger
+ * /parameters/locality/active/{idLocality}:
+ *   post:
+ *     summary: Dar de alta una localidad
+ *     tags: [LOCALITY]
+ *     responses:
+ *       200:
+ *         description: Localidad dada de alta.
+ *         content:
+ *            application/json:
+ *              schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *       404:
+ *         description: No existe ninguna localidad con es id.
+ *       500:
+ *          description: Hubo un error
+ */
+router.post("/active/:idLocality", localityActive);
 
 export default router;

@@ -8,10 +8,8 @@ export async function createCountry(data) {
     const newCountry = await Country.create(
       {
         countryName: countryName.toUpperCase(),
-        createdDate: new Date(),
-        updatedDate: new Date(),
       },
-      { fields: ["countryName", "active", "createdDate", "updatedDate"] }
+      { fields: ["countryName"] }
     );
 
     return newCountry;
@@ -42,16 +40,12 @@ export async function getAllCountries() {
 export async function getCountryById(idCountry) {
   try {
     const query = `
-    SELECT countries.idCountry, countries.countryName, provinces.provinceName
+    SELECT countries.idCountry, countries.countryName, GROUP_CONCAT(provinces.provinceName) AS provincias
     FROM countries
     LEFT JOIN provinces ON countries.idCountry = provinces.idCountry
     WHERE countries.idCountry = '${idCountry}'
+    GROUP BY countries.idCountry, countries.countryName
     `;
-    // const query = `
-    // SELECT idCountry, countryName
-    // FROM countries
-    // WHERE idCountry = '${idCountry}'
-    // `;
 
     const country = await sequelize.query(query, {
       model: Country,
@@ -88,7 +82,7 @@ export async function updateCountry(data, idCountry) {
 
   try {
     await Country.update(
-      { countryName: countryName.toUpperCase(), updatedDate: new Date() },
+      { countryName: countryName.toUpperCase() },
       { where: { idCountry }, returning: true }
     );
     return;
@@ -100,7 +94,20 @@ export async function updateCountry(data, idCountry) {
 export async function deleteCountry(idCountry) {
   try {
     await Country.update(
-      { active: false, updatedDate: new Date() },
+      { active: false },
+      { where: { idCountry }, returning: true }
+    );
+
+    return;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function activeCountry(idCountry) {
+  try {
+    await Country.update(
+      { active: true },
       { where: { idCountry }, returning: true }
     );
 

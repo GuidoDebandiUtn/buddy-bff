@@ -2,6 +2,8 @@ import { Router } from "express";
 import {
   getTurn,
   getTurns,
+  turnActive,
+  turnArchive,
   turnCreate,
   turnDelete,
   turnUpdate,
@@ -163,5 +165,51 @@ router.put("/:idPet/:idTurn", turnUpdate);
  *          description: Hubo un error
  */
 router.delete("/:idPet/:idTurn", turnDelete);
+
+/**
+ * @swagger
+ * /mypet/turn/{idPet}/active/{idTurn}:
+ *   post:
+ *     summary: Dar de alta un turno
+ *     tags: [TURN]
+ *     responses:
+ *       200:
+ *         description: Turno dado de alta.
+ *         content:
+ *            application/json:
+ *              schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *       404:
+ *         description: No existe ningun turno con es id.
+ *       500:
+ *          description: Hubo un error
+ */
+router.post("/:idPet/active/:idTurn", turnActive);
+
+/**
+ * @swagger
+ * /mypet/information/{idPet}/archive/{idTurn}:
+ *   put:
+ *     summary: Archiva o desarchiva un turno de una mascota
+ *     tags: [INFO]
+ *     responses:
+ *       200:
+ *         description: Turno actualizado exitosamente.
+ *         content:
+ *            application/json:
+ *              schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *       404:
+ *         description: No existe ningun turno con ese id.
+ *       500:
+ *          description: Hubo un error
+ */
+router.put("/:idPet/archive/:idTurn", turnArchive);
 
 export default router;

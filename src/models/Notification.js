@@ -1,19 +1,25 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../database/database.js";
 
-export class UserType extends Model {}
+export class Notification extends Model {}
 
-UserType.init(
+Notification.init(
   {
-    idUserType: {
+    idNotification: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
     },
-    userTypeName: {
+    content: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    severity: {
+      type: DataTypes.STRING,
+    },
+    language: {
+      type: DataTypes.STRING,
     },
     active: {
       type: DataTypes.BOOLEAN,
@@ -25,10 +31,16 @@ UserType.init(
     updatedDate: {
       type: DataTypes.DATE,
     },
+    expirationDate: {
+      type: DataTypes.DATE,
+    },
+    processDate: {
+      type: DataTypes.DATE,
+    },
   },
   {
     sequelize,
     timestamps: false,
-    modelName: "userType",
+    modelName: "notification",
   }
 );

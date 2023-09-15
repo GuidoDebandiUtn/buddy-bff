@@ -6,6 +6,7 @@ import {
   userDelete,
   changeState,
   userCreate,
+  changeRole,
 } from "../controllers/user.controller.js";
 import { verifyToken } from "../controllers/auth.controller.js";
 
@@ -19,7 +20,7 @@ const router = Router();
  */
 /**
  * @swagger
- * /security/auth/register:
+ * /security/user/register:
  *   post:
  *     summary: Crea un nuevo usuario
  *     tags: [USER]
@@ -55,7 +56,7 @@ router.post("/register", userCreate);
 
 /**
  * @swagger
- * /security/user/:
+ * /security/user/all:
  *  get:
  *    summary: Obtener todos los usuarios
  *    tags: [USER]
@@ -89,14 +90,18 @@ router.post("/register", userCreate);
  *      500:
  *        description: Hubo un error
  */
-router.get("/", verifyToken, getUsers);
+router.get("/all", verifyToken, getUsers);
 
 /**
  * @swagger
- * /security/user/{idUser}:
+ * /security/user/:
  *   get:
  *     summary: Traer el ususario por id
  *     tags: [USER]
+ *     header:
+ *       auth-token:
+ *         required: true
+ *         description: token conteniendo al usuario a encontrar
  *     responses:
  *       200:
  *         description: Devuleve el ususario buscado
@@ -119,7 +124,7 @@ router.get("/", verifyToken, getUsers);
  *       500:
  *          description: Hubo un eror
  */
-router.get("/:idUser", verifyToken, getUser);
+router.get("/", verifyToken, getUser);
 
 /**
  * @swagger
@@ -218,5 +223,35 @@ router.delete("/:idUser", verifyToken, userDelete);
  *        description: Hubo un error
  */
 router.post("/changeState/:idUser/:userStateName", verifyToken, changeState);
+
+/**
+ * @swagger
+ * /security/user/changeRole/{idUser}/{roleName}:
+ *  post:
+ *    summary: Cambiar rol de un usuario
+ *    tags: [USER]
+ *    responses:
+ *      200:
+ *        description: Se ha cambiado de rol un usuario exitosamente
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *      404:
+ *        description: No se encuentra el usuario al que se le va a cambiar el rol ni el ususario autor
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *      500:
+ *        description: Hubo un error
+ */
+router.post("/changeRole/:idUser/:roleName", verifyToken, changeRole);
 
 export default router;

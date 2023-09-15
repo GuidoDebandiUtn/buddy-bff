@@ -20,17 +20,16 @@ Rating.init(
     },
     numberRating: {
       type: DataTypes.INTEGER,
+      allowNull: false,
     },
-    createdDate: {
-      type: DataTypes.DATE,
-    },
-    updatedDate: {
-      type: DataTypes.DATE,
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
     },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "rating",
   }
 );

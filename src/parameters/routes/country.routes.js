@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  countryActive,
   countryCreate,
   countryDelete,
   countryUpdate,
@@ -153,5 +154,28 @@ router.put("/:idCountry", countryUpdate);
  *          description: Hubo un error
  */
 router.delete("/:idCountry", countryDelete);
+
+/**
+ * @swagger
+ * /parameters/country/active/{idCountry}:
+ *   post:
+ *     summary: Dar de alta un país
+ *     tags: [COUNTRY]
+ *     responses:
+ *       200:
+ *         description: País dado de alta.
+ *         content:
+ *            application/json:
+ *              schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *       404:
+ *         description: No existe ningun país con es id.
+ *       500:
+ *          description: Hubo un error
+ */
+router.post("/active/:idCountry", countryActive);
 
 export default router;

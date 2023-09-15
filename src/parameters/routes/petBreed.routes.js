@@ -5,10 +5,12 @@ import {
   petBreedCreate,
   petBreedDelete,
   petBreedUpdate,
-  getPetBreedsByType
+  getPetBreedsByType,
+  petBreedActive,
 } from "../controllers/petBreed.controller.js";
 
 const router = Router();
+
 /**
  * @swagger
  * tags:
@@ -152,9 +154,30 @@ router.put("/:idPetBreed", petBreedUpdate);
  *       500:
  *          description: Hubo un error
  */
-router.delete(":idPetBreed", petBreedDelete);
+router.delete("/:idPetBreed", petBreedDelete);
 
-
+/**
+ * @swagger
+ * /parameters/petBreed/active/{idPetBreed}:
+ *   post:
+ *     summary: Dar de alta una raza
+ *     tags: [PETBREED]
+ *     responses:
+ *       200:
+ *         description: Raza dada de alta.
+ *         content:
+ *            application/json:
+ *              schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *       404:
+ *         description: No existe ninguna raza con es id.
+ *       500:
+ *          description: Hubo un error
+ */
+router.post("/active/:idPetBreed", petBreedActive);
 
 /**
  * @swagger
@@ -179,6 +202,5 @@ router.delete(":idPetBreed", petBreedDelete);
  *          description: Hubo un error
  */
 router.get("/byType/:petTypeName", getPetBreedsByType);
-
 
 export default router;

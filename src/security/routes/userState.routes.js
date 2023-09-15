@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   getUserState,
   getUserStates,
+  userStateActive,
   userStateCreate,
   userStateDelete,
   userStateUpdate,
@@ -153,5 +154,28 @@ router.put("/:idUserState", verifyToken, userStateUpdate);
  *          description: Hubo un error
  */
 router.delete("/:idUserState", verifyToken, userStateDelete);
+
+/**
+ * @swagger
+ * /security/userState/active/{idUserState}:
+ *   post:
+ *     summary: Dar de alta un UserState
+ *     tags: [USERSTATE]
+ *     responses:
+ *       201:
+ *         description: Se ha dado de alta el UserState
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *       404:
+ *         description: No existe ningun UserState con este id
+ *       500:
+ *          description: Hubo un error
+ */
+router.post("/active/:idUserState", verifyToken, userStateActive);
 
 export default router;

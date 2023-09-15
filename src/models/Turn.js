@@ -20,20 +20,23 @@ Turn.init(
     },
     active: {
       type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+    archive: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
     turnDate: {
       type: DataTypes.DATE,
+      allowNull: false,
     },
-    createdDate: {
-      type: DataTypes.DATE,
-    },
-    updatedDate: {
-      type: DataTypes.DATE,
+    alertType: {
+      type: DataTypes.STRING,
     },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "turn",
   }
 );

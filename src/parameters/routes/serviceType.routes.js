@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   getServiceType,
   getServiceTypes,
+  serviceTypeActive,
   serviceTypeCreate,
   serviceTypeDelete,
   serviceTypeUpdate,
@@ -153,5 +154,28 @@ router.put("/:idServiceType", serviceTypeUpdate);
  *          description: Hubo un error
  */
 router.delete("/:idServiceType", serviceTypeDelete);
+
+/**
+ * @swagger
+ * /parameters/serviceType/active/{idServiceType}:
+ *   post:
+ *     summary: Dar de alta un tipo de servicio
+ *     tags: [SERVICETYPE]
+ *     responses:
+ *       200:
+ *         description: Tipo de servicio dado de alta.
+ *         content:
+ *            application/json:
+ *              schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *       404:
+ *         description: No existe ningun tipo de servicio con es id.
+ *       500:
+ *          description: Hubo un error
+ */
+router.post("/active/:idServiceType", serviceTypeActive);
 
 export default router;

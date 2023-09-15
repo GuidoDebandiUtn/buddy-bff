@@ -7,6 +7,7 @@ import {
 } from "../services/user.service.js";
 import { findToken, insertToken } from "../services/token.service.js";
 import { resetPasswordMail } from "../../helpers/mailHelper.js";
+import bcrypt from "bcryptjs";
 
 export async function login(req, res) {
   const { password } = req.body;
@@ -26,7 +27,9 @@ export async function login(req, res) {
 
     let token;
 
-    if (password == user[0].password) {
+    const passwordMatch = await bcrypt.compare(password, user[0].password)
+
+    if (passwordMatch) {
       token = jwt.sign(
         { idUser: user[0].idUser, mail: user[0].mail },
         process.env.TOKEN_SECRET,
@@ -53,12 +56,14 @@ export async function verifyToken(req, res, next) {
 
   try {
     if (!token) {
+      console.log("error en la obtencion del token en el header");
       return res.status(401).json({
         error: "Aún no ha iniciado sesión",
       });
     }
 
     if (await findToken(token)) {
+      console.log("se ha encontrado el token en la lista de invalidados");
       return res.status(401).json({
         error: "Token expirado",
       });
@@ -70,6 +75,7 @@ export async function verifyToken(req, res, next) {
 
     next();
   } catch (error) {
+    console.log(error)
     return res.status(500).json({
       error: "El token no es válido",
     });
@@ -82,7 +88,7 @@ export async function logout(req, res) {
   try {
     await insertToken(token);
 
-    res.status(200);
+    return res.status(200).json({message: "Se ha revocado el token del usuario"});
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -144,6 +150,7 @@ export async function changePassword(req, res) {
       .json({
         message:
           "Ha ocurrido un problema. No hemos podido verificar tu cuenta. Intenta nuevamente más tarde.",
+          error
       });
   }
 }
@@ -151,6 +158,12 @@ export async function changePassword(req, res) {
 export async function changePasswordPage(req, res) {
   const { idUser } = req.params;
   try {
+    const user = await getUserById(idUser);
+
+    if (!user[0]) {
+      return res.status(404).render("resetPassword/noFound");
+    }
+
     return res.status(200).render("resetPassword/success", { idUser });
   } catch (error) {
     return res.status(500).render("resetPassword/error");

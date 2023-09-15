@@ -2,10 +2,13 @@ import { Router } from "express";
 import {
   getPet,
   getPets,
+  petActive,
   petCreate,
   petDelete,
   petUpdate,
 } from "../controllers/pet.controller.js";
+import { verifyToken } from "../../security/controllers/auth.controller.js";
+
 
 const router = Router();
 
@@ -31,6 +34,10 @@ const router = Router();
  *             properties:
  *               petName:
  *                 type: string
+ *               idPetBreed:
+ *                 type: string
+ *               idPetType:
+ *                 type: string
  *               birthDate:
  *                 type: Date
  *     responses:
@@ -46,7 +53,7 @@ const router = Router();
  *       500:
  *          description: Hubo un error
  */
-router.post("/", petCreate);
+router.post("/",verifyToken, petCreate);
 
 /**
  * @swagger
@@ -72,7 +79,7 @@ router.post("/", petCreate);
  *       500:
  *          description: Hubo un error
  */
-router.get("/", getPets);
+router.get("/",verifyToken, getPets);
 
 /**
  * @swagger
@@ -155,5 +162,28 @@ router.put("/:idPet", petUpdate);
  *          description: Hubo un error
  */
 router.delete("/:idPet", petDelete);
+
+/**
+ * @swagger
+ * /mypet/pet/active/{idPet}:
+ *   post:
+ *     summary: Dar de alta una mascota
+ *     tags: [PETS]
+ *     responses:
+ *       200:
+ *         description: Mascota dada de alta.
+ *         content:
+ *            application/json:
+ *              schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *       404:
+ *         description: No existe ninguna mascota con es id.
+ *       500:
+ *          description: Hubo un error
+ */
+router.post("/active/:idPet", petActive);
 
 export default router;

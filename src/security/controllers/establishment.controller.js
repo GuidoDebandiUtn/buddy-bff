@@ -10,6 +10,8 @@ import { validateMail } from "../../helpers/mailHelper.js";
 import { changeStateUser } from "../services/stateUser.service.js";
 import { getUserStateByName } from "../services/userState.service.js";
 import { destroyUser, getUserById } from "../services/user.service.js";
+import { getRoleByName } from "../services/role.service.js";
+import { changeUserRole } from "../services/userRole.service.js";
 
 export async function establishmentCreate(req, res) {
   const data = req.body;
@@ -110,7 +112,7 @@ export async function establishmentDelete(req, res) {
 
     const idUserAuthor = await getIdToken(req.header("auth-token"));
 
-    await changeStateUser(idUser, userState.idUserState, idUserAuthor);
+    await changeStateUser(idUser, userState[0].idUserState, idUserAuthor);
 
     res.status(200).json({ message: "El establecimiento se ha dado de baja" });
   } catch (error) {
@@ -142,11 +144,45 @@ export async function changeState(req, res) {
 
     const userState = await getUserStateByName(userStateName);
 
-    await changeStateUser(idUser, userState.idUserState, idUserAuthor);
+    await changeStateUser(idUser, userState[0].idUserState, idUserAuthor);
 
     res
       .status(200)
       .json({ message: "Se ha cambiado el estado del establecimiento" });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export async function changeRole(req, res) {
+  const { idUser, roleName } = req.params;
+
+  try {
+    const idUserAuthor = await getIdToken(req.header("auth-token"));
+
+    const establishment = await getUserById(idUser);
+
+    if (!establishment[0]) {
+      return res.status(404).json({
+        message: "No existe ningun establecimiento con ese id",
+      });
+    }
+
+    const exist = await getUserById(idUserAuthor);
+
+    if (!exist) {
+      return res.status(404).json({
+        message: "No existe ningun establecimiento con ese id",
+      });
+    }
+
+    const role = await getRoleByName(roleName);
+
+    await changeUserRole(idUser, role[0].idRole, idUserAuthor);
+
+    return res
+      .status(200)
+      .json({ message: "Se ha cambiado el rol del establecimiento" });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

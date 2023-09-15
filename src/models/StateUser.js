@@ -13,18 +13,16 @@ StateUser.init(
     },
     idUserAuthor: {
       type: DataTypes.UUID,
-      allowNull: true,
+      allowNull: false,
     },
-    createdDate: {
-      type: DataTypes.DATE,
-    },
-    updatedDate: {
-      type: DataTypes.DATE,
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
     },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "stateUser",
   }
 );

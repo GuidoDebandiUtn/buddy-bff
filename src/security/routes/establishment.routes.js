@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  changeRole,
   changeState,
   establishmentCreate,
   establishmentDelete,
@@ -19,7 +20,7 @@ const router = Router();
  */
 /**
  * @swagger
- * /security/auth/register:
+ * /security/establishment/register:
  *   post:
  *     summary: Crea un nuevo establecimiento
  *     tags: [ESTABLISHMENT]
@@ -30,7 +31,7 @@ const router = Router();
  *           schema:
  *             type: object
  *             properties:
- *               establishmentname:
+ *               userName:
  *                 type: string
  *               mail:
  *                 type: string
@@ -218,5 +219,35 @@ router.delete("/:idUser", verifyToken, establishmentDelete);
  *        description: Hubo un error
  */
 router.post("/changeState/:idUser/:userStateName", verifyToken, changeState);
+
+/**
+ * @swagger
+ * /security/establishment/changeRole/{idUser}/{roleName}:
+ *  post:
+ *    summary: Cambiar rol de un establecimiento
+ *    tags: [ESTABLISHMENT]
+ *    responses:
+ *      200:
+ *        description: Se ha cambiado de rol un establecimiento exitosamente
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *      404:
+ *        description: No se encuentra el establecimiento al que se le va a cambiar el rol ni el ususario autor
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *      500:
+ *        description: Hubo un error
+ */
+router.post("/changeRole/:idUser/:roleName", verifyToken, changeRole);
 
 export default router;

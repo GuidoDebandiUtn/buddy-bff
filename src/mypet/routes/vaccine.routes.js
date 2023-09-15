@@ -2,6 +2,8 @@ import { Router } from "express";
 import {
   getVaccine,
   getVaccines,
+  vaccineActive,
+  vaccineArchive,
   vaccineCreate,
   vaccineDelete,
   vaccineUpdate,
@@ -155,5 +157,51 @@ router.put("/:idPet/:idVaccine", vaccineUpdate);
  *          description: Hubo un error
  */
 router.delete("/:idPet/:idVaccine", vaccineDelete);
+
+/**
+ * @swagger
+ * /mypet/vaccine/{idPet}/active/{idVaccine}:
+ *   post:
+ *     summary: Dar de alta una vacuna de una mascota
+ *     tags: [VACCINE]
+ *     responses:
+ *       200:
+ *         description: Vacuna dada de alta.
+ *         content:
+ *            application/json:
+ *              schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *       404:
+ *         description: No existe ninguna vacuna con es id.
+ *       500:
+ *          description: Hubo un error
+ */
+router.post("/:idPet/active/:idVaccine", vaccineActive);
+
+/**
+ * @swagger
+ * /mypet/information/{idPet}/archive/{idVaccine}:
+ *   put:
+ *     summary: Archiva o desarchiva una vacuna de una mascota
+ *     tags: [INFO]
+ *     responses:
+ *       200:
+ *         description: Vacuna actualizada exitosamente.
+ *         content:
+ *            application/json:
+ *              schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *       404:
+ *         description: No existe ninguna vacuna con ese id.
+ *       500:
+ *          description: Hubo un error
+ */
+router.put("/:idPet/archive/:idVaccine", vaccineArchive);
 
 export default router;

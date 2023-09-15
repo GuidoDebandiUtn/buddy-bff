@@ -30,20 +30,17 @@ PetBreed.init(
     specialProperty: {
       type: DataTypes.STRING,
     },
+    fur: {
+      type: DataTypes.STRING,
+    },
     active: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
-    createdDate: {
-      type: DataTypes.DATE,
-    },
-    updatedDate: {
-      type: DataTypes.DATE,
-    },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "petBreed",
   }
 );

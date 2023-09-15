@@ -1,39 +1,39 @@
 import { User } from "../../models/User.js";
 import { getUserStateByName } from "./userState.service.js";
 import { createStateUser } from "./stateUser.service.js";
-import { getUserTypeByName } from "../../parameters/services/userType.service.js";
 import { sequelize } from "../../database/database.js";
+import { getRoleByName } from "./role.service.js";
+import { createUserRole } from "./userRole.service.js";
+import bcrypt from "bcryptjs";
 
 export async function createUser(data) {
-  const { mail, password, userName } = data;
+  const { mail, password, userName, name } = data;
 
   try {
-    const userType = await getUserTypeByName("BÁSICO");
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await User.create(
       {
         mail,
-        password,
+        password: hashedPassword,       
         userName,
-        createdDate: new Date(),
-        updatedDate: new Date(),
-        idUserType: userType.idUserType,
+        name,
       },
       {
-        fields: [
-          "mail",
-          "password",
-          "userName",
-          "createdDate",
-          "updatedDate",
-          "idUserType",
-        ],
+        fields: ["mail", "password", "userName"],
       }
     );
 
     const userState = await getUserStateByName("ACTIVO");
 
-    await createStateUser(newUser.idUser, userState.idUserState);
+    await createStateUser(newUser.idUser, userState[0].idUserState);
+
+    const role = await getRoleByName("BÁSICO");
+
+    console.log();
+    role[0].idRole;
+
+    await createUserRole(newUser.idUser, role[0].idRole);
 
     return newUser;
   } catch (error) {
@@ -47,13 +47,18 @@ export async function getAllUsers() {
     SELECT users.mail, users.userName
     FROM users
     INNER JOIN (
-      SELECT idUser, idUserState, MAX(createdDate) AS ultimaFecha
+      SELECT idUser, idUserState, MAX(createdAt) AS ultimaFecha
       FROM stateUsers 
       GROUP BY idUser
     ) AS ultimosEstados ON users.idUser = ultimosEstados.idUser
     INNER JOIN userStates ON ultimosEstados.idUserState = userStates.idUserState
-    INNER JOIN userTypes ON users.idUserType = userTypes.idUserType
-    WHERE userStates.userStateName = 'ACTIVO' and userTypes.userTypeName = "BÁSICO"
+    INNER JOIN (
+      SELECT idUser, idRole, MAX(createdAt) AS ultimaFecha
+      FROM userRoles 
+      GROUP BY idUser
+    ) AS ultimosRoles ON users.idUser = ultimosRoles.idUser
+    INNER JOIN roles ON ultimosRoles.idRole = roles.idRole
+    WHERE userStates.userStateName = 'ACTIVO' and roles.roleName = 'BÁSICO'
     `;
 
     const users = await sequelize.query(query, {
@@ -70,7 +75,7 @@ export async function getAllUsers() {
 export async function getUserById(idUser) {
   try {
     const query = `
-    SELECT idUser, mail, userName
+    SELECT idUser, mail, userName,name,lastName
     FROM users
     WHERE idUser = '${idUser}'
     `;
@@ -80,6 +85,25 @@ export async function getUserById(idUser) {
     });
 
     return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getUserPassword(idUser) {
+  try {
+    const query = `
+    SELECT password
+    FROM users
+    WHERE idUser = '${idUser}'
+    `;
+
+    const user = await sequelize.query(query, {
+      model: User,
+      mapToModel: true,
+    });
+
+    return user[0].password;
   } catch (error) {
     throw error;
   }
@@ -129,7 +153,8 @@ export async function updateUser(idUser, data) {
     }
 
     if (password) {
-      updates.password = password;
+      const hashedPassword = await bcrypt.hash(password, 10);
+      updates.password = hashedPassword;
     }
 
     if (phoneNumber) {
@@ -181,6 +206,8 @@ export async function destroyUser(mail) {
       where: { mail },
       force: true,
     });
+
+    return;
   } catch (error) {
     throw error;
   }

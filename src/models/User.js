@@ -42,20 +42,32 @@ User.init(
     birthDate: {
       type: DataTypes.DATE,
     },
+    job: {
+      type: DataTypes.STRING,
+    },
+    language: {
+      type: DataTypes.STRING,
+    },
     validated: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    createdDate: {
-      type: DataTypes.DATE,
+    blocked: {
+      type: DataTypes.BOOLEAN,
     },
-    updatedDate: {
-      type: DataTypes.DATE,
+    blockedReason: {
+      type: DataTypes.STRING,
+    },
+    image: {
+      type: DataTypes.STRING,
+    },
+    cuitCuil: {
+      type: DataTypes.STRING,
     },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "user",
   }
 );

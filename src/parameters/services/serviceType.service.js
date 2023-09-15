@@ -8,10 +8,8 @@ export async function createServiceType(data) {
     const serviceType = await ServiceType.create(
       {
         serviceTypeName: serviceTypeName.toUpperCase(),
-        createdDate: new Date(),
-        updatedDate: new Date(),
       },
-      { fields: ["serviceTypeName", "active", "createdDate", "updatedDate"] }
+      { fields: ["serviceTypeName"] }
     );
 
     return serviceType;
@@ -84,7 +82,6 @@ export async function updateServiceType(data, idServiceType) {
     await ServiceType.update(
       {
         serviceTypeName: serviceTypeName.toUpperCase(),
-        updatedDate: new Date(),
       },
       { where: { idServiceType }, returning: true }
     );
@@ -100,7 +97,21 @@ export async function deleteServiceType(idServiceType) {
     await ServiceType.update(
       {
         active: false,
-        updatedDate: new Date(),
+      },
+      { where: { idServiceType }, returning: true }
+    );
+
+    return;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function activeServiceType(idServiceType) {
+  try {
+    await ServiceType.update(
+      {
+        active: true,
       },
       { where: { idServiceType }, returning: true }
     );

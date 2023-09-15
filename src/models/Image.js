@@ -19,16 +19,10 @@ Image.init(
       type: DataTypes.UUID,
       allowNull: false,
     },
-    createdDate: {
-      type: DataTypes.DATE,
-    },
-    createdDate: {
-      type: DataTypes.DATE,
-    },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "image",
   }
 );
