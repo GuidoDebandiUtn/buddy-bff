@@ -6,20 +6,20 @@ const router = Router();
 /**
  * @swagger
  * tags:
- *   name: PUBLICATION
+ *   name: TRACE
  *   description: ABM trazas
  */
 
 
 /**
  * @swagger
- * /traces/:idPublication:
+ * publications/trace/:idPublicationSearch:
  *   get:
  *     summary: Obtiene todas las trazas de un publicacion puntual.
- *     tags: [PUBLICATION]
+ *     tags: [TRACE]
  *     parameters:
  *       - in: query
- *         name: idPublication
+ *         name: idPublicationSearch
  *         description: id de la publicacion dueña de las trazas
  *         required: true
  *         default: null
@@ -48,10 +48,10 @@ router.get('/:idPublicationSearch', verifyToken,getTracesByPublication);
 
 /**
  * @swagger
- * /traces/:
+ * publications/trace/:
  *   post:
  *     summary: Crea una nueva traza de la busqueda.
- *     tags: [PUBLICATION] [TRACE] 
+ *     tags: [TRACE] 
  *     requestBody:
  *       required: true
  *       content:
@@ -100,7 +100,7 @@ router.post('/', verifyToken,postTrace);
 
 /**
  * @swagger
- * /traces/:idTrace:
+ * publications/trace/:idTrace:
  *   put:
  *     summary: Modifica una traza.
  *     parameters:
@@ -109,7 +109,7 @@ router.post('/', verifyToken,postTrace);
  *         schema:
  *           type: uuid
  *         description: Id de la traza a modificar.
- *     tags: [PUBLICATION] [TRACE]
+ *     tags: [TRACE]
  *     requestBody:
  *       required: true
  *       content:
@@ -156,7 +156,7 @@ router.put('/:idTrace', verifyToken,putTrace);
 
 /**
  * @swagger
- * /traces/:idTrace:
+ * publications/trace/:idTrace:
  *   delete:
  *     summary: Elimina una traza indicando el Id, se realiza una baja logica de la traza antes creada.
  *     parameters:
@@ -165,7 +165,7 @@ router.put('/:idTrace', verifyToken,putTrace);
  *         schema:
  *           type: uuid
  *         description: Id de la traza a eliminar.
- *     tags: [PUBLICATION]
+ *     tags: [TRACE]
  *     responses:
  *       200:
  *         description: Traza eliminada correctamente.
@@ -182,3 +182,6 @@ router.put('/:idTrace', verifyToken,putTrace);
  *          description: Error interno del servicio
  */
 router.delete('/:idTrace', verifyToken,deleteTrace);
+
+
+export default router;

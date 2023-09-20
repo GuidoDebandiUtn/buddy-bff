@@ -1,6 +1,5 @@
-import { PublicationSearch } from "../../models/PublicationSearch";
-import { Trace } from "../../models/Trace";
-import { getPublicationById } from "./publication.service";
+import { Trace } from "../../models/Trace.js";
+import { getPublicationById } from "./publication.service.js";
 
 
 export async function createTrace(traceDto,idUser) {

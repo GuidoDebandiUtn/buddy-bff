@@ -1,9 +1,9 @@
-import { createTrace, getTraceById, retrieveTracesByPublication, traceDelete, updateTrace } from "../services/trace.service";
+import { createTrace, getTraceById, retrieveTracesByPublication, traceDelete, updateTrace } from "../services/trace.service.js";
 
 
 
 export async function getTracesByPublication(req, res) {
-    const { idPublicationSearch } = req.query;
+    const { idPublicationSearch } = req.params;
     const idUser = req.user.idUser;
   
       if(!idPublicationSearch){
@@ -33,7 +33,7 @@ export async function getTracesByPublication(req, res) {
   
     try {
       trace = await createTrace(req.body,idUser);
-      return res.status(201).json(publication);
+      return res.status(201).json(trace);
     } catch (error) {
       res.status(500).json({
         message: error.message,
@@ -43,7 +43,7 @@ export async function getTracesByPublication(req, res) {
 
 
   export async function deleteTrace(req, res) {
-    const { idTrace } = req.query;
+    const { idTrace } = req.params;
   
   
     if(!idTrace){
@@ -81,7 +81,7 @@ export async function getTracesByPublication(req, res) {
   }
 
   export async function putTrace(req, res) {
-    const { idTrace } = req.query;
+    const { idTrace } = req.params;
   
     if(!idTrace){
       return res
