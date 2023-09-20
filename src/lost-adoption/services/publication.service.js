@@ -12,7 +12,7 @@ import { getPetColorById } from "../../parameters/services/petColor.service.js";
 import { getPetTypeById } from "../../parameters/services/petType.service.js";
 import { User } from "../../models/User.js";
 
-export async function retrivePaginatedPublications(  page = 1,  recordsPerPage = 10,  modelType = "search") {
+export async function retrivePaginatedPublications(  page = 1,  recordsPerPage = 10,  modelType = "SEARCH") {
   
   const modelParams = getModel(modelType);
   try {
@@ -166,7 +166,7 @@ export async function publicationDelete(idPublication, modelType) {
   }
 }
 
-export async function getPublicationById(idPublication, modelType) {
+export async function getPublicationById(idPublication, modelType = "SEARCH") {
   const modelParams = getModel(modelType);
   const whereClause = {};
   whereClause[modelParams.attributes.pop()] = idPublication;

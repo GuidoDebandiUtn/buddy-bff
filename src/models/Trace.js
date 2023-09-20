@@ -21,7 +21,7 @@ Trace.init(
     },
     localityName: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     traceDate: {
       type: DataTypes.DATE,
@@ -34,6 +34,7 @@ Trace.init(
     },
     idAuthorUser: {
       type: DataTypes.UUID,
+      allowNull: false,
     },
     active: {
       type: DataTypes.BOOLEAN,
