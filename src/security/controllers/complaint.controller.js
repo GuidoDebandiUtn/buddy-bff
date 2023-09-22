@@ -36,7 +36,7 @@ export async function getComplaintsAll(req, res) {
     const complaints = await getAllComplaints(page, size);
 
     if (!complaints[0]) {
-      return res.status(404).json({ message: "No existen denuncias activas" });
+      return res.status(204).json({ message: "No existen denuncias activas" });
     }
 
     return res.status(200).send(JSON.stringify(complaints,(key, value) => {

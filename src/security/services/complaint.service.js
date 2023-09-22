@@ -6,7 +6,7 @@ import { Service } from "../../models/Service.js";
 
 
 export async function createComplaint(data, idComplainant) {
-  const { category, reportDescription, idUserReported, idReference } = data;
+  const { category, complaintDescription, idUserReported, idReference } = data;
   let referenceAtribute;
 
   switch (category) {
@@ -25,10 +25,8 @@ export async function createComplaint(data, idComplainant) {
   try {
     const newComplaintData = {
       category,
-      reportDescription,
+      complaintDescription,
       idUserReported,
-      createdDate: new Date(),
-      updatedDate: new Date(),
       idUserReporting: idComplainant,
     };
 
@@ -48,12 +46,12 @@ export async function getAllComplaints(page = 1, recordsPerPage = 10) {
     let include = [
       { model: PublicationSearch, attributes: ['idPublicationSearch', 'title', 'isFound', 'lostDate', 'createdAt', 'idUser'] },
       { model: PublicationAdoption, attributes: ['idPublicationAdoption', 'title', 'createdAt', 'contactPhone', 'idUser'] },
-      { model: Service, attributes: ['idService', 'serviceTitle', 'avgRating', 'address', 'createdDate', 'idUser'] },
+      { model: Service, attributes: ['idService', 'serviceTitle', 'avgRating', 'address', 'createdAt', 'idUser'] },
     ];
-    let attributes = ['idComplaint', 'idUserReporting', 'idUserReported', 'reportDescription', 'category', 'active', 'verified', 'createdDate', 'updatedDate'];
+    let attributes = ['idComplaint', 'idUserReporting', 'idUserReported', 'complaintDescription', 'category', 'active', 'verified', 'createdAt', 'updatedAt'];
     const offset = (parseInt(page, 10) - 1) * recordsPerPage;
     const limit = parseInt(recordsPerPage, 10);
-    const order = [['createdDate', 'DESC']];
+    const order = [['createdAt', 'DESC']];
     const where = {active: 1};
 
 
