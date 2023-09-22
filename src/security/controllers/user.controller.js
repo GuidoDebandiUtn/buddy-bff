@@ -9,7 +9,8 @@ import {
   getUserById,
   getUserByMail,
   updateUser,
-  getUserPassword
+  getUserPassword,
+  getUserPermissions,
 } from "../services/user.service.js";
 import { changeUserRole } from "../services/userRole.service.js";
 import { getUserStateByName } from "../services/userState.service.js";
@@ -88,12 +89,13 @@ export async function userUpdate(req, res) {
     }
 
     const userPassword = await getUserPassword(idUser);
-  
+
     const passwordMatch = await bcrypt.compare(currentPassword, userPassword);
 
-    if(!passwordMatch){
+    if (!passwordMatch) {
       return res.status(400).json({
-        error: "Ha habido un problema con la contraseña actual del usuario"});
+        error: "Ha habido un problema con la contraseña actual del usuario",
+      });
     }
 
     await updateUser(idUser, req.body);
@@ -194,6 +196,24 @@ export async function changeRole(req, res) {
       .status(200)
       .json({ message: "Se ha cambiado el rol del usuario" });
   } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export async function userPermission(req, res) {
+  try {
+    const id = await getIdToken(req.header("auth-token"));
+    const permissions = await getUserPermissions(id);
+
+    if (!permissions[0]) {
+      return res.status(404).json({
+        message: "No se encuentra ningun permiso",
+      });
+    }
+
+    return res.status(200).json(permissions[0]);
+  } catch (error) {
+    console.log(error);
     return res.status(500).json({ error: error.message });
   }
 }
