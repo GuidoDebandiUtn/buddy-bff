@@ -15,7 +15,7 @@ export async function createUser(data) {
     const newUser = await User.create(
       {
         mail,
-        password: hashedPassword,       
+        password: hashedPassword,
         userName,
         name,
       },
@@ -122,6 +122,29 @@ export async function getUserByMail(mail) {
       SELECT idUser, mail, validated, password
       FROM users
       WHERE mail = '${mail}'
+      `;
+
+    const user = await sequelize.query(query, {
+      model: User,
+      mapToModel: true,
+    });
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getUserPermissions(idUser) {
+  try {
+    const query = `
+      SELECT GROUP_CONCAT(p.tokenClaim SEPARATOR ' - ') AS permisos
+      FROM users AS u
+      JOIN userroles AS ur ON u.idUser = ur.idUser
+      JOIN roles AS r ON r.idRole = ur.idRole
+      JOIN rolepermissions AS rp ON r.idRole = rp.idRole
+      JOIN permissions AS p ON p.idPermission = rp.idPermission
+      WHERE u.idUser = '${idUser}' and ur.active = true
       `;
 
     const user = await sequelize.query(query, {

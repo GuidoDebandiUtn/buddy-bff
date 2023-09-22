@@ -27,16 +27,14 @@ export async function login(req, res) {
 
     let token;
 
-    const passwordMatch = await bcrypt.compare(password, user[0].password)
+    const passwordMatch = await bcrypt.compare(password, user[0].password);
 
     if (passwordMatch) {
-      token = jwt.sign(
-        { idUser: user[0].idUser, mail: user[0].mail },
-        process.env.TOKEN_SECRET,
-        {
-          expiresIn: "30d",
-        }
-      );
+      // const permissions = await getUserPermissions()
+
+      token = jwt.sign({ idUser: user[0].idUser }, process.env.TOKEN_SECRET, {
+        expiresIn: "7d",
+      });
     } else {
       return res.status(400).json({
         message: "Contraseña incorrecta",
@@ -57,43 +55,51 @@ export async function verifyToken(req, res, next) {
   try {
     if (!token) {
       console.log("error en la obtencion del token en el header");
-      return res.status(400).json({
+      return res.status(401).json({
         error: "Aún no ha iniciado sesión",
       });
     }
 
-    if (await findToken(token)) {
-      console.log("se ha encontrado el token en la lista de invalidados");
-      return res.status(401).json({
-        error: "Token expirado",
+    const verified = jwt.verify(token, process.env.TOKEN_SECRET);
+
+    if (!verified) {
+      return res.status(400).json({
+        error: "Token no es valido",
       });
     }
+    
 
-    //const permissions = await ;
-
-    const verified = jwt.verify(token, process.env.TOKEN_SECRET);
 
     req.user = verified;
     req.userPermissions= permissions
 
     next();
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(500).json({
       error: "El token no es válido",
     });
   }
 }
 
-export async function logout(req, res) {
+export async function expirationToken(req, res) {
   const token = req.header("auth-token");
 
   try {
-    await insertToken(token);
+    const tokenDecodificado = jwt.decode(token);
 
-    return res.status(200).json({message: "Se ha revocado el token del usuario"});
+    const fechaExpiracion = tokenDecodificado.exp * 1000; // La fecha de expiración en segundos
+    const fechaActual = Date.now();
+
+    if (fechaActual > fechaExpiracion) {
+      return res.status(400).json({ error: "El token ha expirado" });
+    } else {
+      return res.status(200).json({ message: "El token es válido" });
+    }
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({
+      error: "El token no es válido",
+    });
   }
 }
 
@@ -148,13 +154,11 @@ export async function changePassword(req, res) {
 
     return res.status(200).json({ message: "Se ha actualizado la contraseña" });
   } catch (error) {
-    return res
-      .status(500)
-      .json({
-        message:
-          "Ha ocurrido un problema. No hemos podido verificar tu cuenta. Intenta nuevamente más tarde.",
-          error
-      });
+    return res.status(500).json({
+      message:
+        "Ha ocurrido un problema. No hemos podido verificar tu cuenta. Intenta nuevamente más tarde.",
+      error,
+    });
   }
 }
 

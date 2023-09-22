@@ -7,6 +7,7 @@ import {
   changeState,
   userCreate,
   changeRole,
+  userPermission,
 } from "../controllers/user.controller.js";
 import { verifyToken } from "../controllers/auth.controller.js";
 
@@ -253,5 +254,7 @@ router.post("/changeState/:idUser/:userStateName", verifyToken, changeState);
  *        description: Hubo un error
  */
 router.post("/changeRole/:idUser/:roleName", verifyToken, changeRole);
+
+router.get("/permissions", verifyToken, userPermission);
 
 export default router;

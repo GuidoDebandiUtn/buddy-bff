@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const response = await fetch(
-        `https://buddy-app1.loca.lt/security/auth/changePassword/${idUser}`,
+        `https://b49c-181-91-230-36.ngrok-free.app/security/auth/changePassword/${idUser}`,
         {
           method: "PUT",
           headers: {
@@ -59,10 +59,8 @@ document.addEventListener("DOMContentLoaded", () => {
         alert(`Error al cambiar la contraseña: ${errorData.message}`);
       }
     } catch (error) {
-      console.log(error)
-      alert(
-        "Ha ocurrido un error. Por favor, inténtalo nuevamente más tarde.",
-      );
+      console.log(error);
+      alert("Ha ocurrido un error. Por favor, inténtalo nuevamente más tarde.");
     }
   });
 });
