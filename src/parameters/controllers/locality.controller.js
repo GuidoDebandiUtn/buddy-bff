@@ -1,4 +1,6 @@
+import { activeCountry } from "../services/country.service.js";
 import {
+  activeLocality,
   createLocality,
   deleteLocality,
   getAllLocalities,
@@ -10,25 +12,34 @@ import { getRegionById } from "../services/region.service.js";
 
 export async function localityCreate(req, res) {
   try {
-    const duplicate = await getLocalityByName(req.body.localityName);
-
-    if (duplicate[0]) {
-      return res
-        .status(400)
-        .json({ message: "Ya existe una localidad con ese nombre" });
-    }
-
+    let locality;
     const region = await getRegionById(req.body.idRegion);
-
     if (!region[0]) {
       return res
         .status(400)
-        .json({ message: "Ya existe una localidad con ese nombre" });
+        .json({ message: "Ya ha sido posible validar el departamento asociado a la localidad" });
     }
 
-    const locality = await createLocality(req.body);
+    const duplicate = await getLocalityByName(
+      req.body.localityName,
+      req.body.idRegion
+    );
 
-    return res.status(201).json({ locality });
+    if (duplicate[0]) {
+      locality = await activeLocality(duplicate[0].idLocality);
+      return res.status(201).json({ message: "Se ha reactivado la Localidad" });
+    }else{
+      locality = await createLocality(req.body);
+      return res.status(201).json({ locality });
+    }
+
+
+
+
+
+    
+
+    
   } catch (error) {
     return res.status(500).json({
       message: error.message,
@@ -81,7 +92,10 @@ export async function localityUpdate(req, res) {
         .status(404)
         .json({ message: "No existe ninguna localidad con este id" });
     }
-    const duplicate = await getLocalityByName(req.body.localityName);
+    const duplicate = await getLocalityByName(
+      req.body.localityName,
+      locality[0].idRegion
+    );
 
     if (duplicate[0]) {
       return res

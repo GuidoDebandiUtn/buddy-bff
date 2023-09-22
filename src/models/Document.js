@@ -22,13 +22,10 @@ Document.init(
     validDate: {
       type: DataTypes.DATE,
     },
-    createdDate: {
-      type: DataTypes.DATE,
-    },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "document",
   }
 );

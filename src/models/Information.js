@@ -20,20 +20,16 @@ Information.init(
     },
     active: {
       type: DataTypes.BOOLEAN,
+      defaultValue: true,
     },
     archive: {
       type: DataTypes.BOOLEAN,
-    },
-    createdDate: {
-      type: DataTypes.DATE,
-    },
-    updatedDate: {
-      type: DataTypes.DATE,
+      defaultValue: false,
     },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "information",
   }
 );

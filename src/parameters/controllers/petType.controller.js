@@ -10,17 +10,17 @@ import {
 
 export async function petTypeCreate(req, res) {
   try {
+    let petType;
     const duplicate = await getPetTypeByName(req.body.petTypeName);
 
     if (duplicate[0]) {
-      return res
-        .status(400)
-        .json({ message: "Ya existe un Tipo de mascota con este nombre" });
+      petType = await activePetType(duplicate[0].idPetType);
+      return res.status(201).json({ message:"Se ha reactivado el tipo de Animal" });
+    }else{
+      petType = await createPetType(req.body);
+      return res.status(201).json({ petType });
     }
-
-    const petType = await createPetType(req.body);
-
-    return res.status(201).json({ petType });
+    
   } catch (error) {
     return res.status(500).json({
       message: error.message,

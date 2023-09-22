@@ -7,6 +7,8 @@ import {
   petDelete,
   petUpdate,
 } from "../controllers/pet.controller.js";
+import { verifyToken } from "../../security/controllers/auth.controller.js";
+
 
 const router = Router();
 
@@ -51,7 +53,7 @@ const router = Router();
  *       500:
  *          description: Hubo un error
  */
-router.post("/", petCreate);
+router.post("/",verifyToken, petCreate);
 
 /**
  * @swagger
@@ -77,7 +79,7 @@ router.post("/", petCreate);
  *       500:
  *          description: Hubo un error
  */
-router.get("/", getPets);
+router.get("/",verifyToken, getPets);
 
 /**
  * @swagger

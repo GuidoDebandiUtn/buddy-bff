@@ -1,5 +1,7 @@
 import { Router } from "express";
-import {    getPublications, postAdoption, postSearch,deletePublication, putPublication} from "../controllers/publication.controller.js";
+import {    getPublications, postAdoption, postSearch,deletePublication, putPublication, obtainPublicationsByUser} from "../controllers/publication.controller.js";
+import { verifyToken } from "../../security/controllers/auth.controller.js";
+
 const router = Router();
 /**
  * @swagger
@@ -54,6 +56,10 @@ const router = Router();
 router.get('/',getPublications);
 
 
+
+router.get('/ByUser',verifyToken,obtainPublicationsByUser);
+
+
 /**
  * @swagger
  * /publications/publication/search:
@@ -99,7 +105,7 @@ router.get('/',getPublications);
  *       500:
  *          description: Error interno del servicio
  */
-router.post('/search',postSearch);
+router.post('/search', verifyToken,postSearch);
 
 
 /**
@@ -171,7 +177,7 @@ router.post('/search',postSearch);
  *       500:
  *          description: Error interno del servicio
  */
-router.post('/adoption',postAdoption);
+router.post('/adoption', verifyToken,postAdoption);
 
 /**
  * @swagger

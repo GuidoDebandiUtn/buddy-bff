@@ -2,23 +2,16 @@ import { Role } from "../../models/Role.js";
 import { sequelize } from "../../database/database.js";
 
 export async function createRole(data) {
-  const { roleName, roleDescription } = data;
+  const { roleName, roleDescription, adminRole } = data;
   try {
     const role = await Role.create(
       {
         roleName: roleName.toUpperCase(),
         roleDescription,
-        createdDate: new Date(),
-        updatedDate: new Date(),
+        adminRole,
       },
       {
-        fields: [
-          "roleName",
-          "roleDescription",
-          "active",
-          "createdDate",
-          "updatedDate",
-        ],
+        fields: ["roleName", "roleDescription", "adminRole"],
       }
     );
 
@@ -28,12 +21,14 @@ export async function createRole(data) {
   }
 }
 
-export async function getAllRole() {
+export async function getAllRoles() {
   try {
     const query = `
-        SELECT idRole, roleName
-        FROM roles
-        WHERE active = true`;
+        SELECT roles.idRole, roles.roleName, GROUP_CONCAT(permission.tokenClaim SEPARATOR ' - ')
+        LEFT JOIN rolePermissions ON roles.idRole = rolePermissions.idRole
+        LEFT JOIN permissions ON rolePermissions.idPermission = permissions.idPermission
+        WHERE roles.active = true
+        GROUP BY roles.idRole, roles.roleName`;
 
     const roles = await sequelize.query(query, {
       model: Role,
@@ -49,9 +44,12 @@ export async function getAllRole() {
 export async function getRoleById(idRole) {
   try {
     const query = `
-        SELECT idRole, roleName
-        FROM roles
-        WHERE idRole = "${idRole}"`;
+    SELECT roles.idRole, roles.roleName, roles.roleDescription, GROUP_CONCAT(permissions.tokenClaim) AS permisos
+    FROM roles
+    LEFT JOIN rolePermissions ON roles.idRole = rolePermissions.idRole
+    LEFT JOIN permissions ON rolePermissions.idPermission = permissions.idPermission
+    WHERE roles.idRole = '${idRole}'
+    GROUP BY roles.idRole, roles.roleName`;
 
     const role = await sequelize.query(query, {
       model: Role,
@@ -67,9 +65,9 @@ export async function getRoleById(idRole) {
 export async function getRoleByName(roleName) {
   try {
     const query = `
-        SELECT idRole, roleName
-        FROM roles
-        WHERE roleName = "${roleName}"`;
+      SELECT idRole, roleName
+      FROM roles
+      WHERE roles.roleName = "${roleName}"`;
 
     const role = await sequelize.query(query, {
       model: Role,
@@ -83,7 +81,7 @@ export async function getRoleByName(roleName) {
 }
 
 export async function updateRole(data, idRole) {
-  const { roleName, roleDescription } = data;
+  const { roleName, roleDescription, adminRole } = data;
 
   try {
     const updates = {};
@@ -97,7 +95,9 @@ export async function updateRole(data, idRole) {
       updates.roleDescription = roleDescription;
     }
 
-    updates.updatedDate = new Date();
+    if (adminRole) {
+      updates.adminRole = adminRole;
+    }
 
     await Role.update(updates, updateOptions);
 
@@ -110,8 +110,8 @@ export async function updateRole(data, idRole) {
 export async function deleteRole(idRole) {
   try {
     await Role.update(
-      { active: false, updatedDate: new Date() },
-      { where: { idRole: idRole }, returning: true }
+      { active: false },
+      { where: { idRole }, returning: true }
     );
 
     return;
@@ -122,10 +122,7 @@ export async function deleteRole(idRole) {
 
 export async function activeRole(idRole) {
   try {
-    await Role.update(
-      { active: true, updatedDate: new Date() },
-      { where: { idRole: idRole }, returning: true }
-    );
+    await Role.update({ active: true }, { where: { idRole }, returning: true });
 
     return;
   } catch (error) {

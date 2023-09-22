@@ -9,9 +9,13 @@ import {
   getUserById,
   getUserByMail,
   updateUser,
+  getUserPassword,
+  getUserPermissions,
 } from "../services/user.service.js";
 import { changeUserRole } from "../services/userRole.service.js";
 import { getUserStateByName } from "../services/userState.service.js";
+
+import bcrypt from "bcryptjs";
 
 export async function userCreate(req, res) {
   const data = req.body;
@@ -55,10 +59,9 @@ export async function getUsers(req, res) {
 }
 
 export async function getUser(req, res) {
-  const { idUser } = req.params;
-
+  const userReq = req.user;
   try {
-    const user = await getUserById(idUser);
+    const user = await getUserById(userReq.idUser);
 
     if (!user[0]) {
       return res.status(404).json({
@@ -74,6 +77,7 @@ export async function getUser(req, res) {
 
 export async function userUpdate(req, res) {
   const { idUser } = req.params;
+  const { currentPassword } = req.body;
 
   try {
     const user = await getUserById(idUser);
@@ -81,6 +85,16 @@ export async function userUpdate(req, res) {
     if (!user[0]) {
       return res.status(404).json({
         message: "No existe ningun usuario con ese id",
+      });
+    }
+
+    const userPassword = await getUserPassword(idUser);
+
+    const passwordMatch = await bcrypt.compare(currentPassword, userPassword);
+
+    if (!passwordMatch) {
+      return res.status(400).json({
+        error: "Ha habido un problema con la contraseña actual del usuario",
       });
     }
 
@@ -182,6 +196,24 @@ export async function changeRole(req, res) {
       .status(200)
       .json({ message: "Se ha cambiado el rol del usuario" });
   } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export async function userPermission(req, res) {
+  try {
+    const id = await getIdToken(req.header("auth-token"));
+    const permissions = await getUserPermissions(id);
+
+    if (!permissions[0]) {
+      return res.status(404).json({
+        message: "No se encuentra ningun permiso",
+      });
+    }
+
+    return res.status(200).json(permissions[0]);
+  } catch (error) {
+    console.log(error);
     return res.status(500).json({ error: error.message });
   }
 }

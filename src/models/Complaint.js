@@ -19,7 +19,7 @@ Complaint.init(
       type: DataTypes.UUID,
       allowNull: false,
     },
-    reportDescription: {
+    complaintDescription: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -34,16 +34,10 @@ Complaint.init(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    createdDate: {
-      type: DataTypes.DATE,
-    },
-    updatedDate: {
-      type: DataTypes.DATE,
-    },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "complaint",
   }
 );

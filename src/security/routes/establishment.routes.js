@@ -20,7 +20,7 @@ const router = Router();
  */
 /**
  * @swagger
- * /security/auth/register:
+ * /security/establishment/register:
  *   post:
  *     summary: Crea un nuevo establecimiento
  *     tags: [ESTABLISHMENT]
@@ -31,7 +31,7 @@ const router = Router();
  *           schema:
  *             type: object
  *             properties:
- *               establishmentname:
+ *               userName:
  *                 type: string
  *               mail:
  *                 type: string

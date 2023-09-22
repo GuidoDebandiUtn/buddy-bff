@@ -27,11 +27,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const idUser = idUserInput.value;
 
     // Validación de contraseña
-    const passwordRegex =
-      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/;
+    const passwordRegex = /^(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/;
     if (!passwordRegex.test(password)) {
       alert(
-        "La contraseña debe tener como mínimo 8 caracteres, 1 caracter en mayúscula, 1 caracter en minúscula, 1 número y 1 caracter especial."
+        "La contraseña debe tener al menos 8 caracteres, 1 número y 1 caracter especial."
       );
       return;
     }
@@ -43,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const response = await fetch(
-        `http://localhost:4000/security/auth/changePassword/${idUser}`,
+        `https://b49c-181-91-230-36.ngrok-free.app/security/auth/changePassword/${idUser}`,
         {
           method: "PUT",
           headers: {
@@ -60,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
         alert(`Error al cambiar la contraseña: ${errorData.message}`);
       }
     } catch (error) {
+      console.log(error);
       alert("Ha ocurrido un error. Por favor, inténtalo nuevamente más tarde.");
     }
   });

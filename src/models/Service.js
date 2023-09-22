@@ -15,7 +15,7 @@ Service.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    descriptionService: {
+    serviceDescription: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -31,16 +31,32 @@ Service.init(
     address: {
       type: DataTypes.STRING,
     },
-    createdDate: {
-      type: DataTypes.DATE,
+    open24hs: {
+      type: DataTypes.BOOLEAN,
     },
-    updatedDate: {
-      type: DataTypes.DATE,
+    numberQueries: {
+      type: DataTypes.INTEGER,
+    },
+    emailService: {
+      type: DataTypes.STRING,
+    },
+    images: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      get() {
+        // This getter will parse the JSON data stored in the database into a JavaScript array
+        const value = this.getDataValue("images");
+        return value ? JSON.parse(value) : [];
+      },
+      set(value) {
+        // This setter will convert the JavaScript array to a JSON string before storing it in the database
+        this.setDataValue("images", value ? JSON.stringify(value) : "[]");
+      },
     },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "service",
   }
 );

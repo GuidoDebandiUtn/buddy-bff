@@ -2,18 +2,16 @@ import { Province } from "../../models/Province.js";
 import { sequelize } from "../../database/database.js";
 
 export async function createProvince(data) {
-  const { provinceName, idProvince } = data;
+  const { provinceName, idCountry } = data;
 
   try {
     const province = await Province.create(
       {
         provinceName: provinceName.toUpperCase(),
-        createdDate: new Date(),
-        updatedDate: new Date(),
-        idProvince,
+        idCountry,
       },
       {
-        fields: ["provinceName", "createdDate", "updatedDate", "idProvince"],
+        fields: ["provinceName", "idCountry"],
       }
     );
 
@@ -26,9 +24,10 @@ export async function createProvince(data) {
 export async function getAllProvinces() {
   try {
     const query = `
-    SELECT idProvince, provinceName
+    SELECT provinces.idProvince, provinces.provinceName, countries.countryName
     FROM provinces
-    WHERE active = true
+    INNER JOIN countries ON provinces.idCountry = countries.idCountry
+    WHERE provinces.active = true
     `;
 
     const provinces = await sequelize.query(query, {
@@ -45,10 +44,11 @@ export async function getAllProvinces() {
 export async function getProvinceById(idProvince) {
   try {
     const query = `
-    SELECT provinces.idProvince, provinces.provinceName, regions.regionName
+    SELECT provinces.idProvince, provinces.provinceName, GROUP_CONCAT(regions.regionName), provinces.idCountry
     FROM provinces
     LEFT JOIN regions ON provinces.idProvince = regions.idProvince
     WHERE provinces.idProvince = '${idProvince}'
+    GROUP BY provinces.idProvince, provinces.provinceName
     `;
 
     const province = await sequelize.query(query, {
@@ -62,12 +62,12 @@ export async function getProvinceById(idProvince) {
   }
 }
 
-export async function getProvinceByName(provinceName) {
+export async function getProvinceByName(provinceName, idCountry) {
   try {
     const query = `
     SELECT idProvince, provinceName
     FROM provinces
-    WHERE provinceName = '${provinceName.toUpperCase()}'
+    WHERE provinceName = '${provinceName.toUpperCase()}' and idCountry = '${idCountry}'
     `;
 
     const province = await sequelize.query(query, {
@@ -85,7 +85,7 @@ export async function updateProvince(data, idProvince) {
   const { provinceName } = data;
   try {
     await Province.update(
-      { provinceName: provinceName.toUpperCase(), updatedDate: new Date() },
+      { provinceName: provinceName.toUpperCase() },
       { where: { idProvince }, returning: true }
     );
 
@@ -98,7 +98,7 @@ export async function updateProvince(data, idProvince) {
 export async function deleteProvince(idProvince) {
   try {
     await Province.update(
-      { active: false, updatedDate: new Date() },
+      { active: false },
       { where: { idProvince }, returning: true }
     );
 
@@ -111,7 +111,7 @@ export async function deleteProvince(idProvince) {
 export async function activeProvince(idProvince) {
   try {
     await Province.update(
-      { active: true, updatedDate: new Date() },
+      { active: true },
       { where: { idProvince }, returning: true }
     );
 

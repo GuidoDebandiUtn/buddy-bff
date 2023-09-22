@@ -10,23 +10,10 @@ export async function createTurn(data, idPet) {
         titleTurn,
         descriptionTurn,
         turnDate,
-        active: true,
-        archive: false,
-        createdDate: new Date(),
-        updatedDate: new Date(),
         idPet,
       },
       {
-        fields: [
-          "titleTurn",
-          "descriptionTurn",
-          "turnDate",
-          "active",
-          "archive",
-          "createdDate",
-          "updatedDate",
-          "idPet",
-        ],
+        fields: ["titleTurn", "descriptionTurn", "turnDate", "idPet"],
       }
     );
 
@@ -39,7 +26,7 @@ export async function createTurn(data, idPet) {
 export async function getAllTurns(idPet) {
   try {
     const query = `
-        SELECT idTurn, titleTurn, descriptionTurn, turnDate
+        SELECT idTurn, titleTurn, descriptionTurn, archive, DATE_FORMAT(turnDate, '%H:%i') AS turnHour, DATE_FORMAT(turnDate, '%d-%m-%Y') AS turnDate
         FROM turns
         WHERE idPet = "${idPet}" and active = true`;
 
@@ -54,12 +41,12 @@ export async function getAllTurns(idPet) {
   }
 }
 
-export async function getTurnById(idTurn) {
+export async function getTurnById(idTurn, idPet) {
   try {
     const query = `
-            SELECT idTurn, titleTurn, descriptionTurn, turnDate
+            SELECT idTurn, titleTurn, descriptionTurn, archive, DATE_FORMAT(turnDate, '%H:%i') AS turnHour, DATE_FORMAT(turnDate, '%d-%m-%Y') AS turnDate
             FROM turns
-            WHERE idTurn = "${idTurn}"`;
+            WHERE idTurn = "${idTurn}" and idPet = "${idPet}"`;
 
     const turn = await sequelize.query(query, {
       model: Turn,
@@ -91,8 +78,6 @@ export async function updateTurn(idTurn, data) {
       updates.turnDate = turnDate;
     }
 
-    updates.updatedDate = new Date();
-
     await Turn.update(updates, updateOptions);
 
     return;
@@ -104,7 +89,7 @@ export async function updateTurn(idTurn, data) {
 export async function deleteTurn(idTurn) {
   try {
     await Turn.update(
-      { active: false, updatedDate: new Date() },
+      { active: false },
       { where: { idTurn }, returning: true }
     );
 
@@ -116,10 +101,7 @@ export async function deleteTurn(idTurn) {
 
 export async function activeTurn(idTurn) {
   try {
-    await Turn.update(
-      { active: true, updatedDate: new Date() },
-      { where: { idTurn }, returning: true }
-    );
+    await Turn.update({ active: true }, { where: { idTurn }, returning: true });
 
     return;
   } catch (error) {
@@ -137,8 +119,6 @@ export async function archiveTurn(idTurn, archive) {
     } else {
       updates.archive = true;
     }
-
-    updates.updatedDate = new Date();
 
     await Turn.update(updates, updateOptions);
 

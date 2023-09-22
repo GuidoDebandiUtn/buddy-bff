@@ -1,11 +1,11 @@
 import { Router } from "express";
 import {
   login,
-  logout,
   validateUser,
   resetPassword,
   changePassword,
   changePasswordPage,
+  expirationToken,
 } from "../controllers/auth.controller.js";
 
 const router = Router();
@@ -46,19 +46,7 @@ const router = Router();
  */
 router.post("/login", login);
 
-/**
- * @swagger
- * /security/auth/logout:
- *  post:
- *     summary: Cerrar sesión en la aplicación.
- *     tags: [AUTH]
- *     responses:
- *       200:
- *         description: Usuario cerró sesión
- *       500:
- *          description: Hubo un eror
- */
-router.post("/logout", logout);
+router.get("/expire", expirationToken);
 
 /**
  * @swagger

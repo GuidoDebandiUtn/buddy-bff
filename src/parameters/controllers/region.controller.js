@@ -10,26 +10,35 @@ import {
 } from "../services/region.service.js";
 
 export async function regionCreate(req, res) {
+
+  const province = await getProvinceById(req.body.idProvince);
+
+  if (!province[0]) {
+    return res
+      .status(404)
+      .json({ message: "No existe ninguna provincia con ese id" });
+  }
+
   try {
-    const duplicate = await getRegionByName(req.body.regionName);
+    let region;
+    const duplicate = await getRegionByName(
+      req.body.regionName,
+      req.body.idProvince
+    );
 
     if (duplicate[0]) {
-      return res
-        .status(400)
-        .json({ message: "Ya existe una region con ese nombre" });
+      region = await activeRegion(duplicate[0].idRegion);
+      return res.status(201).json({message:"Se ha reactivado el departamento" });
+    }else{
+      region = await createRegion(req.body);
+      return res.status(201).json({ region });
     }
 
-    const province = await getProvinceById(req.body.idProvince);
 
-    if (!province[0]) {
-      return res
-        .status(404)
-        .json({ message: "No existe ninguna provincia con ese id" });
-    }
 
-    const region = await createRegion(req.body);
+    
 
-    return res.status(201).json({ region });
+    
   } catch (error) {
     return res.status(500).json({
       message: error.message,
@@ -84,7 +93,10 @@ export async function regionUpdate(req, res) {
         .json({ message: "No existe ninguna region con este id" });
     }
 
-    const duplicate = await getRegionByName(req.body.regionName);
+    const duplicate = await getRegionByName(
+      req.body.regionName,
+      region[0].idProvince
+    );
 
     if (duplicate[0]) {
       return res

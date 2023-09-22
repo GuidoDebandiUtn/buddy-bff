@@ -2,11 +2,16 @@ import {
   activeRole,
   createRole,
   deleteRole,
-  getAllRole,
+  getAllRoles,
   getRoleById,
   getRoleByName,
   updateRole,
 } from "../services/role.service.js";
+import {
+  createRolePermission,
+  deleteRolePermission,
+  getRolePermission,
+} from "../services/rolePermission.service.js";
 
 export async function roleCreate(req, res) {
   try {
@@ -30,7 +35,7 @@ export async function roleCreate(req, res) {
 
 export async function getRoles(req, res) {
   try {
-    const roles = await getAllRole();
+    const roles = await getAllRoles();
 
     if (!roles[0]) {
       return res.status(404).json({ message: "No existe ningun rol" });
@@ -52,7 +57,7 @@ export async function getRole(req, res) {
 
     if (!role[0]) {
       return res.status(404).json({
-        message: "No existe ningun role con ese id",
+        message: "No existe ningun rol con ese id",
       });
     }
 
@@ -127,6 +132,64 @@ export async function roleActive(req, res) {
     await activeRole(idRole);
 
     return res.status(200).json({ message: "Se ha dado de alta este rol" });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function addPermission(req, res) {
+  const { idRole } = req.params;
+  const { idPermission } = req.body;
+
+  try {
+    const role = await getRoleById(idRole);
+
+    if (!role[0]) {
+      return res.status(404).json({
+        message: "No existe ningun rol con ese id",
+      });
+    }
+
+    const rolePermission = await getRolePermission(idRole, idPermission);
+
+    if (rolePermission[0]) {
+      return res.status(400).json({
+        message: "Este rol ya tiene este permiso",
+      });
+    }
+
+    await createRolePermission(idRole, idPermission);
+
+    return res
+      .status(200)
+      .json({ message: "Se ha añadido un permiso a este rol" });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function takePermission(req, res) {
+  const { idRole } = req.params;
+  const { idPermission } = req.body;
+
+  try {
+    const role = await getRoleById(idRole);
+
+    if (!role[0]) {
+      return res.status(404).json({
+        message: "No existe ningun rol con ese id",
+      });
+    }
+
+    await deleteRolePermission(idRole, idPermission);
+
+    return res
+      .status(200)
+      .json({ message: "Se ha quitado un permiso a este rol" });
   } catch (error) {
     return res.status(500).json({
       message: error.message,

@@ -10,22 +10,10 @@ export async function createVaccine(data, idPet) {
         titleVaccine,
         descriptionVaccine,
         vaccineDate,
-        active: true,
-        archive: false,
-        createdDate: new Date(),
-        updatedDate: new Date(),
         idPet,
       },
       {
-        fields: [
-          "titleVaccine",
-          "descriptionVaccine",
-          "active",
-          "archive",
-          "createdDate",
-          "updatedDate",
-          "idPet",
-        ],
+        fields: ["titleVaccine", "descriptionVaccine", "vaccineDate", "idPet"],
       }
     );
 
@@ -38,7 +26,7 @@ export async function createVaccine(data, idPet) {
 export async function getAllVaccines(idPet) {
   try {
     const query = `
-        SELECT idVaccine, titleVaccine, descriptionVaccine, vaccineDate
+        SELECT idVaccine, titleVaccine, descriptionVaccine, archive, DATE_FORMAT(vaccineDate, '%H:%i') AS vaccineHour, DATE_FORMAT(vaccineDate, '%d-%m-%Y') AS vaccineDate
         FROM vaccines
         WHERE idPet = "${idPet}" and active = true`;
 
@@ -56,7 +44,7 @@ export async function getAllVaccines(idPet) {
 export async function getVaccineById(idVaccine) {
   try {
     const query = `
-        SELECT idVaccine, titleVaccine, descriptionVaccine, vaccineDate
+        SELECT idVaccine, titleVaccine, descriptionVaccine, archive, DATE_FORMAT(vaccineDate, '%H:%i') AS vaccineHour, DATE_FORMAT(vaccineDate, '%d-%m-%Y') AS vaccineDate
         FROM vaccines
         WHERE idVaccine = "${idVaccine}"`;
 
@@ -72,7 +60,8 @@ export async function getVaccineById(idVaccine) {
 }
 
 export async function updateVaccine(idVaccine, data) {
-  const { titleVaccine, descriptionVaccine } = data;
+  const { titleVaccine, descriptionVaccine, vaccineDate, nextVaccineDate } =
+    data;
 
   try {
     const updates = {};
@@ -86,7 +75,13 @@ export async function updateVaccine(idVaccine, data) {
       updates.descriptionVaccine = descriptionVaccine;
     }
 
-    updates.updatedDate = new Date();
+    if (vaccineDate) {
+      updates.vaccineDate = vaccineDate;
+    }
+
+    if (nextVaccineDate) {
+      updates.nextVaccineDate = nextVaccineDate;
+    }
 
     await Vaccine.update(updates, updateOptions);
 
@@ -99,7 +94,7 @@ export async function updateVaccine(idVaccine, data) {
 export async function deleteVaccine(idVaccine) {
   try {
     await Vaccine.update(
-      { active: false, updatedDate: new Date() },
+      { active: false },
       { where: { idVaccine }, returning: true }
     );
 
@@ -112,7 +107,7 @@ export async function deleteVaccine(idVaccine) {
 export async function activeVaccine(idVaccine) {
   try {
     await Vaccine.update(
-      { active: true, updatedDate: new Date() },
+      { active: true },
       { where: { idVaccine }, returning: true }
     );
 
@@ -126,14 +121,12 @@ export async function archiveVaccine(idVaccine, archive) {
   try {
     const updates = {};
     const updateOptions = { where: { idVaccine } };
-
+    console.log(archive);
     if (archive) {
       updates.archive = false;
     } else {
       updates.archive = true;
     }
-
-    updates.updatedDate = new Date();
 
     await Vaccine.update(updates, updateOptions);
 

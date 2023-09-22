@@ -9,22 +9,10 @@ export async function createInformation(data, idPet) {
       {
         titleInformation,
         descriptionInformation,
-        active: true,
-        archive: false,
-        createdDate: new Date(),
-        updatedDate: new Date(),
         idPet,
       },
       {
-        fields: [
-          "titleInformation",
-          "descriptionInformation",
-          "active",
-          "archive",
-          "createdDate",
-          "updatedDate",
-          "idPet",
-        ],
+        fields: ["titleInformation", "descriptionInformation", "idPet"],
       }
     );
 
@@ -84,8 +72,6 @@ export async function updateInformation(idInformation, data) {
       updates.descriptionInformation = descriptionInformation;
     }
 
-    updates.updatedDate = new Date();
-
     await Information.update(updates, updateOptions);
 
     return;
@@ -97,7 +83,7 @@ export async function updateInformation(idInformation, data) {
 export async function deleteInformation(idInformation) {
   try {
     await Information.update(
-      { active: false, updatedDate: new Date() },
+      { active: false },
       { where: { idInformation }, returning: true }
     );
 
@@ -110,7 +96,7 @@ export async function deleteInformation(idInformation) {
 export async function activeInformation(idInformation) {
   try {
     await Information.update(
-      { active: true, updatedDate: new Date() },
+      { active: true },
       { where: { idInformation }, returning: true }
     );
 
@@ -130,8 +116,6 @@ export async function archiveInformation(idInformation, archive) {
     } else {
       updates.archive = true;
     }
-
-    updates.updatedDate = new Date();
 
     await Information.update(updates, updateOptions);
 

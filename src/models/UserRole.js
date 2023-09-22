@@ -13,17 +13,16 @@ UserRole.init(
     },
     idUserAuthor: {
       type: DataTypes.UUID,
+      allowNull: false,
     },
-    createdDate: {
-      type: DataTypes.DATE,
-    },
-    updatedDate: {
-      type: DataTypes.DATE,
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
     },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "userRole",
   }
 );

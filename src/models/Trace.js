@@ -21,7 +21,7 @@ Trace.init(
     },
     localityName: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     traceDate: {
       type: DataTypes.DATE,
@@ -30,15 +30,20 @@ Trace.init(
       type: DataTypes.TIME,
     },
     images: {
-      type: DataTypes.TIME,
+      type: DataTypes.STRING,
     },
     idAuthorUser: {
       type: DataTypes.UUID,
+      allowNull: false,
+    },
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
     },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "trace",
   }
 );
