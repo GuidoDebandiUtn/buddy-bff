@@ -7,11 +7,11 @@ import { createUserRole } from "./userRole.service.js";
 import bcrypt from "bcryptjs";
 
 export async function createUser(data) {
-  const { mail, password, userName, name } = data;
+  const { mail, password, userName, name, userType } = data;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-
+    log.debug("Hased password for user %s, original: %s, hashed: %s",userName,password,hashedPassword);
     const newUser = await User.create(
       {
         mail,
@@ -28,15 +28,22 @@ export async function createUser(data) {
 
     await createStateUser(newUser.idUser, userState[0].idUserState);
 
-    const role = await getRoleByName("BÁSICO");
 
-    console.log();
+    let role;
+    if(userType == 'BASICO'){
+      role = await getRoleByName("BÁSICO");
+    }else{
+      role = await getRoleByName("ESTABLECIMIENTO");
+    }
+
+    
     role[0].idRole;
 
     await createUserRole(newUser.idUser, role[0].idRole);
 
     return newUser;
   } catch (error) {
+    console.error("Error creating user: %s, error: ",userName,error);
     throw error;
   }
 }

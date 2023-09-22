@@ -130,3 +130,41 @@ export async function activeRole(idRole) {
     throw error;
   }
 }
+
+
+export async function getRoleByUser(idUser) {
+  try {
+    const query = `
+      SELECT *
+      FROM roles
+      JOIN users 
+      ON users.idRole = roles,idRole
+      WHERE users.idUser = ${idUser}`;
+
+    const role = await sequelize.query(query, {
+      model: Role,
+      mapToModel: true,
+    });
+
+    return role;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+export async function getPermissionByRole(idUser) {
+  try {
+    const query = `
+      SELECT`;
+
+    const role = await sequelize.query(query, {
+      model: Role,
+      mapToModel: true,
+    });
+
+    return role;
+  } catch (error) {
+    throw error;
+  }
+}

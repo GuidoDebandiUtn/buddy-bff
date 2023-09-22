@@ -57,7 +57,7 @@ export async function verifyToken(req, res, next) {
   try {
     if (!token) {
       console.log("error en la obtencion del token en el header");
-      return res.status(401).json({
+      return res.status(400).json({
         error: "Aún no ha iniciado sesión",
       });
     }
@@ -69,9 +69,12 @@ export async function verifyToken(req, res, next) {
       });
     }
 
+    //const permissions = await ;
+
     const verified = jwt.verify(token, process.env.TOKEN_SECRET);
 
     req.user = verified;
+    req.userPermissions= permissions
 
     next();
   } catch (error) {

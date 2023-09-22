@@ -6,36 +6,6 @@ import { getRoleByName } from "./role.service.js";
 import { createUserRole } from "./userRole.service.js";
 import bcrypt from "bcryptjs";
 
-export async function createEstablishment(data) {
-  const { mail, userName, password } = data;
-
-  try {
-    const newEstablishment = await User.create(
-      {
-        mail,
-        password,
-        userName,
-        createdDate: new Date(),
-        updatedDate: new Date(),
-      },
-      {
-        fields: ["mail", "password", "userName", "createdDate", "updatedDate"],
-      }
-    );
-
-    const userState = await getUserStateByName("EN REVISIÓN");
-
-    await createStateUser(newEstablishment.idUser, userState[0].idUserState);
-
-    const role = await getRoleByName("ESTABLECIMIENTO");
-
-    await createUserRole(newEstablishment.idUser, role[0].idRole);
-
-    return newEstablishment;
-  } catch (error) {
-    throw error;
-  }
-}
 
 export async function getAllEstablishments() {
   try {
@@ -85,25 +55,26 @@ export async function getEstablishmentById(idUser) {
     throw error;
   }
 }
+export async function validateEstablishment(idUser, userData) {
+  //modificar el estado del usuario
+    //recuperar el usuario en base al id||username||email
+    const user= await getUserById(idUser);
+    //recuperar el estado del usuario
+    //validar que el estado sea en epsera de verificacion
+    //actualizar el estado segun la definicion
 
-export async function getEstablishmentByMail(mail) {
-  try {
-    const query = `
-      SELECT idUser, mail, userName, validated
-      FROM users
-      WHERE mail = '${mail}'
-      `;
 
-    const user = await sequelize.query(query, {
-      model: User,
-      mapToModel: true,
-    });
+  //acualizar fecha de vencimiento de cada documento
 
-    return user;
-  } catch (error) {
-    throw error;
-  }
+
+
+  //enviar mail al user con el resultado
 }
+
+
+
+
+
 
 export async function updateEstablishment(idUser, userData) {
   const { userName, password, phoneNumber, address } = userData;
