@@ -15,6 +15,10 @@ export async function createService(idUser, data) {
     idLocality,
   } = data;
 
+
+
+  
+
   try {
     const newService = await Service.create(
       {
@@ -27,8 +31,6 @@ export async function createService(idUser, data) {
         open24hs,
         idServiceType,
         idLocality,
-        createdDate: new Date(),
-        updatedDate: new Date(),
       },
       {
         fields: [
@@ -40,9 +42,7 @@ export async function createService(idUser, data) {
           "open24hs",
           "idUser",
           "idServiceType",
-          "idLocality",
-          "createdDate",
-          "updatedDate",
+          "idLocality"
         ],
       }
     );

@@ -8,15 +8,15 @@ import {
 import { getServiceStateByName } from "../services/serviceState.service";
 import { changeStateService } from "../services/stateService.service";
 
-export async function serciveCreate(req, res) {
+export async function serviceCreate(req, res) {
   try {
-    const idUser = await getIdToken(req.header("auth-token"));
+    const idUser = req.user.idUser;
 
-    const service = await createService(idUser, req.body);
+    const  service = await createService(idUser, req.body);
 
     return res
       .status(201)
-      .json({ message: "Se creó correctamente el servicio" });
+      .json({ message: "Se creó correctamente el servicio", service: service });
   } catch (error) {
     return res.status(500).json({
       message: error.message,
@@ -28,8 +28,8 @@ export async function getServices(req, res) {
   try {
     const services = await getAllServices();
 
-    if (services[0]) {
-      return res.status(404).json({ message: "No existe ningún servicio" });
+    if (!services[0]) {
+      return res.status(204).json({ message: "No existe ningún servicio", services: services });
     }
 
     return res.status(200).json(services);
