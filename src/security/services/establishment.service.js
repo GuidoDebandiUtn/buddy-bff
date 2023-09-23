@@ -5,6 +5,7 @@ import { sequelize } from "../../database/database.js";
 import { getRoleByName } from "./role.service.js";
 import { createUserRole } from "./userRole.service.js";
 import bcrypt from "bcryptjs";
+import { getUserById, getUserState } from "./user.service.js";
 
 
 export async function getAllEstablishments() {
@@ -55,13 +56,29 @@ export async function getEstablishmentById(idUser) {
     throw error;
   }
 }
-export async function validateEstablishment(idUser, userData) {
-  //modificar el estado del usuario
-    //recuperar el usuario en base al id||username||email
-    const user= await getUserById(idUser);
-    //recuperar el estado del usuario
-    //validar que el estado sea en epsera de verificacion
-    //actualizar el estado segun la definicion
+export async function validateEstablishment(idUser, validateDto) {
+
+    const userRevision = await getUserById(idUser);
+
+    if(!userRevision){
+      throw new Error("Error obteniendo el usuario para validacion");
+    }
+      
+    const userState= await getUserState(userRevision.idUser);
+
+    if(!userState){
+      throw new Error("Error obteniendo el estado del usuario");
+    }
+
+    if(!userState.userStateName == 'EN REVISION'){
+      throw new Error("El usuario no esta esperando revision");
+    }
+    
+
+    if(validateDto.approved){
+      const activeState = await getUserStateByName('ACTIVO');
+      //TODO invalidar stateUser anterior
+    }
 
 
   //acualizar fecha de vencimiento de cada documento

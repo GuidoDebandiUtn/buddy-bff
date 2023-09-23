@@ -5,6 +5,7 @@ import { sequelize } from "../../database/database.js";
 import { getRoleByName } from "./role.service.js";
 import { createUserRole } from "./userRole.service.js";
 import bcrypt from "bcryptjs";
+import { UserState } from "../../models/UserState.js";
 
 export async function createUser(data) {
   const { mail, password, userName, name, userType } = data;
@@ -157,6 +158,28 @@ export async function getUserPermissions(idUser) {
     throw error;
   }
 }
+
+export async function getUserState(idUser) {
+  try {
+    const query = `
+      select state.*  from userstates as state 
+      join stateusers change_sate on change_sate.idUserState = state.idUserState
+      join users u on u.idUser = change_sate.idUser
+      where u.idUser= ${idUser} and change_sate.active = 1 
+      order by change_sate.createdAt desc 
+      limit 1;`;   
+
+    const user = await sequelize.query(query, {
+      model: UserState,
+      mapToModel: true,
+    });
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
 
 export async function updateUser(idUser, data) {
   const {

@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import {
   getUserById,
   getUserByMail,
+  getUserPermissions,
   updateUser,
   userValidate,
 } from "../services/user.service.js";
@@ -67,11 +68,19 @@ export async function verifyToken(req, res, next) {
         error: "Token no es valido",
       });
     }
+    console.log(verified);
+
+    const permissions = await getUserPermissions(verified.idUser);
+
+    if(!permissions){
+      return res.status(400).json({
+        error: "Error en la obtencion de los permisos del usuario",
+      });
+    }
     
 
-
     req.user = verified;
-    req.userPermissions= permissions
+    req.userPermissions= permissions;
 
     next();
   } catch (error) {

@@ -25,22 +25,21 @@ export async function getEstablishments(req, res) {
 
 
 export async function postValidateEstablishment(req, res) {
-  const idUser = req.idUser;
+  const { idUser } = req.params;
+
   const userPermissions = req.userPermissions;
-  const permisionRequired = 'GESTIONAR_DOCUMENTACION';
-
-
+  const permisionRequired = 'WRITE_DOCUMENTACION';
   if(userPermissions.include(permisionRequired)){
     res.status(401).json({ error: "No se cuenta con los permisos necesarios para ejecutar el EndPoint" });
   }
   
-
-  //validar parametros
   if(!idUser){
     res.status(400).json({ error: "No se ha podido obtener el parametro IdUser" });
   }
-  //invocar servicio para la validacion de establecimiento
-  const validateResponse = await validateEstablishment(req.data);
+
+  req.body.author= req.user;
+  
+  const validateResponse = await validateEstablishment(idUser,req.body);
   //manejar respuesta de servicio
 
 
