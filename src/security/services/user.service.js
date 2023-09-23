@@ -128,7 +128,7 @@ export async function getUserByMail(mail) {
   }
 }
 
-export async function getUserPermissions(idUser) {
+export async function getPermissionsForUser(idUser) {
   try {
     const query = `
       SELECT GROUP_CONCAT(p.tokenClaim SEPARATOR ' - ') AS permisos
@@ -150,6 +150,11 @@ export async function getUserPermissions(idUser) {
     throw error;
   }
 }
+
+
+
+
+
 
 export async function updateUser(idUser, data) {
   const {
