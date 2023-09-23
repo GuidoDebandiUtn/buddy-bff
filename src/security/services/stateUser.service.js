@@ -41,7 +41,7 @@ export async function changeStateUser(idUser, idUserState, idUserAuthor) {
       where: {
         idUser,
       },
-      order: [["createdDate", "DESC"]],
+      order: [["createdAt", "DESC"]],
     });
 
     state.active = false;

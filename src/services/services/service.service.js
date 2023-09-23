@@ -180,7 +180,6 @@ export async function updateService(idService, data) {
       updates.idLocality = idLocality;
     }
 
-    updates.updatedDate = new Date();
 
     await Service.update(updates, updateOptions);
 

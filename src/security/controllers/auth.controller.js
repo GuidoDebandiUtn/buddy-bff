@@ -60,7 +60,7 @@ export async function verifyToken(req, res, next) {
     }
 
     const verified = jwt.verify(token, process.env.TOKEN_SECRET);
-
+    
     if (!verified) {
       return res.status(400).json({
         error: "Este token nos el valido",
@@ -68,6 +68,7 @@ export async function verifyToken(req, res, next) {
     }
 
     req.user = verified;
+    console.log("usuario obtenido del token : ",verified)
 
     next();
   } catch (error) {

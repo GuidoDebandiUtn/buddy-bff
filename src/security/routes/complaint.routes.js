@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { complaintDelete, getComplaintsAll, postComplaint } from "../controllers/complaint.controller.js";
+import { complaintDelete, complaintExecute, getComplaintsAll, postComplaint } from "../controllers/complaint.controller.js";
+import { verifyToken } from "../controllers/auth.controller.js";
 
 const router = Router();
 /**
@@ -43,7 +44,7 @@ const router = Router();
  *       500:
  *          description: Error interno en la aplicacion
  */
-router.post("/",postComplaint);
+router.post("/",verifyToken,postComplaint);
 
 /**
  * @swagger
@@ -67,7 +68,7 @@ router.post("/",postComplaint);
  *       500:
  *          description: Error interno en la aplicacion
  */
-router.delete("/:idComplaint",complaintDelete) 
+router.delete("/:idComplaint",verifyToken,complaintDelete) 
 
 /**
  * @swagger
@@ -105,9 +106,36 @@ router.delete("/:idComplaint",complaintDelete)
  *       500:
  *          description: Error interno del servicio
  */
-router.get("/",getComplaintsAll) 
+router.get("/",verifyToken,getComplaintsAll) 
 
-router.post("/execute/:idComplaint") 
+/**
+ * @swagger
+ * /security/complaint/execute/:validate/:idComplaint:
+ *  post:
+ *     tags: [COMPLAINT]
+ *     summary: Ejecutar una denuncia, eliminando la publicacion y bloqueando al usuario o solo eliminando la denuncia en caso de que no se valide
+ *     parameters:
+ *       - in: query
+ *         name: idComplaint
+ *         schema:
+ *           type: uuid
+ *         description: Id de la denuncia a eliminar.
+ *       - in: query
+ *         name: validate
+ *         schema:
+ *           type: boolean
+ *         description: Bandera para saber si la denuncia fue aprobada o rechazada
+ *     
+ *     
+ *     responses:
+ *       200:
+ *         description: denuncia ejecutada correctamente
+ *       400:
+ *         description: Error en el id pasado.
+ *       500:
+ *          description: Error interno en la aplicacion
+ */
+router.post("/execute/:validate/:idComplaint",verifyToken,complaintExecute);
 
 
 export default router;

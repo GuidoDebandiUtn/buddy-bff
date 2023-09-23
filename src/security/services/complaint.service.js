@@ -6,6 +6,8 @@ import { PublicationSearch } from "../../models/PublicationSearch.js";
 import { Service } from "../../models/Service.js";
 import { deleteService } from "../../services/services/service.service.js";
 import { changeStateUser } from "./stateUser.service.js";
+import { getStateForUser, updateUser } from "./user.service.js";
+import { getUserStateByName } from "./userState.service.js";
 
 
 export async function createComplaint(data, idComplainant) {
@@ -55,10 +57,10 @@ export async function getAllComplaints(page = 1, recordsPerPage = 10) {
     const offset = (parseInt(page, 10) - 1) * recordsPerPage;
     const limit = parseInt(recordsPerPage, 10);
     const order = [['createdAt', 'DESC']];
-    const where = {active: 1,verified: 0};
+    const where = { active: 1, verified: 0 };
 
 
-    const complaints = Complaint.findAll({ offset, limit, order, attributes, include,where })
+    const complaints = Complaint.findAll({ offset, limit, order, attributes, include, where })
 
     return complaints;
   } catch (error) {
@@ -118,9 +120,9 @@ export async function getComplaintById(idComplaint) {
 export async function getComplaintsByUser(idUser) {
   try {
     const query = `
-              SELECT *
-              FROM complaints
-              WHERE idUserReported = "${idUser}" AND verified = 1`;
+      SELECT *
+      FROM complaints
+      WHERE idUserReported = "${idUser}" AND verified = 1`;
 
     const complaints = await sequelize.query(query, {
       model: Complaint,
@@ -134,15 +136,15 @@ export async function getComplaintsByUser(idUser) {
 }
 
 
-export async function aproveComplaint(idComplaint) {
-  const complaint= await validateComplaint(idComplaint);
+export async function aproveComplaint(validateComplaintDto) {
+  const complaint = validateComplaintDto.complaint;
 
-  if(!complaint){
-    throw new Error("No se ha podido obtener la denuncia");
-  }
+  await validateComplaint(complaint.idComplaint);
 
-  try{
-    switch(complaint.category){
+  console.debug("valor de denuncia: ",complaint);
+
+  try {
+    switch (complaint.category) {
       case 'SERVICE':
         await deleteService(complaint.idService);
         break;
@@ -155,18 +157,31 @@ export async function aproveComplaint(idComplaint) {
       default:
         throw new Error("Error en la categoria del servicio");
     }
-  }catch(error){
-    console.log("Error ejecutando el borrado de la denuncia: ",error);
+  } catch (error) {
+    console.log("Error ejecutando el borrado de la denuncia: ", error);
     throw error;
   }
 
+  try {
+    const userComplaints = await getComplaintsByUser(complaint.idUserReported);
 
-  const userComplaints= await getComplaintsByUser(complaint.idUserReported);
+    console.debug("userComplaints: ", userComplaints);
 
-  if(userComplaints.length >= 3){
-    getUserS
-    
+    if (userComplaints.length >= 3) {
+      const userState = await getStateForUser(complaint.idUserReported);
+      if (userState.userStateName == 'BLOQUEADO') {
+        throw new Error("El usuario ya se encuentra bloqueado!")
+      } 
+
+      const bloquedUserState = (await getUserStateByName('BLOQUEADO'))[0].dataValues;
+      console.log(bloquedUserState);
+      await updateUser(complaint.idUserReported,{blocked: true, blockedReason: "Maximo de denuncias superado"});
+      await changeStateUser(complaint.idUserReported, bloquedUserState.idUserState, validateComplaintDto.author.idUser);
+    }
+    return;
+  } catch (error) {
+    console.log("error validando el bloqueo del usuario: ", error);
+    throw error;
+
   }
-  
-  return;
 }

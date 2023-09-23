@@ -5,6 +5,7 @@ import { sequelize } from "../../database/database.js";
 import { getRoleByName } from "./role.service.js";
 import { createUserRole } from "./userRole.service.js";
 import bcrypt from "bcryptjs";
+import { UserState } from "../../models/UserState.js";
 
 export async function createUser(data) {
   const { mail, password, userName, name } = data;
@@ -151,8 +152,26 @@ export async function getPermissionsForUser(idUser) {
   }
 }
 
+export async function getStateForUser(idUser) {
+  try {
+    const query = `
+      select state.*  from userstates as state 
+      join stateusers change_sate on change_sate.idUserState = state.idUserState
+      join users u on u.idUser = change_sate.idUser
+      where u.idUser= '${idUser}' and change_sate.active = 1 
+      order by change_sate.createdAt desc 
+      limit 1;`;   
 
+    const user = await sequelize.query(query, {
+      model: UserState,
+      mapToModel: true,
+    });
 
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
 
 
 
@@ -166,11 +185,21 @@ export async function updateUser(idUser, data) {
     dni,
     birthDate,
     address,
+    blockedReason,
+    blocked
   } = data;
 
   try {
     const updates = {};
     const updateOptions = { where: { idUser } };
+
+    if (blocked) {
+      updates.blocked = blocked;
+    }
+
+    if (blockedReason) {
+      updates.blockedReason = blockedReason;
+    }
 
     if (userName) {
       updates.userName = userName;
@@ -208,6 +237,7 @@ export async function updateUser(idUser, data) {
     updates.updatedDate = new Date();
 
     await User.update(updates, updateOptions);
+    console.debug("usuario: ",idUser, "modificado correctamente con : ",updates);
 
     return;
   } catch (error) {
