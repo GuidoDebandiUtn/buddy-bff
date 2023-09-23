@@ -159,7 +159,7 @@ export async function getUserPermissions(idUser) {
   }
 }
 
-export async function getUserState(idUser) {
+export async function getStateForUser(idUser) {
   try {
     const query = `
       select state.*  from userstates as state 

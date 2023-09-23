@@ -1,5 +1,5 @@
 import { StateUser } from "../../models/StateUser.js";
-import { getUserState } from "./user.service.js";
+import { getStateForUser } from "./user.service.js";
 
 export async function createStateUser(idUser, idUserState, idUserAuthor) {
   let idAuthor;
@@ -10,7 +10,7 @@ export async function createStateUser(idUser, idUserState, idUserAuthor) {
     idAuthor = idUser;
   }
 
-  const lastState = await getUserState(idUser);
+  const lastState = await getStateForUser(idUser);
   await dest
 
   try {
