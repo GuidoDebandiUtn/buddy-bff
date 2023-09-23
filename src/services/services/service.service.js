@@ -138,7 +138,7 @@ export async function updateService(idService, data) {
     serviceDescription,
     openTime,
     closeTime,
-    addres,
+    address,
     open24hs,
     idServiceType,
     idLocality,
@@ -164,8 +164,8 @@ export async function updateService(idService, data) {
       updates.closeTime = closeTime;
     }
 
-    if (addres) {
-      updates.addres = addres;
+    if (address) {
+      updates.address = address;
     }
 
     if (open24hs) {
@@ -180,9 +180,22 @@ export async function updateService(idService, data) {
       updates.idLocality = idLocality;
     }
 
-    updates.updatedDate = new Date();
 
     await Service.update(updates, updateOptions);
+
+    return;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+export async function deleteService(idService) {
+  try {
+    await Service.update(
+      { active: false },
+      { where: { idService }, returning: true }
+    );
 
     return;
   } catch (error) {

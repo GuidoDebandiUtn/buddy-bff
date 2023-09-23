@@ -45,10 +45,10 @@ export async function changeStateUser(idUser, idUserState, idUserAuthor) {
       where: {
         idUser,
       },
-      order: [["createdDate", "DESC"]],
+      order: [["createdAt", "DESC"]],
     });
 
-    state.updatedDate = new Date();
+    state.active = false;
 
     await state.save();
 

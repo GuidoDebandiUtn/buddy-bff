@@ -136,7 +136,7 @@ export async function getUserByMail(mail) {
   }
 }
 
-export async function getUserPermissions(idUser) {
+export async function getPermissionsForUser(idUser) {
   try {
     const query = `
       SELECT GROUP_CONCAT(p.tokenClaim SEPARATOR ' - ') AS permisos
@@ -165,7 +165,7 @@ export async function getStateForUser(idUser) {
       select state.*  from userstates as state 
       join stateusers change_sate on change_sate.idUserState = state.idUserState
       join users u on u.idUser = change_sate.idUser
-      where u.idUser= ${idUser} and change_sate.active = 1 
+      where u.idUser= '${idUser}' and change_sate.active = 1 
       order by change_sate.createdAt desc 
       limit 1;`;   
 
@@ -191,11 +191,21 @@ export async function updateUser(idUser, data) {
     dni,
     birthDate,
     address,
+    blockedReason,
+    blocked
   } = data;
 
   try {
     const updates = {};
     const updateOptions = { where: { idUser } };
+
+    if (blocked) {
+      updates.blocked = blocked;
+    }
+
+    if (blockedReason) {
+      updates.blockedReason = blockedReason;
+    }
 
     if (userName) {
       updates.userName = userName;
@@ -233,6 +243,7 @@ export async function updateUser(idUser, data) {
     updates.updatedDate = new Date();
 
     await User.update(updates, updateOptions);
+    console.debug("usuario: ",idUser, "modificado correctamente con : ",updates);
 
     return;
   } catch (error) {
