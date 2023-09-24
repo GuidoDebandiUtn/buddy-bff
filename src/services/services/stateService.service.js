@@ -43,16 +43,16 @@ export async function changeStateService(
   idUserAuthor
 ) {
   try {
-    const state = await StateService.findOne({
+    const actualState = await StateService.findOne({
       where: {
         idService,
       },
       order: [["createdAt", "DESC"]],
     });
 
-    state.updatedDate = new Date();
+    actualState.active = false;
 
-    await state.save();
+    await actualState.save();
 
     await createStateService(idService, idServiceState, idUserAuthor);
 

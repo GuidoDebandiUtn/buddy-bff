@@ -4,7 +4,7 @@ import parameterRoutes from "./parameters/parameters.routes.js";
 import publicationRoutes from "./lost-adoption/lostAdoption.routes.js";
 import mypetRoutes from "./mypet/myPet.routes.js";
 import reportsRoutes from "./reports/reports.routes.js";
-import servicesRoutes from "./services/service.routes.js";
+import servicesRoutes from "./services/services.routes.js";
 
 const router = Router();
 

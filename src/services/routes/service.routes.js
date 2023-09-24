@@ -1,6 +1,6 @@
 import { verifyToken } from "../../security/controllers/auth.controller.js";
 import { Router } from "express";
-import { serviceCreate } from "../controllers/service.controller.js";
+import { getServices, getServicesByUser, serviceCreate, serviceDelete, serviceUpdate } from "../controllers/service.controller.js";
 
 const router = Router();
 
@@ -71,10 +71,165 @@ const router = Router();
  *                properties:
  *                  message:
  *                    type: string
+ *       400:
+ *          description: Ya existe el servicio que se quiere crear u error en parametros pasados
  *       500:
  *          description: Hubo un error
  */
 router.post("/",verifyToken, serviceCreate);
+
+
+
+/**
+ * @swagger
+ * /services/service/ByUser:
+ *   get:
+ *     summary: Obtiene los servicios referidos a un usuario
+ *     tags: [SERVICES]
+ *     responses:
+ *       200:
+ *         description: Servicios recuperados exitosamente.
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *       204:
+ *          description: El usuario no tiene ningun servicio publicado.
+ *       500:
+ *          description: Hubo un error
+ */
+router.get("/ByUser",verifyToken, getServicesByUser);
+
+/**
+ * @swagger
+ * /services/service/:
+ *   get:
+ *     summary: Obtiene todos los servicios activos
+ *     tags: [SERVICES]
+ *     responses:
+ *       200:
+ *         description: Servicios recuperados exitosamente.
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *       204:
+ *          description: No existen servicios activos.
+ *       500:
+ *          description: Hubo un error
+ */
+router.get("/",verifyToken, getServices);
+
+/**
+ * @swagger
+ * /services/service/:idService:
+ *   put:
+ *     summary: Modifica un servicio
+ *     tags: [SERVICES]
+ * 
+ *     parameters:
+ *       - in: query
+ *         name: idService
+ *         schema:
+ *           type: uuid
+ *         description: Id del servicio a modificar.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               serviceTitle:
+ *                 type: String
+ *                 required: false
+ *               serviceDescription:
+ *                 type: String
+ *                 required: true
+ *               openTime:
+ *                 type: Time
+ *                 required: false
+ *                 format: HH:mm:ss
+ *               closeTime:
+ *                 type: Time
+ *                 required: false
+ *                 format: HH:mm:ss
+ *               address:
+ *                 type: String
+ *                 required: false
+ *               open24hs:
+ *                 type: Boolean
+ *                 required: false
+ *               emailService:
+ *                 type: String
+ *                 required: false
+ *               images:
+ *                 type: Text
+ *                 required: false
+ *               idServiceType:
+ *                 type: String
+ *                 required: false
+ *               idLocality:
+ *                 type: String
+ *                 required: false
+ *               petTypes:
+ *                 type: Array
+ *                 required: false
+ *     responses:
+ *       200:
+ *         description: Servicio modificado exitosamente.
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *       400:
+ *          description: Error en los parametros pasado
+ *       500:
+ *          description: Hubo un error
+ */
+router.put("/:idService",verifyToken, serviceUpdate);
+
+
+/**
+ * @swagger
+ * /services/service/:idService:
+ *   delete:
+ *     summary: Elimina un servicio
+ *     tags: [SERVICES]
+ * 
+ *     parameters:
+ *       - in: query
+ *         name: idService
+ *         schema:
+ *           type: uuid
+ *         description: Id del servicio a eliminar.
+ *     responses:
+ *       200:
+ *         description: Servicio eliminado exitosamente.
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *       400:
+ *          description: Error en el idService pasado
+ *       404:
+ *          description: No se ha encontrado el servicio a eliminar
+ *       500:
+ *          description: Hubo un error interno en sistema
+ */
+router.delete("/:idService",verifyToken, serviceDelete);
 
 
 export default router;

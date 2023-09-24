@@ -60,6 +60,29 @@ export async function getPetTypeById(idPetType) {
   }
 }
 
+export async function getPetTypeByIdIn(petTypes) {
+  try {
+    const petTypeIds = petTypes.map(petType => `'${petType.idPetType}'`).join(',');
+
+    const query = `
+    SELECT pettypes.idPetType, pettypes.petTypeName, GROUP_CONCAT(petbreeds.petBreedName) AS razas
+    FROM pettypes
+    LEFT JOIN petbreeds ON pettypes.idPetType = petbreeds.idPetType
+    WHERE pettypes.idPetType IN (${petTypeIds})
+    GROUP BY pettypes.idPetType, pettypes.petTypeName
+    `;
+
+    const petTypesReturn = await sequelize.query(query, {
+      model: PetType,
+      mapToModel: true,
+    });
+
+    return petTypesReturn;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function getPetTypeByName(petTypeName) {
   try {
     const query = `
