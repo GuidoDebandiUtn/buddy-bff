@@ -9,8 +9,6 @@ export async function createPermission(data) {
         permissionName: permissionName.toUpperCase(),
         permissionDescription,
         tokenClaim,
-        createdDate: new Date(),
-        updatedDate: new Date(),
       },
       {
         fields: [
@@ -18,8 +16,8 @@ export async function createPermission(data) {
           "permissionDescription",
           "tokenClaim",
           "active",
-          "createdDate",
-          "updatedDate",
+          "createdAt",
+          "updatedAt",
         ],
       }
     );

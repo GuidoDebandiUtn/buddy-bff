@@ -4,50 +4,17 @@ import { getServiceStateByName } from "./serviceState.service.js";
 import { createStateService } from "./stateService.service.js";
 
 export async function createService(idUser, data) {
-  const {
-    serviceTitle,
-    serviceDescription,
-    openTime,
-    closeTime,
-    addres,
-    open24hs,
-    idServiceType,
-    idLocality,
-  } = data;
-
-
-
-  
+  const {serviceTitle, serviceDescription , openTime, closeTime, address, open24hs, idServiceType, idLocality,emailService,images  } = data;
 
   try {
     const newService = await Service.create(
-      {
-        serviceTitle,
-        serviceDescription,
-        openTime,
-        closeTime,
-        addres,
-        idUser,
-        open24hs,
-        idServiceType,
-        idLocality,
-      },
-      {
-        fields: [
-          "serviceTitle",
-          "serviceDescription",
-          "openTime",
-          "closeTime",
-          "addres",
-          "open24hs",
-          "idUser",
-          "idServiceType",
-          "idLocality"
-        ],
-      }
+      { serviceTitle, serviceDescription, openTime, closeTime, address, idUser, open24hs, idServiceType, idLocality,emailService,images},
+      { fields: [ "serviceTitle", "serviceDescription", "openTime", "closeTime", "address", "open24hs", "idUser", "idServiceType", "idLocality", "emailService", "images"], }
     );
 
     const serviceState = await getServiceStateByName("ACTIVO");
+
+    console.log("Se a obtenido el siguiente resultado de la busqueda getServiceStateByName(\"ACTIVO\"): ", serviceState[0].idServiceState);
 
     await createStateService(
       newService.idService,
@@ -56,6 +23,7 @@ export async function createService(idUser, data) {
 
     return newService;
   } catch (error) {
+    console.log(error);
     throw error;
   }
 }
@@ -63,10 +31,10 @@ export async function createService(idUser, data) {
 export async function getAllServices() {
   try {
     const query = `
-          SELECT services.serviceTitle, services.serviceDescription, services.addres, services.openTime, services.closeTime, services.open24hs
+          SELECT services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs
           FROM services
           INNER JOIN (
-              SELECT idService, idServiceState, MAX(createdDate) AS ultimaFecha
+              SELECT idService, idServiceState, MAX(createdAt) AS ultimaFecha
               FROM stateServices 
               GROUP BY idService) AS ultimosEstados ON services.idService = ultimosEstados.idService
           INNER JOIN serviceStates ON ultimosEstados.idServiceState = serviceStates.idServiceState
@@ -80,6 +48,7 @@ export async function getAllServices() {
 
     return services;
   } catch (error) {
+    console.log(error);
     throw error;
   }
 }
@@ -87,10 +56,10 @@ export async function getAllServices() {
 export async function getServicesByIdUser(idUser) {
   try {
     const query = `
-        SELECT services.serviceTitle, services.serviceDescription, services.addres, services.openTime, services.closeTime, services.open24hs
+        SELECT services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs
         FROM services
         INNER JOIN (
-            SELECT idService, idServiceState, MAX(createdDate) AS ultimaFecha
+            SELECT idService, idServiceState, MAX(createdAt) AS ultimaFecha
             FROM stateServices 
             GROUP BY idService) AS ultimosEstados ON services.idService = ultimosEstados.idService
         INNER JOIN serviceStates ON ultimosEstados.idServiceState = serviceStates.idServiceState
@@ -104,6 +73,7 @@ export async function getServicesByIdUser(idUser) {
 
     return services;
   } catch (error) {
+    console.log(error);
     throw error;
   }
 }
@@ -111,10 +81,10 @@ export async function getServicesByIdUser(idUser) {
 export async function getServiceById(idService) {
   try {
     const query = `
-          SELECT services.serviceTitle, services.serviceDescription, services.addres, services.openTime, services.closeTime, services.open24hs
+          SELECT services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs
           FROM services
           INNER JOIN (
-              SELECT idService, idServiceState, MAX(createdDate) AS ultimaFecha
+              SELECT idService, idServiceState, MAX(createdAt) AS ultimaFecha
               FROM stateServices 
               GROUP BY idService) AS ultimosEstados ON services.idService = ultimosEstados.idService
           INNER JOIN serviceStates ON ultimosEstados.idServiceState = serviceStates.idServiceState
@@ -128,6 +98,7 @@ export async function getServiceById(idService) {
 
     return services;
   } catch (error) {
+    console.log(error);
     throw error;
   }
 }
@@ -185,6 +156,7 @@ export async function updateService(idService, data) {
 
     return;
   } catch (error) {
+    console.log(error);
     throw error;
   }
 }
@@ -198,6 +170,34 @@ export async function deleteService(idService) {
     );
 
     return;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+
+
+
+export async function getServiceByUserIdAndServiceType(idUser,idServiceType) {
+  try {
+    const query = `
+          SELECT services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs
+          FROM services
+          INNER JOIN (
+              SELECT idService, idServiceState, MAX(createdAt) AS ultimaFecha
+              FROM stateServices 
+              GROUP BY idService) AS ultimosEstados ON services.idService = ultimosEstados.idService
+          INNER JOIN serviceStates ON ultimosEstados.idServiceState = serviceStates.idServiceState
+          WHERE serviceStates.serviceStateName = 'ACTIVO' and services.idUser = '${idUser}' AND services.idServiceType = '${idServiceType}'
+      `;
+
+    const services = await sequelize.query(query, {
+      model: Service,
+      mapToModel: true,
+    });
+
+    return services;
   } catch (error) {
     throw error;
   }

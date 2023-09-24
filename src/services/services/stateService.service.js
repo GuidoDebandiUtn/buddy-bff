@@ -17,16 +17,14 @@ export async function createStateService(
     const newStateService = await StateService.create(
       {
         idUserAuthor: idAuthor,
-        createdDate: new Date(),
-        updatedDate: new Date(),
         idService,
         idServiceState,
       },
       {
         fields: [
           "idUserAuthor",
-          "createdDate",
-          "updatedDate",
+          "createdAt",
+          "updatedAt",
           "idService",
           "idServiceState",
         ],
@@ -49,7 +47,7 @@ export async function changeStateService(
       where: {
         idService,
       },
-      order: [["createdDate", "DESC"]],
+      order: [["createdAt", "DESC"]],
     });
 
     state.updatedDate = new Date();

@@ -1,9 +1,8 @@
 import { verifyToken } from "../../security/controllers/auth.controller.js";
 import { Router } from "express";
-import { createService } from "../services/service.service.js";
 import { serviceCreate } from "../controllers/service.controller.js";
 
-
+const router = Router();
 
 /**
  * @swagger
@@ -53,7 +52,13 @@ import { serviceCreate } from "../controllers/service.controller.js";
  *               images:
  *                 type: Text
  *                 required: false
- *               PetTypes:
+ *               idServiceType:
+ *                 type: String
+ *                 required: true
+ *               idLocality:
+ *                 type: String
+ *                 required: true
+ *               petTypes:
  *                 type: Array
  *                 required: true
  *     responses:
@@ -70,3 +75,6 @@ import { serviceCreate } from "../controllers/service.controller.js";
  *          description: Hubo un error
  */
 router.post("/",verifyToken, serviceCreate);
+
+
+export default router;

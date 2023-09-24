@@ -1,18 +1,35 @@
-import { getIdToken } from "../../helpers/authHelper";
+import { getIdToken } from "../../helpers/authHelper.js";
 import {
   createService,
   getAllServices,
   getServiceById,
+  getServiceByUserIdAndServiceType,
   updateService,
 } from "../services/service.service.js";
-import { getServiceStateByName } from "../services/serviceState.service";
-import { changeStateService } from "../services/stateService.service";
+import { getServiceStateByName } from "../services/serviceState.service.js";
+import { changeStateService } from "../services/stateService.service.js";
 
 export async function serviceCreate(req, res) {
-  try {
-    const idUser = req.user.idUser;
+  const {idServiceType} = req.body;
+  const idUser = req.user.idUser;
 
-    const  service = await createService(idUser, req.body);
+  if(!idServiceType){
+    return res
+    .status(400)
+    .json({ message: "Error en el tipo del Servicio enviado", code: 400});
+  }
+
+
+  try {
+    let  service = await getServiceByUserIdAndServiceType(idUser,idServiceType);
+
+    if(service[0]){
+      return res
+      .status(400)
+      .json({ message: "Ya se ha registrado un servicio de este tipo para el Usuario", code: 400});
+    }
+
+    service = await createService(idUser, req.body);
 
     return res
       .status(201)

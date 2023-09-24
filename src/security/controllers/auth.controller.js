@@ -1,12 +1,11 @@
 import jwt from "jsonwebtoken";
 import {
+  getPermissionsForUser,
   getUserById,
   getUserByMail,
-  getUserPermissions,
   updateUser,
   userValidate,
 } from "../services/user.service.js";
-import { findToken, insertToken } from "../services/token.service.js";
 import { resetPasswordMail } from "../../helpers/mailHelper.js";
 import bcrypt from "bcryptjs";
 
@@ -31,7 +30,6 @@ export async function login(req, res) {
     const passwordMatch = await bcrypt.compare(password, user[0].password);
 
     if (passwordMatch) {
-      // const permissions = await getUserPermissions()
 
       token = jwt.sign({ idUser: user[0].idUser }, process.env.TOKEN_SECRET, {
         expiresIn: "7d",
@@ -68,9 +66,8 @@ export async function verifyToken(req, res, next) {
         error: "Token no es valido",
       });
     }
-    console.log(verified);
 
-    const permissions = await getUserPermissions(verified.idUser);
+    const permissions = await getPermissionsForUser(verified.idUser);
 
     if(!permissions){
       return res.status(400).json({

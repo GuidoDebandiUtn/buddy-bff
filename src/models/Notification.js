@@ -25,12 +25,6 @@ Notification.init(
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
-    createdDate: {
-      type: DataTypes.DATE,
-    },
-    updatedDate: {
-      type: DataTypes.DATE,
-    },
     expirationDate: {
       type: DataTypes.DATE,
     },
@@ -40,7 +34,7 @@ Notification.init(
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: "notification",
   }
 );

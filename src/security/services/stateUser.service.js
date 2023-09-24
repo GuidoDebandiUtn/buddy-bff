@@ -17,16 +17,14 @@ export async function createStateUser(idUser, idUserState, idUserAuthor) {
     const newStateUser = await StateUser.create(
       {
         idUserAuthor: idAuthor,
-        createdDate: new Date(),
-        updatedDate: new Date(),
         idUser,
         idUserState,
       },
       {
         fields: [
           "idUserAuthor",
-          "createdDate",
-          "updatedDate",
+          "createdAt",
+          "updatedAt",
           "idUser",
           "idUserState",
         ],
