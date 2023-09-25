@@ -35,7 +35,7 @@ export async function retrivePaginatedPublications(  page = 1,  recordsPerPage =
 
 export async function getPublicationsByUser(idUser) {
   let include = [
-    {model: User,attributes:["userName"],},
+    {model: User,attributes:["userName","idUser"],},
     {model:PetColor, attributes: ['petColorName']},
     {model:Locality, attributes: ['localityName']},
     {model:PetBreed,include: [{model:PetType, attributes: ['petTypeName']}], attributes: ['petBreedName','size','intelligence','temperament','lifespan','idPetType','idPetBreed']},
@@ -235,7 +235,7 @@ function getModel(modelType) {
   let orderBy;
   let model;
   let include = [
-    {model: User,attributes:["userName"],},
+    {model: User,attributes:["userName","idUser"],},
     { model: PetColor, attributes: ["petColorName"] },
     { model: Locality, attributes: ["localityName"] },
     { model: PetBreed,
