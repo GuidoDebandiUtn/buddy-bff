@@ -7,7 +7,7 @@ import { createUserRole } from "./userRole.service.js";
 import bcrypt from "bcryptjs";
 
 export async function createUser(data) {
-  const { mail, password, userName, name } = data;
+  const { mail, password, userName } = data;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -17,7 +17,6 @@ export async function createUser(data) {
         mail,
         password: hashedPassword,
         userName,
-        name,
       },
       {
         fields: ["mail", "password", "userName"],
