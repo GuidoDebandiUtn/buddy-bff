@@ -112,7 +112,7 @@ router.get("/:idService",verifyToken, getRatingsByService);
  *       500:
  *          description: Hubo un error interno en el servicio
  */
-router.get("/:idService",verifyToken, deleteRating);
+router.delete("/:idRating",verifyToken, deleteRating);
 
 
 

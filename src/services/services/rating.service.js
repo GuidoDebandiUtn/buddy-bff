@@ -1,25 +1,26 @@
 import { Rating } from "../../models/Rating.js";
+import { Service } from "../../models/Service.js";
 import { calculateAverageRating, getServiceById } from "./service.service.js";
 
 
 export async function createRating(idUser, data) {
-    const { titleRating,descriptionRating,idService } = data;
+    const { titleRating,descriptionRating,idService,numberRating } = data;
 
-    console.log(data);
     const service = await getServiceById(idService);
 
     if(!service[0]){
         throw {message: "Error obteniendo el servicio asociado a la valoracion", code: 400};
     }
-  
+    
     try {
       const newRating = await Rating.create(
-        { titleRating,descriptionRating, idService,idUser},
+        { titleRating,descriptionRating, numberRating, idService,idUser},
         { fields: ["titleRating", "descriptionRating", "numberRating", "idService", "idUser"], }
       ); 
   
-      await calculateAverageRating(service);
-  
+
+      await calculateAverageRating(service[0]);
+
       return newRating;
     } catch (error) {
       console.log(error);
@@ -60,6 +61,12 @@ export async function deleteRatingService(idRating) {
         {active:0},
         {where:{ idService}}
       ); 
+
+      const service = await Service.findOne({where:{idService:rating.idService}});
+      if(!service){
+        throw {message: "Error en la obtencion del servicio asociado a la calificacion", code:500}
+      }
+      await calculateAverageRating(service);
   
       return;
     } catch (error) {
@@ -85,9 +92,17 @@ export async function updateRatingService(idRating, data) {
         ...(data.titleRating && { titleRating: data.titleRating }),
         ...(data.descriptionRating && { descriptionRating: data.descriptionRating }),
         ...(data.serviceDescription && { serviceDescription: data.serviceDescription }),
+        ...(data.numberRating && { numberRating: data.numberRating }),
       };
     
       await Rating.update(updates, updateOptions);
+
+
+      const service = await Service.findOne({where:{idService:rating.idService}});
+      if(!service){
+        throw {message: "Error en la obtencion del servicio asociado a la calificacion", code:500}
+      }
+      await calculateAverageRating(service);
   
       return;
     } catch (error) {

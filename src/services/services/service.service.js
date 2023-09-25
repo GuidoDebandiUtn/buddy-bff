@@ -343,18 +343,23 @@ export async function deleteServicePetTypes(idService, petTypes) {
 }
 
 export async function calculateAverageRating(service) {
-  Rating.findOne({
-    attributes: [
-      [sequelize.fn('AVG', sequelize.col('numberRating')), 'avgRating']
-    ],
-    where: { idService: service.idService }
-  }).then(result => {
+  try {
+    const result = await Rating.findOne({
+      attributes: [
+        [sequelize.fn('AVG', sequelize.col('numberRating')), 'avgRating']
+      ],
+      where: { idService: service.idService }
+    });
+
     const avgRating = result.get('avgRating');
-    service.avgRating = avgRating;
-  }).catch(err => {
-    console.error('Error al calcular la valoracion promedio del servicio: %s, error:',service.idService, err);
-  });
-  
-  service.save();
-  
+
+    await Service.update({ avgRating: avgRating }, {
+      where: { idService: service.idService }
+    });
+
+    console.log('Valoración promedio actualizada para el servicio:', service.idService);
+  } catch (err) {
+    console.error('Error al calcular la valoración promedio del servicio: %s, error:', service.idService, err);
+    throw err;
+  }
 }

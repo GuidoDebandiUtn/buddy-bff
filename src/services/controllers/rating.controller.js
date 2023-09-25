@@ -1,12 +1,13 @@
-import { createRating, deleteRatingService, eraseRating, obtainRatingByService, updateRatingService } from "../services/rating.service";
+import { createRating, deleteRatingService, obtainRatingByService, updateRatingService } from "../services/rating.service.js";
 
 export async function postNewRating(req, res) {
     const idUser = req.user.idUser;
+
   
     try {
         const rating = await createRating(idUser,req.body);
-  
-        return res.status(200).json("Se creado correctanente la valoracion", rating);
+
+        return res.status(201).json(rating);
     } catch (error) {
         if(error.code){
           return res.status(error.code).json({
@@ -23,11 +24,11 @@ export async function getRatingsByService(req, res) {
     try {
         const ratings = await obtainRatingByService(idService);
 
-        if(ratings[0]){
+        if(!ratings[0]){
             return res.status(204).json("No se ha podido obtener ninguna calificacion para el servicio.");
         }
   
-        return res.status(200).json("Se creado correctanente la valoracion", ratings);
+        return res.status(200).json(ratings);
     } catch (error) {
         if(error.code){
           return res.status(error.code).json({
@@ -46,7 +47,7 @@ export async function deleteRating(req, res) {
     try {
         await deleteRatingService(idRating);
   
-        return res.status(200).json("Se eliminado correctanente la calificacion");
+        return res.status(200).json({message:"Se eliminado correctamente la calificacion"});
     } catch (error) {
         if(error.code){
           return res.status(error.code).json({
@@ -64,9 +65,9 @@ export async function deleteRating(req, res) {
 export async function putRating(req, res) {
     const { idRating } = req.params;
     try {
-        await updateRatingService(idRating);
+        await updateRatingService(idRating,req.body);
   
-        return res.status(200).json("Se eliminado correctamente la calificacion");
+        return res.status(200).json({message:"Se modificado correctamente la calificacion"});
     } catch (error) {
         if(error.code){
           return res.status(error.code).json({
