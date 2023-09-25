@@ -6,6 +6,7 @@ import { createStateService } from "./stateService.service.js";
 import { ServiceState } from "../../models/ServiceState.js";
 import { changeStateService } from "../services/stateService.service.js";
 import { getPetTypeByIdIn } from "../../parameters/services/petType.service.js";
+import { Rating } from "../../models/Rating.js";
 
 
 export async function createService(idUser, data) {
@@ -341,3 +342,19 @@ export async function deleteServicePetTypes(idService, petTypes) {
   }
 }
 
+export async function calculateAverageRating(service) {
+  Rating.findOne({
+    attributes: [
+      [sequelize.fn('AVG', sequelize.col('numberRating')), 'avgRating']
+    ],
+    where: { idService: service.idService }
+  }).then(result => {
+    const avgRating = result.get('avgRating');
+    service.avgRating = avgRating;
+  }).catch(err => {
+    console.error('Error al calcular la valoracion promedio del servicio: %s, error:',service.idService, err);
+  });
+  
+  service.save();
+  
+}
