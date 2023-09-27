@@ -5,14 +5,12 @@ export async function createRolePermission(idRole, idPermission) {
   try {
     const newRolePermission = await RolePermission.create(
       {
-        createdDate: new Date(),
-        updatedDate: new Date(),
         active: true,
         idPermission,
         idRole,
       },
       {
-        fields: ["createdDate", "updatedDate", "idPermission", "idRole"],
+        fields: ["createdAt", "updatedAt", "idPermission", "idRole"],
       }
     );
 

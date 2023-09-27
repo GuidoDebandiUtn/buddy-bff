@@ -1,12 +1,8 @@
 import { Router } from "express";
 import {
-  changeRole,
-  changeState,
-  establishmentCreate,
-  establishmentDelete,
   establishmentUpdate,
-  getEstablishment,
   getEstablishments,
+  postValidateEstablishment,
 } from "../controllers/establishment.controller.js";
 import { verifyToken } from "../controllers/auth.controller.js";
 
@@ -18,41 +14,7 @@ const router = Router();
  *   name: ESTABLISHMENT
  *   description: Endpoints relacionados con los establecimientos
  */
-/**
- * @swagger
- * /security/establishment/register:
- *   post:
- *     summary: Crea un nuevo establecimiento
- *     tags: [ESTABLISHMENT]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               userName:
- *                 type: string
- *               mail:
- *                 type: string
- *               password:
- *                  type: string
- *     responses:
- *       201:
- *         description: Usuario creado exitosamente
- *         content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  message:
- *                    type: string
- *       400:
- *         description: Este mail ya se encuentra en uso
- *       500:
- *          description: Hubo un eror
- */
-router.post("/register", establishmentCreate);
+
 
 /**
  * @swagger
@@ -92,35 +54,7 @@ router.post("/register", establishmentCreate);
  */
 router.get("/", verifyToken, getEstablishments);
 
-/**
- * @swagger
- * /security/establishment/{idUser}:
- *   get:
- *     summary: Traer el ususario por id
- *     tags: [ESTABLISHMENT]
- *     responses:
- *       200:
- *         description: Devuleve el ususario buscado
- *         content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  message:
- *                    type: string
- *       404:
- *         description: No se econtraron establecimientos
- *         content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  message:
- *                    type: string
- *       500:
- *          description: Hubo un eror
- */
-router.get("/:idUser", verifyToken, getEstablishment);
+
 
 /**
  * @swagger
@@ -160,45 +94,21 @@ router.get("/:idUser", verifyToken, getEstablishment);
  */
 router.put("/:idUser", verifyToken, establishmentUpdate);
 
-/**
- * @swagger
- * /security/establishment/{idUser}:
- *  delete:
- *    summary: Dar de baja un establecimiento
- *    tags: [ESTABLISHMENT]
- *    responses:
- *      200:
- *        description: Se ha dado de baja un establecimiento exitosamente
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *      404:
- *        description: No se ha encotrado ningun establecimiento
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *      500:
- *        description: Hubo un error
- */
-router.delete("/:idUser", verifyToken, establishmentDelete);
+
+
+
+
+
 
 /**
  * @swagger
- * /security/establishment/changeState/{idUser}/{userStateName}:
+ * /security/establishment/validateEstablishment:
  *  post:
- *    summary: Cambiar estado de un establecimiento
+ *    summary: Validar la documentacion del establecimiento y modificar el estado en base a eso
  *    tags: [ESTABLISHMENT]
  *    responses:
  *      200:
- *        description: Se ha cambiado de estado un establecimiento exitosamente
+ *        description: 
  *        content:
  *          application/json:
  *            schema:
@@ -207,7 +117,7 @@ router.delete("/:idUser", verifyToken, establishmentDelete);
  *                message:
  *                  type: string
  *      404:
- *        description: No se encuentra el establecimiento al que se le va a cambiar el estado ni el ususario autor
+ *        description: 
  *        content:
  *          application/json:
  *            schema:
@@ -218,36 +128,6 @@ router.delete("/:idUser", verifyToken, establishmentDelete);
  *      500:
  *        description: Hubo un error
  */
-router.post("/changeState/:idUser/:userStateName", verifyToken, changeState);
-
-/**
- * @swagger
- * /security/establishment/changeRole/{idUser}/{roleName}:
- *  post:
- *    summary: Cambiar rol de un establecimiento
- *    tags: [ESTABLISHMENT]
- *    responses:
- *      200:
- *        description: Se ha cambiado de rol un establecimiento exitosamente
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *      404:
- *        description: No se encuentra el establecimiento al que se le va a cambiar el rol ni el ususario autor
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *      500:
- *        description: Hubo un error
- */
-router.post("/changeRole/:idUser/:roleName", verifyToken, changeRole);
+router.post("/validateEstablishment", verifyToken, postValidateEstablishment);
 
 export default router;

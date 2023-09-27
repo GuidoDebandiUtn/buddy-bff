@@ -1,4 +1,5 @@
 import { StateUser } from "../../models/StateUser.js";
+import { getStateForUser } from "./user.service.js";
 
 export async function createStateUser(idUser, idUserState, idUserAuthor) {
   let idAuthor;
@@ -9,20 +10,21 @@ export async function createStateUser(idUser, idUserState, idUserAuthor) {
     idAuthor = idUser;
   }
 
+  const lastState = await getStateForUser(idUser);
+  await dest
+
   try {
     const newStateUser = await StateUser.create(
       {
         idUserAuthor: idAuthor,
-        createdDate: new Date(),
-        updatedDate: new Date(),
         idUser,
         idUserState,
       },
       {
         fields: [
           "idUserAuthor",
-          "createdDate",
-          "updatedDate",
+          "createdAt",
+          "updatedAt",
           "idUser",
           "idUserState",
         ],
@@ -41,10 +43,10 @@ export async function changeStateUser(idUser, idUserState, idUserAuthor) {
       where: {
         idUser,
       },
-      order: [["createdDate", "DESC"]],
+      order: [["createdAt", "DESC"]],
     });
 
-    state.updatedDate = new Date();
+    state.active = false;
 
     await state.save();
 

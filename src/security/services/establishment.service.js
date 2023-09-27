@@ -5,37 +5,8 @@ import { sequelize } from "../../database/database.js";
 import { getRoleByName } from "./role.service.js";
 import { createUserRole } from "./userRole.service.js";
 import bcrypt from "bcryptjs";
+import { getStateForUser, getUserById } from "./user.service.js";
 
-export async function createEstablishment(data) {
-  const { mail, userName, password } = data;
-
-  try {
-    const newEstablishment = await User.create(
-      {
-        mail,
-        password,
-        userName,
-        createdDate: new Date(),
-        updatedDate: new Date(),
-      },
-      {
-        fields: ["mail", "password", "userName", "createdDate", "updatedDate"],
-      }
-    );
-
-    const userState = await getUserStateByName("EN REVISIÓN");
-
-    await createStateUser(newEstablishment.idUser, userState[0].idUserState);
-
-    const role = await getRoleByName("ESTABLECIMIENTO");
-
-    await createUserRole(newEstablishment.idUser, role[0].idRole);
-
-    return newEstablishment;
-  } catch (error) {
-    throw error;
-  }
-}
 
 export async function getAllEstablishments() {
   try {
@@ -43,13 +14,13 @@ export async function getAllEstablishments() {
       SELECT users.idUser, users.mail, users.userName
       FROM users
       INNER JOIN (
-        SELECT idUser, idUserState, MAX(createdDate) AS ultimaFecha
+        SELECT idUser, idUserState, MAX(createdAt) AS ultimaFecha
         FROM stateUsers 
         GROUP BY idUser
       ) AS ultimosEstados ON users.idUser = ultimosEstados.idUser
       INNER JOIN userStates ON ultimosEstados.idUserState = userStates.idUserState
       INNER JOIN (
-        SELECT idUser, idRole, MAX(createdDate) AS ultimaFecha
+        SELECT idUser, idRole, MAX(createdAt) AS ultimaFecha
         FROM userRoles 
         GROUP BY idUser
       ) AS ultimosRoles ON users.idUser = ultimosRoles.idUser
@@ -85,25 +56,42 @@ export async function getEstablishmentById(idUser) {
     throw error;
   }
 }
+export async function validateEstablishment(idUser, validateDto) {
 
-export async function getEstablishmentByMail(mail) {
-  try {
-    const query = `
-      SELECT idUser, mail, userName, validated
-      FROM users
-      WHERE mail = '${mail}'
-      `;
+    const userRevision = await getUserById(idUser);
 
-    const user = await sequelize.query(query, {
-      model: User,
-      mapToModel: true,
-    });
+    if(!userRevision){
+      throw new Error("Error obteniendo el usuario para validacion");
+    }
+      
+    const userState= await getStateForUser(userRevision.idUser);
 
-    return user;
-  } catch (error) {
-    throw error;
-  }
+    if(!userState){
+      throw new Error("Error obteniendo el estado del usuario");
+    }
+
+    if(!userState.userStateName == 'EN REVISION'){
+      throw new Error("El usuario no esta esperando revision");
+    }
+    
+
+    if(validateDto.approved){
+      const activeState = await getUserStateByName('ACTIVO');
+      //TODO invalidar stateUser anterior
+    }
+
+
+  //acualizar fecha de vencimiento de cada documento
+
+
+
+  //enviar mail al user con el resultado
 }
+
+
+
+
+
 
 export async function updateEstablishment(idUser, userData) {
   const { userName, password, phoneNumber, address } = userData;

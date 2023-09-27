@@ -7,11 +7,9 @@ export async function createUserState(data) {
     const userState = await UserState.create(
       {
         userStateName: userStateName.toUpperCase(),
-        createdDate: new Date(),
-        updatedDate: new Date(),
       },
       {
-        fields: ["userStateName", "active", "createdDate", "updatedDate"],
+        fields: ["userStateName", "active", "createdAt", "updatedAt"],
       }
     );
 

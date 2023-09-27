@@ -1,11 +1,11 @@
 import jwt from "jsonwebtoken";
 import {
+  getPermissionsForUser,
   getUserById,
   getUserByMail,
   updateUser,
   userValidate,
 } from "../services/user.service.js";
-import { findToken, insertToken } from "../services/token.service.js";
 import { resetPasswordMail } from "../../helpers/mailHelper.js";
 import bcrypt from "bcryptjs";
 
@@ -30,17 +30,21 @@ export async function login(req, res) {
     const passwordMatch = await bcrypt.compare(password, user[0].password);
 
     if (passwordMatch) {
-      // const permissions = await getUserPermissions()
+      const permissions = await getPermissionsForUser(user[0].idUser);
 
-      token = jwt.sign({ idUser: user[0].idUser }, process.env.TOKEN_SECRET, {
-        expiresIn: "7d",
-      });
+      token = jwt.sign(
+        { idUser: user[0].idUser, permissions },
+        process.env.TOKEN_SECRET,
+        {
+          expiresIn: "7d",
+        }
+      );
     } else {
       return res.status(400).json({
         message: "Contraseña incorrecta",
       });
     }
-
+    console.log("object");
     return res.status(200).header("auth-token", token).json({
       data: { token },
     });
@@ -54,6 +58,7 @@ export async function verifyToken(req, res, next) {
 
   try {
     if (!token) {
+      console.log("error en la obtencion del token en el header");
       return res.status(401).json({
         error: "Aún no ha iniciado sesión",
       });
@@ -63,11 +68,21 @@ export async function verifyToken(req, res, next) {
 
     if (!verified) {
       return res.status(400).json({
-        error: "Este token nos el valido",
+        error: "Token no es valido",
+      });
+    }
+
+    const permissions = await getPermissionsForUser(verified.idUser);
+
+    if (!permissions) {
+      return res.status(400).json({
+        error: "Error en la obtencion de los permisos del usuario",
       });
     }
 
     req.user = verified;
+    req.userPermissions = permissions;
+    console.log("usuario obtenido del token : ", verified);
 
     next();
   } catch (error) {

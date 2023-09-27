@@ -5,13 +5,20 @@ import { sequelize } from "../../database/database.js";
 import { getRoleByName } from "./role.service.js";
 import { createUserRole } from "./userRole.service.js";
 import bcrypt from "bcryptjs";
+import { UserState } from "../../models/UserState.js";
 
 export async function createUser(data) {
-  const { mail, password, userName, name, image } = data;
+  const { mail, password, userName, name, image, userType } = data;
+
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-
+    log.debug(
+      "Hased password for user %s, original: %s, hashed: %s",
+      userName,
+      password,
+      hashedPassword
+    );
     const newUser = await User.create(
       {
         mail,
@@ -29,15 +36,20 @@ export async function createUser(data) {
 
     await createStateUser(newUser.idUser, userState[0].idUserState);
 
-    const role = await getRoleByName("BÁSICO");
+    let role;
+    if (userType == "BASICO") {
+      role = await getRoleByName("BÁSICO");
+    } else {
+      role = await getRoleByName("ESTABLECIMIENTO");
+    }
 
-    console.log();
     role[0].idRole;
 
     await createUserRole(newUser.idUser, role[0].idRole);
 
     return newUser;
   } catch (error) {
+    console.error("Error creating user: %s, error: ", userName, error);
     throw error;
   }
 }
@@ -129,7 +141,7 @@ export async function getUserByMail(mail) {
   }
 }
 
-export async function getUserPermissions(idUser) {
+export async function getPermissionsForUser(idUser) {
   try {
     const query = `
       SELECT GROUP_CONCAT(p.tokenClaim SEPARATOR ' - ') AS permisos
@@ -143,6 +155,28 @@ export async function getUserPermissions(idUser) {
 
     const user = await sequelize.query(query, {
       model: User,
+      mapToModel: true,
+    });
+
+    return user;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getStateForUser(idUser) {
+  try {
+    const query = `
+      select state.*  from userstates as state 
+      join stateusers change_sate on change_sate.idUserState = state.idUserState
+      join users u on u.idUser = change_sate.idUser
+      where u.idUser= '${idUser}' and change_sate.active = 1 
+      order by change_sate.createdAt desc 
+      limit 1;`;
+
+    const user = await sequelize.query(query, {
+      model: UserState,
       mapToModel: true,
     });
 
@@ -163,11 +197,21 @@ export async function updateUser(idUser, data) {
     birthDate,
     address,
     image,
+    blockedReason,
+    blocked,
   } = data;
 
   try {
     const updates = {};
     const updateOptions = { where: { idUser } };
+
+    if (blocked) {
+      updates.blocked = blocked;
+    }
+
+    if (blockedReason) {
+      updates.blockedReason = blockedReason;
+    }
 
     if (userName) {
       updates.userName = userName;
@@ -211,6 +255,12 @@ export async function updateUser(idUser, data) {
     updates.updatedDate = new Date();
 
     await User.update(updates, updateOptions);
+    console.debug(
+      "usuario: ",
+      idUser,
+      "modificado correctamente con : ",
+      updates
+    );
 
     return;
   } catch (error) {

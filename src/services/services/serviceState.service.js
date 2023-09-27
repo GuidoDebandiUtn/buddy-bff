@@ -7,11 +7,9 @@ export async function createServiceState(data) {
     const serviceState = await ServiceState.create(
       {
         serviceStateName: serviceStateName.toUpperCase(),
-        createdDate: new Date(),
-        updatedDate: new Date(),
       },
       {
-        fields: ["serviceStateName", "active", "createdDate", "updatedDate"],
+        fields: ["serviceStateName", "active", "createdAt", "updatedAt"],
       }
     );
 

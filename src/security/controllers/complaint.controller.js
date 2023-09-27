@@ -1,10 +1,10 @@
 import { getIdToken } from "../../helpers/authHelper.js";
-import { createComplaint, deleteComplaint, getAllComplaints, getComplaintById } from "../services/complaint.service.js";
+import { aproveComplaint, createComplaint, deleteComplaint, getAllComplaints, getComplaintById } from "../services/complaint.service.js";
 
 
 
 export async function postComplaint(req, res) {
-  const idComplainant = await getIdToken(req.header("auth-token"));
+  const idComplainant = req.user.idUser;
   const { category } = req.body;
   const validCategories = ['SEARCH', 'ADOPTION', 'SERVICE'];
 
@@ -36,7 +36,7 @@ export async function getComplaintsAll(req, res) {
     const complaints = await getAllComplaints(page, size);
 
     if (!complaints[0]) {
-      return res.status(404).json({ message: "No existen denuncias activas" });
+      return res.status(204).json({ message: "No existen denuncias activas" });
     }
 
     return res.status(200).send(JSON.stringify(complaints,(key, value) => {
@@ -78,7 +78,8 @@ export async function complaintDelete(req, res) {
 
 
 export async function complaintExecute(req, res) {
-  const { idComplaint } = req.params;
+  const { idComplaint,validate } = req.params;
+  let validateDto = {};
 
   try {
     const complaint = await getComplaintById(idComplaint);
@@ -89,11 +90,22 @@ export async function complaintExecute(req, res) {
         .json({ message: "No se ha encontrado la denuncia que se quiere eliminar" });
     }
 
-    await deleteComplaint(idComplaint);
-
-    return res
+    if(validate){
+      validateDto.complaint = complaint[0].dataValues;
+      validateDto.author = req.user;
+      await aproveComplaint(validateDto);
+      
+      return res
+      .status(200)
+      .json({ message: "Se ha ejecutado correctamente la denuncia" });
+    }else{
+      await deleteComplaint(complaint.idComplaint);
+      return res
       .status(200)
       .json({ message: "Se ha dado de baja correctamente la denuncia" });
+    }
+
+
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

@@ -1,22 +1,65 @@
-import { getIdToken } from "../../helpers/authHelper";
+import { getIdToken } from "../../helpers/authHelper.js";
 import {
   createService,
+  deleteService,
   getAllServices,
   getServiceById,
+  
+  getServicesByIdUser,
+  retriveServiceTypesDB,
   updateService,
 } from "../services/service.service.js";
-import { getServiceStateByName } from "../services/serviceState.service";
-import { changeStateService } from "../services/stateService.service";
+import { getServiceStateByName } from "../services/serviceState.service.js";
 
-export async function serciveCreate(req, res) {
+export async function serviceCreate(req, res) {
+  const idUser = req.user.idUser;
+  const {idServiceType, petTypes} = req.body;
+
+  const errorMessage = !idServiceType && !petTypes? "Error en el tipo del Servicio y en los tipos de mascotas enviados":
+     !idServiceType? "Error en el tipo del Servicio enviado" :
+      !petTypes ? "Error en los tipos de mascotas del servicio":
+       null;
+
+  if(errorMessage){
+    return res
+    .status(400)
+    .json({ message: "Error en el tipo del Servicio enviado", code: 400});
+  }
+
+
   try {
-    const idUser = await getIdToken(req.header("auth-token"));
-
-    const service = await createService(idUser, req.body);
+   const service = await createService(idUser, req.body);
 
     return res
       .status(201)
-      .json({ message: "Se creó correctamente el servicio" });
+      .json({ message: "Se creó correctamente el servicio", service: service });
+    } catch (error) {
+      if(error.code){
+        return res.status(error.code).json({
+          message: error.message,
+        });
+      }
+      return res.status(500).json({
+        message: error.message,
+      });
+    }
+}
+
+export async function getServicesByUser(req, res) {
+  const idUser = req.user.idUser;
+
+  try {
+    const services = await getServicesByIdUser(idUser);
+
+    console.debug("Se han obtenido los siguientes servicios para el user %s, ",idUser,services);
+
+    if (!services[0]) {
+      return res
+        .status(204)
+        .json({ message: "No existe ningún servicio creado por este usuario" });
+    }
+
+    return res.status(200).json(services);
   } catch (error) {
     return res.status(500).json({
       message: error.message,
@@ -28,8 +71,8 @@ export async function getServices(req, res) {
   try {
     const services = await getAllServices();
 
-    if (services[0]) {
-      return res.status(404).json({ message: "No existe ningún servicio" });
+    if (!services[0]) {
+      return res.status(204).json({ message: "No existe ningún servicio" });
     }
 
     return res.status(200).json(services);
@@ -40,25 +83,80 @@ export async function getServices(req, res) {
   }
 }
 
-export async function getServicesByIdUser(req, res) {
+
+export async function serviceUpdate(req, res) {
+  const { idService } = req.params;
+
   try {
-    const idUser = await getIdToken(req.header("auth-token"));
+    const services = await getServiceById(idService);
 
-    const services = await getServicesByIdUser(idUser);
+    if (!services[0]) {
+      return res
+        .status(204)
+        .json({ message: "Error en la obtencion del servicio a modificar" });
+    }
 
-    if (services[0]) {
+
+    await updateService(services[0], req.body);
+
+    return res
+      .status(200)
+      .json({ message: "Se ha actualizado correctamente el servicio" });
+  } catch (error) {
+    if(error.code){
+      return res.status(error.code).json({
+        message: error.message,
+      });
+    }
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function serviceDelete(req, res) {
+  const idAuthor = req.user.idUser;
+  const { idService } = req.params;
+
+  try {
+    const services = await getServiceById(idService);
+
+    if (!services[0]) {
       return res
         .status(404)
-        .json({ message: "No existe ningún servicio creado por este usuario" });
+        .json({ message: "No existe ningún servicio con ese id" });
     }
 
-    return res.status(200).json(services);
+    await deleteService(services[0],idAuthor);
+
+    return res
+      .status(200)
+      .json({ message: "Se ha dado de baja correctamente el servicio" });
   } catch (error) {
     return res.status(500).json({
       message: error.message,
     });
   }
 }
+
+
+export async function getServiceTypes(req, res) {
+  try {
+    const types = await retriveServiceTypesDB();
+
+    if (!types[0]) {
+      return res.status(204).json({ message: "No existe ningún tipo" });
+    }
+
+    return res.status(200).json(types);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+
 
 export async function getService(req, res) {
   const { idService } = req.params;
@@ -80,88 +178,4 @@ export async function getService(req, res) {
   }
 }
 
-export async function serviceUpdate(req, res) {
-  const { idService } = req.params;
 
-  try {
-    const services = await getServiceById(idService);
-
-    if (services[0]) {
-      return res
-        .status(404)
-        .json({ message: "No existe ningún servicio con ese id" });
-    }
-
-    await updateService(idService, req.body);
-
-    return res
-      .status(200)
-      .json({ message: "Se ha actualizado correctamente el servicio" });
-  } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
-  }
-}
-
-export async function serviceDelete(req, res) {
-  const { idService } = req.params;
-
-  try {
-    const services = await getServiceById(idService);
-
-    if (services[0]) {
-      return res
-        .status(404)
-        .json({ message: "No existe ningún servicio con ese id" });
-    }
-
-    const serviceState = await getServiceStateByName("INACTIVO");
-
-    const idUser = await getIdToken(req.header("auth-token"));
-
-    await changeStateService(idService, serviceState[0].idServiceState, idUser);
-
-    return res
-      .status(200)
-      .json({ message: "Se ha dado de baja correctamente el servicio" });
-  } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
-  }
-}
-
-export async function changeState(req, res) {
-  const { idService, userStateName } = req.params;
-
-  try {
-    const idUserAuthor = await getIdToken(req.header("auth-token"));
-
-    const service = await getServiceById(idService);
-
-    if (!service[0]) {
-      return res.status(404).json({
-        message: "No existe ningun servicio con ese id",
-      });
-    }
-
-    const idUser = await getUserById(idUserAuthor);
-
-    if (!idUser[0]) {
-      return res.status(404).json({
-        message: "No existe ningun servicio con ese id",
-      });
-    }
-
-    const serviceState = await getServiceStateByName(userStateName);
-
-    await changeStateService(idService, serviceState[0].idUserState, idUser);
-
-    return res
-      .status(200)
-      .json({ message: "Se ha cambiado el estado del servicio" });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-}

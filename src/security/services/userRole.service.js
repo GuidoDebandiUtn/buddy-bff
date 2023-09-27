@@ -13,16 +13,14 @@ export async function createUserRole(idUser, idRole, idUserAuthor) {
     const newUserRole = await UserRole.create(
       {
         idUserAuthor: idAuthor,
-        createdDate: new Date(),
-        updatedDate: new Date(),
         idUser,
         idRole,
       },
       {
         fields: [
           "idUserAuthor",
-          "createdDate",
-          "updatedDate",
+          "createdAt",
+          "updatedAt",
           "idUser",
           "idRole",
         ],
@@ -41,7 +39,7 @@ export async function changeUserRole(idUser, idRole, idUserAuthor) {
       where: {
         idUser,
       },
-      order: [["createdDate", "DESC"]],
+      order: [["createdAt", "DESC"]],
     });
 
     userRole.updatedDate = new Date();

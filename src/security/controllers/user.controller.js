@@ -10,7 +10,7 @@ import {
   getUserByMail,
   updateUser,
   getUserPassword,
-  getUserPermissions,
+  getPermissionsForUser,
 } from "../services/user.service.js";
 import { changeUserRole } from "../services/userRole.service.js";
 import { getUserStateByName } from "../services/userState.service.js";
@@ -203,7 +203,7 @@ export async function changeRole(req, res) {
 export async function userPermission(req, res) {
   try {
     const id = await getIdToken(req.header("auth-token"));
-    const permissions = await getUserPermissions(id);
+    const permissions = await getPermissionsForUser(id);
 
     if (!permissions[0]) {
       return res.status(404).json({
