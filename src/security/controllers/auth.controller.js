@@ -30,7 +30,7 @@ export async function login(req, res) {
     const passwordMatch = await bcrypt.compare(password, user[0].password);
 
     if (passwordMatch) {
-      const permissions = await getUserPermissions(user[0].idUser);
+      const permissions = await getPermissionsForUser(user[0].idUser);
 
       token = jwt.sign(
         { idUser: user[0].idUser, permissions },
@@ -44,7 +44,7 @@ export async function login(req, res) {
         message: "Contraseña incorrecta",
       });
     }
-
+    console.log("object");
     return res.status(200).header("auth-token", token).json({
       data: { token },
     });

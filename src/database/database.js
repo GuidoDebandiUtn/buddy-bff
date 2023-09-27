@@ -19,6 +19,6 @@ export const sequelize = new Sequelize(
   {
     host: "us-cdbr-east-06.cleardb.net",
     dialect: "mysql",
-    timezone: "America/Argentina/Buenos_Aires",
+    timezone: "-03:00",
   }
 );

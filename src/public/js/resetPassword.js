@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const response = await fetch(
-        `https://b49c-181-91-230-36.ngrok-free.app/security/auth/changePassword/${idUser}`,
+        `https://9223-181-91-230-36.ngrok-free.app/security/auth/changePassword/${idUser}`,
         {
           method: "PUT",
           headers: {

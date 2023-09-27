@@ -12,7 +12,12 @@ export async function createUser(data) {
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    log.debug("Hased password for user %s, original: %s, hashed: %s",userName,password,hashedPassword);
+    log.debug(
+      "Hased password for user %s, original: %s, hashed: %s",
+      userName,
+      password,
+      hashedPassword
+    );
     const newUser = await User.create(
       {
         mail,
@@ -28,22 +33,20 @@ export async function createUser(data) {
 
     await createStateUser(newUser.idUser, userState[0].idUserState);
 
-
     let role;
-    if(userType == 'BASICO'){
+    if (userType == "BASICO") {
       role = await getRoleByName("BÁSICO");
-    }else{
+    } else {
       role = await getRoleByName("ESTABLECIMIENTO");
     }
 
-    
     role[0].idRole;
 
     await createUserRole(newUser.idUser, role[0].idRole);
 
     return newUser;
   } catch (error) {
-    console.error("Error creating user: %s, error: ",userName,error);
+    console.error("Error creating user: %s, error: ", userName, error);
     throw error;
   }
 }
@@ -154,6 +157,7 @@ export async function getPermissionsForUser(idUser) {
 
     return user;
   } catch (error) {
+    console.log(error);
     throw error;
   }
 }
@@ -166,7 +170,7 @@ export async function getStateForUser(idUser) {
       join users u on u.idUser = change_sate.idUser
       where u.idUser= '${idUser}' and change_sate.active = 1 
       order by change_sate.createdAt desc 
-      limit 1;`;   
+      limit 1;`;
 
     const user = await sequelize.query(query, {
       model: UserState,
@@ -179,7 +183,6 @@ export async function getStateForUser(idUser) {
   }
 }
 
-
 export async function updateUser(idUser, data) {
   const {
     userName,
@@ -191,7 +194,7 @@ export async function updateUser(idUser, data) {
     birthDate,
     address,
     blockedReason,
-    blocked
+    blocked,
   } = data;
 
   try {
@@ -242,7 +245,12 @@ export async function updateUser(idUser, data) {
     updates.updatedDate = new Date();
 
     await User.update(updates, updateOptions);
-    console.debug("usuario: ",idUser, "modificado correctamente con : ",updates);
+    console.debug(
+      "usuario: ",
+      idUser,
+      "modificado correctamente con : ",
+      updates
+    );
 
     return;
   } catch (error) {
