@@ -80,7 +80,8 @@ export async function getServicesByIdUser(idUser) {
       SELECT
         services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs, services.idService,
         serviceStates.serviceStateName,serviceStates.idServiceState,
-        GROUP_CONCAT(petTypes.idPetType) AS idPetTypes, GROUP_CONCAT(petTypes.petTypeName) AS petTypesName
+        GROUP_CONCAT(petTypes.idPetType) AS idPetTypes, GROUP_CONCAT(petTypes.petTypeName) AS petTypesName,
+        servicetypes.idServiceType,servicetypes.serviceTypeName 
       FROM services
       INNER JOIN (
         SELECT idService,idServiceState, MAX(createdAt) AS ultimaFecha  FROM stateServices
@@ -89,6 +90,7 @@ export async function getServicesByIdUser(idUser) {
       INNER JOIN serviceStates ON  ultimosEstados.idServiceState = serviceStates.idServiceState
       INNER JOIN servicepets   ON services.idService = ServicePets.idService
       INNER JOIN PetTypes ON ServicePets.idPetType = PetTypes.idPetType
+      INNER JOIN servicetypes ON servicetypes.idServiceType = services.idServiceType
       WHERE serviceStates.serviceStateName = 'ACTIVO' and services.idUser = '${idUser}'
       GROUP BY services.serviceTitle,services.serviceDescription,services.address,services.openTime,services.closeTime, services.open24hs
     `;
@@ -126,7 +128,8 @@ export async function getAllServices() {
       SELECT
         services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs, services.idService,
         serviceStates.serviceStateName,serviceStates.idServiceState,
-        GROUP_CONCAT(petTypes.idPetType) AS idPetTypes, GROUP_CONCAT(petTypes.petTypeName) AS petTypesName
+        GROUP_CONCAT(petTypes.idPetType) AS idPetTypes, GROUP_CONCAT(petTypes.petTypeName) AS petTypesName,
+        servicetypes.idServiceType,servicetypes.serviceTypeName 
       FROM services
       INNER JOIN (
         SELECT idService,idServiceState, MAX(createdAt) AS ultimaFecha  FROM stateServices
@@ -135,6 +138,7 @@ export async function getAllServices() {
       INNER JOIN serviceStates ON  ultimosEstados.idServiceState = serviceStates.idServiceState
       INNER JOIN servicepets   ON services.idService = ServicePets.idService
       INNER JOIN PetTypes ON ServicePets.idPetType = PetTypes.idPetType
+      INNER JOIN servicetypes ON servicetypes.idServiceType = services.idServiceType
       WHERE  serviceStates.serviceStateName = 'ACTIVO'
       GROUP BY services.serviceTitle,services.serviceDescription,services.address,services.openTime,services.closeTime, services.open24hs
     `;
@@ -213,7 +217,8 @@ export async function getServiceById(idService) {
       SELECT
         services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs, services.idService,
         serviceStates.serviceStateName,serviceStates.idServiceState,
-        GROUP_CONCAT(petTypes.idPetType) AS idPetTypes, GROUP_CONCAT(petTypes.petTypeName) AS petTypesName
+        GROUP_CONCAT(petTypes.idPetType) AS idPetTypes, GROUP_CONCAT(petTypes.petTypeName) AS petTypesName,
+        servicetypes.idServiceType,servicetypes.serviceTypeName 
       FROM services
       INNER JOIN (
           SELECT idService,idServiceState, MAX(createdAt) AS ultimaFecha  FROM stateServices
@@ -222,6 +227,7 @@ export async function getServiceById(idService) {
       INNER JOIN serviceStates ON  ultimosEstados.idServiceState = serviceStates.idServiceState
       INNER JOIN servicepets   ON services.idService = ServicePets.idService
       INNER JOIN PetTypes ON ServicePets.idPetType = PetTypes.idPetType
+      INNER JOIN servicetypes ON servicetypes.idServiceType = services.idServiceType
       WHERE  serviceStates.serviceStateName = 'ACTIVO' and services.idService = '${idService}'
       GROUP BY services.serviceTitle,services.serviceDescription,services.address,services.openTime,services.closeTime, services.open24hs
     `;
