@@ -18,7 +18,6 @@ export async function createUser(data) {
         mail,
         password: hashedPassword,
         userName,
-        name,
       },
       {
         fields: ["mail", "password", "userName"],

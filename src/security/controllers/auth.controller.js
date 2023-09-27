@@ -3,6 +3,7 @@ import {
   getPermissionsForUser,
   getUserById,
   getUserByMail,
+  getUserPermissions,
   updateUser,
   userValidate,
 } from "../services/user.service.js";
@@ -30,10 +31,15 @@ export async function login(req, res) {
     const passwordMatch = await bcrypt.compare(password, user[0].password);
 
     if (passwordMatch) {
+      const permissions = await getUserPermissions(user[0].idUser);
 
-      token = jwt.sign({ idUser: user[0].idUser }, process.env.TOKEN_SECRET, {
-        expiresIn: "7d",
-      });
+      token = jwt.sign(
+        { idUser: user[0].idUser, permissions },
+        process.env.TOKEN_SECRET,
+        {
+          expiresIn: "7d",
+        }
+      );
     } else {
       return res.status(400).json({
         message: "Contraseña incorrecta",

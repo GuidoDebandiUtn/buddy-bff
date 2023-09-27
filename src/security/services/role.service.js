@@ -24,7 +24,8 @@ export async function createRole(data) {
 export async function getAllRoles() {
   try {
     const query = `
-        SELECT roles.idRole, roles.roleName, GROUP_CONCAT(permission.tokenClaim SEPARATOR ' - ')
+        SELECT roles.idRole, roles.roleName, GROUP_CONCAT(permissions.tokenClaim SEPARATOR ' - ') AS permisos
+        FROM roles
         LEFT JOIN rolePermissions ON roles.idRole = rolePermissions.idRole
         LEFT JOIN permissions ON rolePermissions.idPermission = permissions.idPermission
         WHERE roles.active = true
