@@ -7,7 +7,7 @@ import { createUserRole } from "./userRole.service.js";
 import bcrypt from "bcryptjs";
 
 export async function createUser(data) {
-  const { mail, password, userName, name } = data;
+  const { mail, password, userName, name, image } = data;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -18,9 +18,10 @@ export async function createUser(data) {
         password: hashedPassword,
         userName,
         name,
+        image,
       },
       {
-        fields: ["mail", "password", "userName"],
+        fields: ["mail", "password", "userName","image"],
       }
     );
 
@@ -44,7 +45,7 @@ export async function createUser(data) {
 export async function getAllUsers() {
   try {
     const query = `
-    SELECT users.mail, users.userName
+    SELECT users.mail, users.userName, user.image
     FROM users
     INNER JOIN (
       SELECT idUser, idUserState, MAX(createdAt) AS ultimaFecha
@@ -75,7 +76,7 @@ export async function getAllUsers() {
 export async function getUserById(idUser) {
   try {
     const query = `
-    SELECT idUser, mail, userName,name,lastName
+    SELECT idUser, mail, userName,name,lastName, image
     FROM users
     WHERE idUser = '${idUser}'
     `;
@@ -112,7 +113,7 @@ export async function getUserPassword(idUser) {
 export async function getUserByMail(mail) {
   try {
     const query = `
-      SELECT idUser, mail, validated, password
+      SELECT idUser, mail, validated, password, image
       FROM users
       WHERE mail = '${mail}'
       `;
@@ -161,6 +162,7 @@ export async function updateUser(idUser, data) {
     dni,
     birthDate,
     address,
+    image,
   } = data;
 
   try {
@@ -199,6 +201,12 @@ export async function updateUser(idUser, data) {
     if (lastName) {
       updates.lastName = lastName;
     }
+
+
+    if (image) {
+      updates.image = image;
+    }
+   
 
     updates.updatedDate = new Date();
 
