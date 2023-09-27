@@ -3,7 +3,6 @@ import {
   getPermissionsForUser,
   getUserById,
   getUserByMail,
-  getUserPermissions,
   updateUser,
   userValidate,
 } from "../services/user.service.js";
@@ -66,7 +65,7 @@ export async function verifyToken(req, res, next) {
     }
 
     const verified = jwt.verify(token, process.env.TOKEN_SECRET);
-    
+
     if (!verified) {
       return res.status(400).json({
         error: "Token no es valido",
@@ -75,17 +74,15 @@ export async function verifyToken(req, res, next) {
 
     const permissions = await getPermissionsForUser(verified.idUser);
 
-    if(!permissions){
+    if (!permissions) {
       return res.status(400).json({
         error: "Error en la obtencion de los permisos del usuario",
       });
     }
-    
 
     req.user = verified;
-    req.userPermissions= permissions;
-    console.log("usuario obtenido del token : ",verified)
-
+    req.userPermissions = permissions;
+    console.log("usuario obtenido del token : ", verified);
 
     next();
   } catch (error) {
