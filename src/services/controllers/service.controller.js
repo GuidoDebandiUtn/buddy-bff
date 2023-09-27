@@ -6,6 +6,7 @@ import {
   getServiceById,
   
   getServicesByIdUser,
+  retriveServiceTypesDB,
   updateService,
 } from "../services/service.service.js";
 import { getServiceStateByName } from "../services/serviceState.service.js";
@@ -138,6 +139,22 @@ export async function serviceDelete(req, res) {
   }
 }
 
+
+export async function getServiceTypes(req, res) {
+  try {
+    const types = await retriveServiceTypesDB();
+
+    if (!types[0]) {
+      return res.status(204).json({ message: "No existe ningún tipo" });
+    }
+
+    return res.status(200).json(types);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+}
 
 
 

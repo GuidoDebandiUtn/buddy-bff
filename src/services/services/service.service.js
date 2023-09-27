@@ -1,4 +1,5 @@
 import { Service } from "../../models/Service.js";
+import { ServiceType } from "../../models/ServiceType.js";
 import { ServicePet } from "../../models/ServicePet.js";
 import { sequelize } from "../../database/database.js";
 import { getServiceStateByName } from "./serviceState.service.js";
@@ -369,3 +370,15 @@ export async function calculateAverageRating(service) {
     throw err;
   }
 }
+
+
+export async function retriveServiceTypesDB() {
+  try {
+    const types = await ServiceType.findAll({where:{ active:true}});
+
+    return types;
+  } catch (err) {
+    console.error('Error al obtener los tipos de servicio: ', err);
+    throw err;
+  }
+};

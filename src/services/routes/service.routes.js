@@ -1,6 +1,6 @@
 import { verifyToken } from "../../security/controllers/auth.controller.js";
 import { Router } from "express";
-import { getServices, getServicesByUser, serviceCreate, serviceDelete, serviceUpdate } from "../controllers/service.controller.js";
+import { getServices, getServicesByUser, serviceCreate, serviceDelete, serviceUpdate,getServiceTypes } from "../controllers/service.controller.js";
 
 const router = Router();
 
@@ -230,6 +230,32 @@ router.put("/:idService",verifyToken, serviceUpdate);
  *          description: Hubo un error interno en sistema
  */
 router.delete("/:idService",verifyToken, serviceDelete);
+
+
+
+
+/**
+ * @swagger
+ * /services/service/types:
+ *   get:
+ *     summary: Obtiene los tipos existentes para un servicio
+ *     tags: [SERVICES]
+ *     responses:
+ *       200:
+ *         description: Tipos recuperados exitosamente.
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *       204:
+ *          description: No existen tipos activos.
+ *       500:
+ *          description: Hubo un error interno
+ */
+router.get("/types",verifyToken, getServiceTypes);
 
 
 export default router;
