@@ -8,6 +8,7 @@ import {
   userCreate,
   changeRole,
   userPermission,
+  getUserAll,
 } from "../controllers/user.controller.js";
 import { verifyToken } from "../controllers/auth.controller.js";
 
@@ -126,6 +127,40 @@ router.get("/all", verifyToken, getUsers);
  *          description: Hubo un eror
  */
 router.get("/", verifyToken, getUser);
+
+/**
+ * @swagger
+ * /security/user/:
+ *   get:
+ *     summary: Traer el ususario por id
+ *     tags: [USER]
+ *     header:
+ *       auth-token:
+ *         required: true
+ *         description: token conteniendo al usuario a encontrar
+ *     responses:
+ *       200:
+ *         description: Devuleve el ususario buscado
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *       404:
+ *         description: No se econtraron usuarios
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *       500:
+ *          description: Hubo un eror
+ */
+router.get("/every", verifyToken, getUserAll);
 
 /**
  * @swagger

@@ -15,7 +15,6 @@ const router = Router();
  *   description: Endpoints relacionados con los establecimientos
  */
 
-
 /**
  * @swagger
  * /security/establishment/:
@@ -53,8 +52,6 @@ const router = Router();
  *        description: Hubo un error
  */
 router.get("/", verifyToken, getEstablishments);
-
-
 
 /**
  * @swagger
@@ -94,12 +91,6 @@ router.get("/", verifyToken, getEstablishments);
  */
 router.put("/:idUser", verifyToken, establishmentUpdate);
 
-
-
-
-
-
-
 /**
  * @swagger
  * /security/establishment/validateEstablishment:
@@ -108,7 +99,7 @@ router.put("/:idUser", verifyToken, establishmentUpdate);
  *    tags: [ESTABLISHMENT]
  *    responses:
  *      200:
- *        description: 
+ *        description:
  *        content:
  *          application/json:
  *            schema:
@@ -117,7 +108,7 @@ router.put("/:idUser", verifyToken, establishmentUpdate);
  *                message:
  *                  type: string
  *      404:
- *        description: 
+ *        description:
  *        content:
  *          application/json:
  *            schema:
