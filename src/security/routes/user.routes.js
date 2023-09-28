@@ -130,7 +130,7 @@ router.get("/", verifyToken, getUser);
 
 /**
  * @swagger
- * /security/user/:
+ * /security/user/every:
  *   get:
  *     summary: Traer el ususario por id
  *     tags: [USER]
