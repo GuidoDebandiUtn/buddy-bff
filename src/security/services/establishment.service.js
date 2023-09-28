@@ -1,28 +1,24 @@
 import { User } from "../../models/User.js";
 import { getUserStateByName } from "./userState.service.js";
-import { createStateUser } from "./stateUser.service.js";
 import { sequelize } from "../../database/database.js";
-import { getRoleByName } from "./role.service.js";
-import { createUserRole } from "./userRole.service.js";
 import bcrypt from "bcryptjs";
 import { getStateForUser, getUserById } from "./user.service.js";
-
 
 export async function getAllEstablishments() {
   try {
     const query = `
-      SELECT users.idUser, users.mail, users.userName
+      SELECT users.idUser, users.mail, users.userName, userStates.userStateName, roles.roleName
       FROM users
       INNER JOIN (
-        SELECT idUser, idUserState, MAX(createdAt) AS ultimaFecha
-        FROM stateUsers 
-        GROUP BY idUser
+        SELECT idUser, idUserState
+        FROM stateUsers
+        where active = true
       ) AS ultimosEstados ON users.idUser = ultimosEstados.idUser
       INNER JOIN userStates ON ultimosEstados.idUserState = userStates.idUserState
       INNER JOIN (
-        SELECT idUser, idRole, MAX(createdAt) AS ultimaFecha
+        SELECT idUser, idRole
         FROM userRoles 
-        GROUP BY idUser
+        where active = true
       ) AS ultimosRoles ON users.idUser = ultimosRoles.idUser
       INNER JOIN roles ON ultimosRoles.idRole = roles.idRole
       WHERE userStates.userStateName IN ('ACTIVO','EN REVISIÓN') and roles.roleName = "ESTABLECIMIENTO"
@@ -57,41 +53,31 @@ export async function getEstablishmentById(idUser) {
   }
 }
 export async function validateEstablishment(idUser, validateDto) {
+  const userRevision = await getUserById(idUser);
 
-    const userRevision = await getUserById(idUser);
+  if (!userRevision) {
+    throw new Error("Error obteniendo el usuario para validacion");
+  }
 
-    if(!userRevision){
-      throw new Error("Error obteniendo el usuario para validacion");
-    }
-      
-    const userState= await getStateForUser(userRevision.idUser);
+  const userState = await getStateForUser(userRevision.idUser);
 
-    if(!userState){
-      throw new Error("Error obteniendo el estado del usuario");
-    }
+  if (!userState) {
+    throw new Error("Error obteniendo el estado del usuario");
+  }
 
-    if(!userState.userStateName == 'EN REVISION'){
-      throw new Error("El usuario no esta esperando revision");
-    }
-    
+  if (!userState.userStateName == "EN REVISION") {
+    throw new Error("El usuario no esta esperando revision");
+  }
 
-    if(validateDto.approved){
-      const activeState = await getUserStateByName('ACTIVO');
-      //TODO invalidar stateUser anterior
-    }
-
+  if (validateDto.approved) {
+    const activeState = await getUserStateByName("ACTIVO");
+    //TODO invalidar stateUser anterior
+  }
 
   //acualizar fecha de vencimiento de cada documento
 
-
-
   //enviar mail al user con el resultado
 }
-
-
-
-
-
 
 export async function updateEstablishment(idUser, userData) {
   const { userName, password, phoneNumber, address } = userData;

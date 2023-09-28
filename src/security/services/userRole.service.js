@@ -17,13 +17,7 @@ export async function createUserRole(idUser, idRole, idUserAuthor) {
         idRole,
       },
       {
-        fields: [
-          "idUserAuthor",
-          "createdAt",
-          "updatedAt",
-          "idUser",
-          "idRole",
-        ],
+        fields: ["idUserAuthor", "createdAt", "updatedAt", "idUser", "idRole"],
       }
     );
 
@@ -42,7 +36,7 @@ export async function changeUserRole(idUser, idRole, idUserAuthor) {
       order: [["createdAt", "DESC"]],
     });
 
-    userRole.updatedDate = new Date();
+    userRole.active = false;
 
     await userRole.save();
 

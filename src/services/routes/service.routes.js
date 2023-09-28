@@ -1,6 +1,14 @@
 import { verifyToken } from "../../security/controllers/auth.controller.js";
 import { Router } from "express";
-import { getServices, getServicesByUser, serviceCreate, serviceDelete, serviceUpdate,getServiceTypes } from "../controllers/service.controller.js";
+import {
+  getServices,
+  getServicesByUser,
+  serviceCreate,
+  serviceDelete,
+  serviceUpdate,
+  getServiceTypes,
+  getEveryServices,
+} from "../controllers/service.controller.js";
 
 const router = Router();
 
@@ -10,8 +18,6 @@ const router = Router();
  *   name: SERVICES
  *   description: ABM servicios
  */
-
-
 
 /**
  * @swagger
@@ -76,9 +82,7 @@ const router = Router();
  *       500:
  *          description: Hubo un error
  */
-router.post("/",verifyToken, serviceCreate);
-
-
+router.post("/", verifyToken, serviceCreate);
 
 /**
  * @swagger
@@ -101,7 +105,7 @@ router.post("/",verifyToken, serviceCreate);
  *       500:
  *          description: Hubo un error
  */
-router.get("/ByUser",verifyToken, getServicesByUser);
+router.get("/ByUser", verifyToken, getServicesByUser);
 
 /**
  * @swagger
@@ -124,7 +128,30 @@ router.get("/ByUser",verifyToken, getServicesByUser);
  *       500:
  *          description: Hubo un error
  */
-router.get("/",verifyToken, getServices);
+router.get("/", verifyToken, getServices);
+
+/**
+ * @swagger
+ * /services/service/:
+ *   get:
+ *     summary: Obtiene todos los servicios activos
+ *     tags: [SERVICES]
+ *     responses:
+ *       200:
+ *         description: Servicios recuperados exitosamente.
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *       204:
+ *          description: No existen servicios activos.
+ *       500:
+ *          description: Hubo un error
+ */
+router.get("/every", verifyToken, getEveryServices);
 
 /**
  * @swagger
@@ -132,7 +159,7 @@ router.get("/",verifyToken, getServices);
  *   put:
  *     summary: Modifica un servicio
  *     tags: [SERVICES]
- * 
+ *
  *     parameters:
  *       - in: query
  *         name: idService
@@ -196,8 +223,7 @@ router.get("/",verifyToken, getServices);
  *       500:
  *          description: Hubo un error
  */
-router.put("/:idService",verifyToken, serviceUpdate);
-
+router.put("/:idService", verifyToken, serviceUpdate);
 
 /**
  * @swagger
@@ -205,7 +231,7 @@ router.put("/:idService",verifyToken, serviceUpdate);
  *   delete:
  *     summary: Elimina un servicio
  *     tags: [SERVICES]
- * 
+ *
  *     parameters:
  *       - in: query
  *         name: idService
@@ -229,10 +255,7 @@ router.put("/:idService",verifyToken, serviceUpdate);
  *       500:
  *          description: Hubo un error interno en sistema
  */
-router.delete("/:idService",verifyToken, serviceDelete);
-
-
-
+router.delete("/:idService", verifyToken, serviceDelete);
 
 /**
  * @swagger
@@ -255,7 +278,6 @@ router.delete("/:idService",verifyToken, serviceDelete);
  *       500:
  *          description: Hubo un error interno
  */
-router.get("/types",verifyToken, getServiceTypes);
-
+router.get("/types", verifyToken, getServiceTypes);
 
 export default router;

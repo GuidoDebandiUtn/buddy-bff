@@ -54,18 +54,18 @@ export async function createUser(data) {
 export async function getAllUsers() {
   try {
     const query = `
-    SELECT users.idUser, users.mail, users.userName, userStates.userStateName
+    SELECT users.idUser, users.mail, users.userName, userStates.userStateName, roles.roleName
     FROM users
     INNER JOIN (
-      SELECT idUser, idUserState, MAX(createdAt) AS ultimaFecha
-      FROM stateUsers 
-      GROUP BY idUser
+      SELECT idUser, idUserState
+      FROM stateUsers
+      where active = true
     ) AS ultimosEstados ON users.idUser = ultimosEstados.idUser
     INNER JOIN userStates ON ultimosEstados.idUserState = userStates.idUserState
     INNER JOIN (
-      SELECT idUser, idRole, MAX(createdAt) AS ultimaFecha
+      SELECT idUser, idRole
       FROM userRoles 
-      GROUP BY idUser
+      where active = true
     ) AS ultimosRoles ON users.idUser = ultimosRoles.idUser
     INNER JOIN roles ON ultimosRoles.idRole = roles.idRole
     WHERE userStates.userStateName = 'ACTIVO' and roles.roleName = 'BÁSICO'
@@ -186,18 +186,18 @@ export async function getStateForUser(idUser) {
 export async function getEveryUsers() {
   try {
     const query = `
-    SELECT users.idUser, users.mail, users.userName, userStates.userStateName
+    SELECT users.idUser, users.mail, users.userName, userStates.userStateName, roles.roleName
     FROM users
     INNER JOIN (
-      SELECT idUser, idUserState, MAX(createdAt) AS ultimaFecha
-      FROM stateUsers 
-      GROUP BY idUser
+      SELECT idUser, idUserState
+      FROM stateUsers
+      where active = true
     ) AS ultimosEstados ON users.idUser = ultimosEstados.idUser
     INNER JOIN userStates ON ultimosEstados.idUserState = userStates.idUserState
     INNER JOIN (
-      SELECT idUser, idRole, MAX(createdAt) AS ultimaFecha
+      SELECT idUser, idRole
       FROM userRoles 
-      GROUP BY idUser
+      where active = true
     ) AS ultimosRoles ON users.idUser = ultimosRoles.idUser
     INNER JOIN roles ON ultimosRoles.idRole = roles.idRole
     `;
