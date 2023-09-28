@@ -11,6 +11,7 @@ import {
   updateUser,
   getUserPassword,
   getPermissionsForUser,
+  getEveryUsers,
 } from "../services/user.service.js";
 import { changeUserRole } from "../services/userRole.service.js";
 import { getUserStateByName } from "../services/userState.service.js";
@@ -66,6 +67,22 @@ export async function getUser(req, res) {
     if (!user[0]) {
       return res.status(404).json({
         message: "No se encuentra ningun usuario con ese id",
+      });
+    }
+
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export async function getUserAll(req, res) {
+  try {
+    const user = await getEveryUsers();
+
+    if (!user[0]) {
+      return res.status(404).json({
+        message: "No se encuentra ningun usuario ",
       });
     }
 

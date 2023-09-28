@@ -10,9 +10,6 @@ export async function createStateUser(idUser, idUserState, idUserAuthor) {
     idAuthor = idUser;
   }
 
-  const lastState = await getStateForUser(idUser);
-  await dest
-
   try {
     const newStateUser = await StateUser.create(
       {

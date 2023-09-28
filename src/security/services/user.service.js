@@ -54,7 +54,7 @@ export async function createUser(data) {
 export async function getAllUsers() {
   try {
     const query = `
-    SELECT users.mail, users.userName
+    SELECT users.idUser, users.mail, users.userName, userStates.userStateName
     FROM users
     INNER JOIN (
       SELECT idUser, idUserState, MAX(createdAt) AS ultimaFecha
@@ -178,6 +178,36 @@ export async function getStateForUser(idUser) {
     });
 
     return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getEveryUsers() {
+  try {
+    const query = `
+    SELECT users.idUser, users.mail, users.userName, userStates.userStateName
+    FROM users
+    INNER JOIN (
+      SELECT idUser, idUserState, MAX(createdAt) AS ultimaFecha
+      FROM stateUsers 
+      GROUP BY idUser
+    ) AS ultimosEstados ON users.idUser = ultimosEstados.idUser
+    INNER JOIN userStates ON ultimosEstados.idUserState = userStates.idUserState
+    INNER JOIN (
+      SELECT idUser, idRole, MAX(createdAt) AS ultimaFecha
+      FROM userRoles 
+      GROUP BY idUser
+    ) AS ultimosRoles ON users.idUser = ultimosRoles.idUser
+    INNER JOIN roles ON ultimosRoles.idRole = roles.idRole
+    `;
+
+    const users = await sequelize.query(query, {
+      model: User,
+      mapToModel: true,
+    });
+
+    return users;
   } catch (error) {
     throw error;
   }
