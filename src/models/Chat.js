@@ -19,12 +19,17 @@ Chat.init(
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
-    archive: {
+    archivedEmitter: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    archivedReceptor: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
     language: {
       type: DataTypes.STRING,
+      defaultValue:"español",
     },
   },
   {

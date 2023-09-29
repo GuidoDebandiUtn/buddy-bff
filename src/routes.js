@@ -5,6 +5,7 @@ import publicationRoutes from "./lost-adoption/lostAdoption.routes.js";
 import mypetRoutes from "./mypet/myPet.routes.js";
 import reportsRoutes from "./reports/reports.routes.js";
 import servicesRoutes from "./services/services.routes.js";
+import chatsRoutes from "./chat/chat.routes.js";
 
 const router = Router();
 
@@ -14,5 +15,6 @@ router.use("/publications", publicationRoutes);
 router.use("/mypet", mypetRoutes);
 router.use("/reports", reportsRoutes);
 router.use("/services", servicesRoutes);
+router.use("/chats", chatsRoutes);
 
 export default router;
