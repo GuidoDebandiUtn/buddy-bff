@@ -53,7 +53,7 @@ router.get('/:archived', verifyToken,getChatsController);
  * @swagger
  * chats/chat/:idUserReceptor:
  *   post:
- *     summary:Crea un nuevo chat para los usuarios especificados.
+ *     summary: Crea un nuevo chat para los usuarios especificados.
  *     parameters:
  *       - in: query
  *         name: idUserReceptor
@@ -99,7 +99,7 @@ router.post('/:idUserReceptor', verifyToken,postCreateChat);
  * @swagger
  * chat/chat/archive/:idChat:
  *   post:
- *     summary:Archiva el chat enviado por parametro para el usuario enviado en el token.
+ *     summary: Archiva el chat enviado por parametro para el usuario enviado en el token
  *     parameters:
  *       - in: query
  *         name: idChat

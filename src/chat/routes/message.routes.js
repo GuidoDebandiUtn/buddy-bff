@@ -53,7 +53,7 @@ router.get('/:idChat', verifyToken,getMessagesController);
  * @swagger
  * chat/message/:idChat:
  *   post:
- *     summary:Crea un nuevo chat para los usuarios especificados.
+ *     summary: Crea un nuevo chat para los usuarios especificados.
  *     parameters:
  *       - in: query
  *         name: idChat
