@@ -20,6 +20,7 @@ Notification.init(
     },
     language: {
       type: DataTypes.STRING,
+      defaultValue: "español",
     },
     active: {
       type: DataTypes.BOOLEAN,
@@ -30,6 +31,10 @@ Notification.init(
     },
     processDate: {
       type: DataTypes.DATE,
+    },
+    readed: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   },
   {

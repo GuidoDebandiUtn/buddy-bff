@@ -1,4 +1,5 @@
 import { User } from "../../models/User.js";
+import { UserRole } from "../../models/UserRole.js";
 import { getUserStateByName } from "./userState.service.js";
 import { createStateUser } from "./stateUser.service.js";
 import { sequelize } from "../../database/database.js";
@@ -6,6 +7,8 @@ import { getRoleByName } from "./role.service.js";
 import { createUserRole } from "./userRole.service.js";
 import bcrypt from "bcryptjs";
 import { UserState } from "../../models/UserState.js";
+import { StateUser } from "../../models/StateUser.js";
+import { Role } from "../../models/Role.js";
 
 export async function createUser(data) {
   const { mail, password, userName, name, userType } = data;
@@ -40,7 +43,6 @@ export async function createUser(data) {
       role = await getRoleByName("ESTABLECIMIENTO");
     }
 
-    role[0].idRole;
 
     await createUserRole(newUser.idUser, role[0].idRole);
 
@@ -310,6 +312,35 @@ export async function destroyUser(mail) {
 
     return;
   } catch (error) {
+    throw error;
+  }
+}
+
+
+
+export async function getUsersByRole(roleName) {
+  roleName = roleName.toUpperCase();
+  try {
+    const users = await User.findAll({
+      attributes: ['idUser', 'username', 'image','name','mail'],
+      group: ['idUser'],
+      include: [{
+        model: UserRole,
+        limit: 1,
+        attributes: ["idRole","idUser"],
+        order: [['createdAt', 'DESC']], 
+        include: [{
+          model: Role,
+          attributes: ["idRole","roleName"],
+          where: { roleName: roleName },
+        },],
+      },],
+    });
+    const formattedUsers = users.map(user => user.get({ plain: true }));
+
+    return formattedUsers;
+  } catch (error) {
+    console.log("error en la obtencion de usuarios para el rol:",roleName,error)
     throw error;
   }
 }
