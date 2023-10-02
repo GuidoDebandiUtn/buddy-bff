@@ -11,6 +11,7 @@ import {
   getUserAll,
 } from "../controllers/user.controller.js";
 import { verifyToken } from "../controllers/auth.controller.js";
+import { getUsersByRole } from "../services/user.service.js";
 
 const router = Router();
 

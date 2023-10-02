@@ -84,7 +84,11 @@ export async function createChat(idUserEmitter, idUserReceptor) {
       });
   
       if (existingChat) {
+<<<<<<< HEAD
         throw {message:'Ya existe un chat entre esos usuarios',code: 400};
+=======
+        throw {message:'Ya existe un chat entre esos usuarios', code: 400, chat:existingChat};
+>>>>>>> c30d24a9ac4bf3f771855eb5642d51271537666e
       }
 
   

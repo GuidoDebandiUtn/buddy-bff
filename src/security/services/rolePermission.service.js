@@ -53,3 +53,22 @@ export async function getRolePermission(idRole, idPermission) {
     throw error;
   }
 }
+
+
+export async function getRolePermissions(idRole, idPermission) {
+  try {
+    const query = `
+        SELECT *
+        FROM rolepermissions
+        WHERE idRole = '${idRole}' and idPermission = '${idPermission}'`;
+
+    const rp = await sequelize.query(query, {
+      model: RolePermission,
+      mapToModel: true,
+    });
+
+    return rp;
+  } catch (error) {
+    throw error;
+  }
+}

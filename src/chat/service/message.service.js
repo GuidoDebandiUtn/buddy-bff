@@ -40,6 +40,13 @@ export async function createMessage(idUser,content, idChat) {
         idChat,
         idUserEmitter: idUser,
       });
+<<<<<<< HEAD
+=======
+
+      chat.archivedEmitter = false;
+      chat.archivedReceptor = false;
+      chat.save();
+>>>>>>> c30d24a9ac4bf3f771855eb5642d51271537666e
   
       return message;
     } catch (error) {

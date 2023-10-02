@@ -54,6 +54,7 @@ User.init(
     },
     blocked: {
       type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
     blockedReason: {
       type: DataTypes.STRING,

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   addPermission,
+  addSeveralPermissions,
   getRole,
   getRoleEvery,
   getRoles,
@@ -242,6 +243,48 @@ router.post("/active/:idRole", verifyToken, roleActive);
  *         description: Hubo un error
  */
 router.post("/add/:idRole", verifyToken, addPermission);
+
+
+/**
+ * @swagger
+ * /security/role/addAll/:idRole:
+ *   post:
+ *     summary: Añade un permiso al rol
+ *     tags: [ROLE]
+ *     parameters:
+ *       - in: query
+ *         name: idRole
+ *         schema:
+ *           type: uuid
+ *         description: uuid del rol a agregar los permisos.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               permissions:
+ *                 type: Array<Object>
+ *                 properties:
+ *                   idPermission:
+ *                   type: string
+ *     responses:
+ *       200:
+ *         description: Permiso añadido exitosamente
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *       404:
+ *         description: No existe ningun rol con este id
+ *       500:
+ *         description: Hubo un error
+ */
+router.post("/addAll/:idRole", verifyToken, addSeveralPermissions);
 
 /**
  * @swagger

@@ -12,6 +12,9 @@ dotenv.config();
 //     }
 // )
 
+
+let backgroundProcessLogShown = false;
+
 export const sequelize = new Sequelize(
   process.env.DATABASE, //DATABASE
   process.env.USER, //USER
@@ -20,5 +23,15 @@ export const sequelize = new Sequelize(
     host: "us-cdbr-east-06.cleardb.net",
     dialect: "mysql",
     timezone: "-03:00",
-  }
+    logging: (msg) => {
+      if (!msg.startsWith('Executing (default): SHOW INDEX') && !msg.startsWith('Executing (default): SELECT TABLE_NAME')) {
+        console.log(msg);
+      }
+      if (!backgroundProcessLogShown) {
+        console.log('Initializing Database processes...');
+        backgroundProcessLogShown = true;
+      }
+    },
+  },
+  
 );

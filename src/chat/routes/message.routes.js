@@ -1,9 +1,11 @@
 import { Router } from "express";
 import { verifyToken } from "../../security/controllers/auth.controller.js";
-import { getMessagesController, postCreateMessage } from "../controller/message.controller.js";
+import {
+  getMessagesController,
+  postCreateMessage,
+} from "../controller/message.controller.js";
 
 const router = Router();
-
 
 /**
  * @swagger
@@ -14,7 +16,7 @@ const router = Router();
 
 /**
  * @swagger
- * chat/message/:idChat:
+ * chats/message/:idChat:
  *   get:
  *     summary: Obtiene los mensajes de un chat especifico.
  *     parameters:
@@ -46,12 +48,11 @@ const router = Router();
  *       500:
  *          description: Error interno del servicio
  */
-router.get('/:idChat', verifyToken,getMessagesController);
-
+router.get("/:idChat", verifyToken, getMessagesController);
 
 /**
  * @swagger
- * chat/message/:idChat:
+ * chats/message/:idChat:
  *   post:
  *     summary: Crea un nuevo chat para los usuarios especificados.
  *     parameters:
@@ -111,9 +112,6 @@ router.get('/:idChat', verifyToken,getMessagesController);
  *       500:
  *          description: Error interno del servicio
  */
-router.post('/:idChat', verifyToken,postCreateMessage);
-
-
-
+router.post("/:idChat", verifyToken, postCreateMessage);
 
 export default router;

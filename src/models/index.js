@@ -6,7 +6,7 @@ import { Country } from "./Country.js";
 import { Information } from "./Information.js";
 import { Locality } from "./Locality.js";
 import { Message } from "./Message.js";
-// import { Notification } from "./Notification.js";
+import { Notification } from "./Notification.js";
 import { Permission } from "./Permission.js";
 import { Pet } from "./Pet.js";
 import { PetBreed } from "./PetBreed.js";
@@ -44,6 +44,7 @@ User.hasMany(PublicationSearch, { foreignKey: "idUser" });
 User.hasMany(UserRole, { foreignKey: "idUser" });
 User.hasMany(Service, { foreignKey: "idUser" });
 User.hasMany(Chat, { foreignKey: "idUserEmitter" });
+User.hasMany(Notification, { foreignKey: "idUser" });
 
 Chat.belongsTo(User, { foreignKey: "idUserEmitter" });
 Chat.hasMany(Message, { foreignKey: "idChat" });
@@ -202,3 +203,7 @@ Complaint.belongsTo(PublicationAdoption, {
   foreignKey: "idPublicationAdoption",
 });
 Complaint.belongsTo(PublicationSearch, { foreignKey: "idPublicationSearch" });
+
+
+
+Notification.belongsTo(User, { foreignKey: "idUser" });

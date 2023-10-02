@@ -189,6 +189,46 @@ export async function addPermission(req, res) {
   }
 }
 
+
+
+export async function addSeveralPermissions(req, res) {
+  const { idRole } = req.params;
+  const { permissions } = req.body; 
+
+  try {
+    const role = await getRoleById(idRole);
+
+    if (!role[0]) {
+      return res.status(404).json({
+        message: "No existe ningun rol con ese id",
+      });
+    }
+
+    const results = [];
+
+    for (const idPermission of permissions) {
+      const rolePermission = await getRolePermission(idRole, idPermission);
+
+      if (!rolePermission[0]) {
+        await createRolePermission(idRole, idPermission);
+        results.push({ idPermission, success: true });
+      } else {
+        results.push({ idPermission, success: false });
+      }
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Operación completada", results });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+
+
 export async function takePermission(req, res) {
   const { idRole } = req.params;
   const { idPermission } = req.body;

@@ -34,6 +34,12 @@ export async function postCreateChat(req, res) {
    
       return res.status(200).json(data);
     }catch (error) {
+<<<<<<< HEAD
+=======
+        if(error.chat){
+          return res.status(error.code).json({chat: error.chat});
+        }
+>>>>>>> c30d24a9ac4bf3f771855eb5642d51271537666e
         if(error.code){
           return res.status(error.code).json({
             message: error.message,
