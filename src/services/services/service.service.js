@@ -275,7 +275,7 @@ export async function getServiceById(idService) {
       INNER JOIN servicepets   ON services.idService = ServicePets.idService
       INNER JOIN PetTypes ON ServicePets.idPetType = PetTypes.idPetType
       INNER JOIN servicetypes ON servicetypes.idServiceType = services.idServiceType
-      WHERE  serviceStates.serviceStateName = 'ACTIVO' and services.idService = '${idService}'
+      WHERE services.idService = '${idService}'
       GROUP BY services.serviceTitle,services.serviceDescription,services.address,services.openTime,services.closeTime, services.open24hs
     `;
 

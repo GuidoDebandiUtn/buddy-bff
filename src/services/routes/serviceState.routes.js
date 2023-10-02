@@ -3,7 +3,6 @@ import { Router } from "express";
 import { changeStateService } from "../services/stateService.service.js";
 import { changeServiceState } from "../controllers/serviceSate.controller.js";
 
-
 const router = Router();
 
 /**
@@ -12,7 +11,6 @@ const router = Router();
  *   name: SERVICESTATE
  *   description: Funcionalidades del estado en los servicios.
  */
-
 
 /**
  * @swagger
@@ -62,4 +60,10 @@ const router = Router();
  *      500:
  *        description: Hubo un error
  */
-router.post("/changeState/:idUser/:userStateName", verifyToken, changeServiceState);
+router.post(
+  "/changeState/:idService/:serviceStateName",
+  verifyToken,
+  changeServiceState
+);
+
+export default router;
