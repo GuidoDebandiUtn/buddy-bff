@@ -28,7 +28,7 @@ export async function createTrace(traceDto,idUser) {
 
   export async function retrieveTracesByPublication(idPublicationSearch) {
     try {
-      const traces =await Trace.findAll({where: {idPublicationSearch: idPublicationSearch},});
+      const traces =await Trace.findAll({where: {idPublicationSearch: idPublicationSearch, active:true},});
       console.log ("trazas obtenidas correctamente pra traza: %s",idPublicationSearch);
       return  {traces};
 

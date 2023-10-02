@@ -11,7 +11,8 @@ import { StateUser } from "../../models/StateUser.js";
 import { Role } from "../../models/Role.js";
 
 export async function createUser(data) {
-  const { mail, password, userName, name, userType } = data;
+  const { mail, password, userName, name, image, userType } = data;
+
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -26,9 +27,11 @@ export async function createUser(data) {
         mail,
         password: hashedPassword,
         userName,
+        name,
+        image,
       },
       {
-        fields: ["mail", "password", "userName"],
+        fields: ["mail", "password", "userName","image"],
       }
     );
 
@@ -56,7 +59,7 @@ export async function createUser(data) {
 export async function getAllUsers() {
   try {
     const query = `
-    SELECT users.idUser, users.mail, users.userName, userStates.userStateName, roles.roleName
+    SELECT users.idUser, users.mail, users.userName, userStates.userStateName, roles.roleName, users.image
     FROM users
     INNER JOIN (
       SELECT idUser, idUserState
@@ -87,7 +90,7 @@ export async function getAllUsers() {
 export async function getUserById(idUser) {
   try {
     const query = `
-    SELECT idUser, mail, userName,name,lastName
+    SELECT idUser, mail, userName,name,lastName, image
     FROM users
     WHERE idUser = '${idUser}'
     `;
@@ -124,7 +127,7 @@ export async function getUserPassword(idUser) {
 export async function getUserByMail(mail) {
   try {
     const query = `
-      SELECT idUser, mail, validated, password
+      SELECT idUser, mail, validated, password, image
       FROM users
       WHERE mail = '${mail}'
       `;
@@ -225,6 +228,7 @@ export async function updateUser(idUser, data) {
     dni,
     birthDate,
     address,
+    image,
     blockedReason,
     blocked,
   } = data;
@@ -273,6 +277,12 @@ export async function updateUser(idUser, data) {
     if (lastName) {
       updates.lastName = lastName;
     }
+
+
+    if (image) {
+      updates.image = image;
+    }
+   
 
     updates.updatedDate = new Date();
 
