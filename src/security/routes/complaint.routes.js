@@ -49,7 +49,7 @@ router.post("/",verifyToken,postComplaint);
 /**
  * @swagger
  * /security/complaint/:idComplaint:
- *  post:
+ *  delete:
  *     tags: [COMPLAINT]
  *     summary: Eliminar una Denuncia
  *     parameters:

@@ -2,7 +2,7 @@ import { Pet } from "../../models/Pet.js";
 import { sequelize } from "../../database/database.js";
 
 export async function createPet(data, idUser) {
-  const { petName, birthDate, idPetType, idPetBreed } = data;
+  const { petName, birthDate, idPetType, idPetBreed, image    } = data;
 
   try {
     const newPet = await Pet.create(

@@ -40,6 +40,8 @@ const router = Router();
  *                 type: string
  *               birthDate:
  *                 type: Date
+ *              image:
+ *                 type: string
  *     responses:
  *       201:
  *         description: Mascota creada exitosamente.
