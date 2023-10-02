@@ -14,7 +14,7 @@ const router = Router();
 
 /**
  * @swagger
- * chat/message/:idChat:
+ * chats/message/:idChat:
  *   get:
  *     summary: Obtiene los mensajes de un chat especifico.
  *     parameters:
@@ -51,7 +51,7 @@ router.get('/:idChat', verifyToken,getMessagesController);
 
 /**
  * @swagger
- * chat/message/:idChat:
+ * chats/message/:idChat:
  *   post:
  *     summary: Crea un nuevo chat para los usuarios especificados.
  *     parameters:
