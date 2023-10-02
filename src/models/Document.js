@@ -12,7 +12,7 @@ Document.init(
       primaryKey: true,
     },
     file: {
-      type: DataTypes.BLOB,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     idUser: {
@@ -21,6 +21,9 @@ Document.init(
     },
     validDate: {
       type: DataTypes.DATE,
+    },
+    title: {
+      type: DataTypes.STRING,
     },
   },
   {

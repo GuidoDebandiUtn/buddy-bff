@@ -31,9 +31,8 @@ export async function createPermission(data) {
 export async function getAllPermission() {
   try {
     const query = `
-        SELECT idPermission, permissionName, tokenClaim
-        FROM permissions
-        WHERE active = true`;
+        SELECT idPermission, permissionName, tokenClaim, active
+        FROM permissions`;
 
     const permissions = await sequelize.query(query, {
       model: Permission,

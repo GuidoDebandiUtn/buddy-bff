@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   addPermission,
   getRole,
+  getRoleEvery,
   getRoles,
   roleActive,
   roleCreate,
@@ -77,6 +78,30 @@ router.post("/", verifyToken, roleCreate);
  *          description: Hubo un error
  */
 router.get("/", verifyToken, getRoles);
+
+/**
+ * @swagger
+ * /security/role/:
+ *   get:
+ *     summary: Obtiene todos los role activos
+ *     tags: [ROLE]
+ *     responses:
+ *       200:
+ *         description: Lista de rol activos
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  properties:
+ *                    roleName:
+ *                      type: string
+ *       404:
+ *         description: No existe ningun rol
+ *       500:
+ *          description: Hubo un error
+ */
+router.get("/every", verifyToken, getRoleEvery);
 
 /**
  * @swagger

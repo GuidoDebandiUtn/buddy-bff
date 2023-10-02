@@ -46,7 +46,7 @@ User.hasMany(Service, { foreignKey: "idUser" });
 User.hasMany(Chat, { foreignKey: "idUserEmitter" });
 
 Chat.belongsTo(User, { foreignKey: "idUserEmitter" });
-Chat.hasMany(Message, { foreignKey: "idUserEmitter" });
+Chat.hasMany(Message, { foreignKey: "idChat" });
 
 Message.belongsTo(Chat, { foreignKey: "idChat" });
 

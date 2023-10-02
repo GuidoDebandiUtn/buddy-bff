@@ -24,7 +24,28 @@ export async function createRole(data) {
 export async function getAllRoles() {
   try {
     const query = `
-        SELECT roles.idRole, roles.roleName, GROUP_CONCAT(permissions.tokenClaim SEPARATOR ' - ') AS permisos
+        SELECT roles.idRole, roles.roleName, GROUP_CONCAT(permissions.tokenClaim SEPARATOR ' - ') AS permisos, roles.active
+        FROM roles
+        LEFT JOIN rolePermissions ON roles.idRole = rolePermissions.idRole
+        LEFT JOIN permissions ON rolePermissions.idPermission = permissions.idPermission
+        WHERE roles.active = true
+        GROUP BY roles.idRole, roles.roleName`;
+
+    const roles = await sequelize.query(query, {
+      model: Role,
+      mapToModel: true,
+    });
+
+    return roles;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getEveryRol() {
+  try {
+    const query = `
+        SELECT roles.idRole, roles.roleName, GROUP_CONCAT(permissions.tokenClaim SEPARATOR ' - ') AS permisos, roles.active
         FROM roles
         LEFT JOIN rolePermissions ON roles.idRole = rolePermissions.idRole
         LEFT JOIN permissions ON rolePermissions.idPermission = permissions.idPermission
@@ -131,7 +152,6 @@ export async function activeRole(idRole) {
   }
 }
 
-
 export async function getRoleByUser(idUser) {
   try {
     const query = `
@@ -151,7 +171,6 @@ export async function getRoleByUser(idUser) {
     throw error;
   }
 }
-
 
 export async function getPermissionByRole(idUser) {
   try {

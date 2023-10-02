@@ -3,6 +3,7 @@ import {
   createRole,
   deleteRole,
   getAllRoles,
+  getEveryRol,
   getRoleById,
   getRoleByName,
   updateRole,
@@ -62,6 +63,22 @@ export async function getRole(req, res) {
     }
 
     return res.status(200).json(role);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function getRoleEvery(req, res) {
+  try {
+    const roles = await getEveryRol();
+
+    if (!roles[0]) {
+      return res.status(404).json({ message: "No existe ningun rol" });
+    }
+
+    return res.status(200).json(roles);
   } catch (error) {
     return res.status(500).json({
       message: error.message,
