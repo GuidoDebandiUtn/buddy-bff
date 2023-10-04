@@ -8,6 +8,7 @@ import {
   serviceUpdate,
   getServiceTypes,
   getEveryServices,
+  getService,
 } from "../controllers/service.controller.js";
 
 const router = Router();
@@ -231,7 +232,6 @@ router.put("/:idService", verifyToken, serviceUpdate);
  *   delete:
  *     summary: Elimina un servicio
  *     tags: [SERVICES]
- *
  *     parameters:
  *       - in: query
  *         name: idService
@@ -279,5 +279,36 @@ router.delete("/:idService", verifyToken, serviceDelete);
  *          description: Hubo un error interno
  */
 router.get("/types", verifyToken, getServiceTypes);
+
+
+/**
+ * @swagger
+ * /services/service/:idService:
+ *   get:
+ *     summary: Obtiene un servicio a traves de un Id.
+ *     tags: [SERVICES]
+ *     parameters:
+ *       - in: query
+ *         name: idService
+ *         schema:
+ *           type: uuid
+ *         description: Id del servicio a obtener.
+ *     responses:
+ *       200:
+ *         description: servicio recuperado exitosamente.
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *       204:
+ *          description: No existen tipos activos.
+ *       500:
+ *          description: Hubo un error interno
+ */
+router.get("/:idService", verifyToken, getService);
+
 
 export default router;

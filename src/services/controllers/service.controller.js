@@ -182,7 +182,7 @@ export async function getService(req, res) {
   try {
     const services = await getServiceById(idService);
 
-    if (services[0]) {
+    if (!services[0]) {
       return res
         .status(404)
         .json({ message: "No existe ningún servicio con ese id" });
