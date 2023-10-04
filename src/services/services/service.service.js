@@ -98,11 +98,11 @@ export async function getServiceByUserIdAndServiceType(idUser, idServiceType) {
           SELECT services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs,services.avgRating
           FROM services
           INNER JOIN (
-              SELECT idService, idServiceState, MAX(createdAt) AS ultimaFecha
+              SELECT idService, idServiceState, MAX(createdAt) AS ultimaFecha , active
               FROM stateServices 
               GROUP BY idService) AS ultimosEstados ON services.idService = ultimosEstados.idService
           INNER JOIN serviceStates ON ultimosEstados.idServiceState = serviceStates.idServiceState
-          WHERE serviceStates.serviceStateName = 'ACTIVO' and services.idUser = '${idUser}' AND services.idServiceType = '${idServiceType}'
+          WHERE serviceStates.serviceStateName = 'ACTIVO' AND ultimosEstados.active = 1 and services.idUser = '${idUser}' AND services.idServiceType = '${idServiceType}'
       `;
 
     const services = await sequelize.query(query, {
@@ -120,20 +120,20 @@ export async function getServicesByIdUser(idUser) {
   try {
     const query = `
       SELECT
-        services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs, services.idService,services.avgRating,
+        services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs, services.idService,services.avgRating,services.emailService,
         serviceStates.serviceStateName,serviceStates.idServiceState,
         GROUP_CONCAT(petTypes.idPetType) AS idPetTypes, GROUP_CONCAT(petTypes.petTypeName) AS petTypesName,
         servicetypes.idServiceType,servicetypes.serviceTypeName 
       FROM services
       INNER JOIN (
-        SELECT idService,idServiceState, MAX(createdAt) AS ultimaFecha  FROM stateServices
+        SELECT idService,idServiceState, MAX(createdAt) AS ultimaFecha , active  FROM stateServices
         GROUP BY  idService
       ) AS ultimosEstados ON services.idService = ultimosEstados.idService
       INNER JOIN serviceStates ON  ultimosEstados.idServiceState = serviceStates.idServiceState
       INNER JOIN servicepets   ON services.idService = ServicePets.idService
       INNER JOIN PetTypes ON ServicePets.idPetType = PetTypes.idPetType
       INNER JOIN servicetypes ON servicetypes.idServiceType = services.idServiceType
-      WHERE serviceStates.serviceStateName = 'ACTIVO' and services.idUser = '${idUser}'
+      WHERE serviceStates.serviceStateName = 'ACTIVO' AND ultimosEstados.active = 1 and services.idUser = '${idUser}'
       GROUP BY services.serviceTitle,services.serviceDescription,services.address,services.openTime,services.closeTime, services.open24hs
     `;
 
@@ -167,13 +167,13 @@ export async function getAllServices() {
   try {
     const query = `
       SELECT
-        services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs, services.idService,services.avgRating,
+        services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs, services.idService,services.avgRating,services.emailService,
         serviceStates.serviceStateName,serviceStates.idServiceState,
         GROUP_CONCAT(petTypes.idPetType) AS idPetTypes, GROUP_CONCAT(petTypes.petTypeName) AS petTypesName,
         servicetypes.idServiceType,servicetypes.serviceTypeName 
       FROM services
       INNER JOIN (
-        SELECT idService , idServiceState
+        SELECT idService , idServiceState , active
         FROM stateServices
         WHERE active = true
       ) AS ultimosEstados ON services.idService = ultimosEstados.idService
@@ -181,7 +181,7 @@ export async function getAllServices() {
       INNER JOIN servicepets   ON services.idService = ServicePets.idService
       INNER JOIN PetTypes ON ServicePets.idPetType = PetTypes.idPetType
       INNER JOIN servicetypes ON servicetypes.idServiceType = services.idServiceType
-      WHERE  serviceStates.serviceStateName = 'ACTIVO'
+      WHERE  serviceStates.serviceStateName = 'ACTIVO'  AND ultimosEstados.active = 1
       GROUP BY services.serviceTitle,services.serviceDescription,services.address,services.openTime,services.closeTime, services.open24hs
     `;
 
@@ -262,20 +262,20 @@ export async function getServiceById(idService) {
   try {
     const query = `      
       SELECT
-        services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs, services.idService,services.avgRating,
+        services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs, services.idService,services.avgRating, services.emailService,
         serviceStates.serviceStateName,serviceStates.idServiceState,
         GROUP_CONCAT(petTypes.idPetType) AS idPetTypes, GROUP_CONCAT(petTypes.petTypeName) AS petTypesName,
         servicetypes.idServiceType,servicetypes.serviceTypeName 
       FROM services
       INNER JOIN (
-          SELECT idService,idServiceState, MAX(createdAt) AS ultimaFecha  FROM stateServices
+          SELECT idService,idServiceState, MAX(createdAt) AS ultimaFecha , active  FROM stateServices
           GROUP BY  idService
       ) AS ultimosEstados ON services.idService = ultimosEstados.idService
       INNER JOIN serviceStates ON  ultimosEstados.idServiceState = serviceStates.idServiceState
       INNER JOIN servicepets   ON services.idService = ServicePets.idService
       INNER JOIN PetTypes ON ServicePets.idPetType = PetTypes.idPetType
       INNER JOIN servicetypes ON servicetypes.idServiceType = services.idServiceType
-      WHERE  serviceStates.serviceStateName = 'ACTIVO' and services.idService = '${idService}'
+      WHERE  serviceStates.serviceStateName = 'ACTIVO' AND ultimosEstados.active = 1 and services.idService = '${idService}'
       GROUP BY services.serviceTitle,services.serviceDescription,services.address,services.openTime,services.closeTime, services.open24hs
     `;
 
@@ -431,10 +431,10 @@ export async function getServicesEvery() {
   try {
     const query = `
       SELECT
-        services.serviceTitle, services.emailService, services.idService, serviceStates.serviceStateName,servicetypes.serviceTypeName 
+        services.serviceTitle, services.emailService, services.idService, serviceStates.serviceStateName,servicetypes.serviceTypeName ,services.emailService,
       FROM services
       INNER JOIN (
-        SELECT idService , idServiceState
+        SELECT idService , idServiceState, active
         FROM stateServices
         WHERE active = true
       ) AS ultimosEstados ON services.idService = ultimosEstados.idService
@@ -442,6 +442,7 @@ export async function getServicesEvery() {
       INNER JOIN servicepets   ON services.idService = ServicePets.idService
       INNER JOIN PetTypes ON ServicePets.idPetType = PetTypes.idPetType
       INNER JOIN servicetypes ON servicetypes.idServiceType = services.idServiceType
+      WHERE ultimosEstados.active = 1
       GROUP BY services.serviceTitle,services.serviceDescription,services.address,services.openTime,services.closeTime, services.open24hs
     `;
 
