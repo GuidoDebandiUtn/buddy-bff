@@ -90,7 +90,7 @@ export async function createChat(idUserEmitter, idUserReceptor) {
     if (existingChat) {
       throw {
         message: "Ya existe un chat entre esos usuarios",
-        code: 400,
+        code: 200,
         chat: existingChat,
       };
     }

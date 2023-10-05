@@ -40,7 +40,7 @@ export async function postCreateChat(req, res) {
     return res.status(200).json(data);
   } catch (error) {
     if (error.chat) {
-      return res.status(error.code).json({ chat: error.chat });
+      return res.status(204).json({ chat: error.chat });
     }
     if (error.code) {
       return res.status(error.code).json({
