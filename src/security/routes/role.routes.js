@@ -244,7 +244,6 @@ router.post("/active/:idRole", verifyToken, roleActive);
  */
 router.post("/add/:idRole", verifyToken, addPermission);
 
-
 /**
  * @swagger
  * /security/role/addAll/:idRole:
@@ -316,6 +315,6 @@ router.post("/addAll/:idRole", verifyToken, addSeveralPermissions);
  *       500:
  *         description: Hubo un error
  */
-router.delete("/take/:idRole", verifyToken, takePermission);
+router.delete("/take/:idRole/:idPermission", verifyToken, takePermission);
 
 export default router;

@@ -55,6 +55,8 @@ export async function login(req, res) {
 
 export async function verifyToken(req, res, next) {
   const token = req.header("auth-token");
+  console.log(req.body);
+  console.log(req.header("auth-token"));
 
   try {
     if (!token) {

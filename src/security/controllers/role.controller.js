@@ -189,11 +189,9 @@ export async function addPermission(req, res) {
   }
 }
 
-
-
 export async function addSeveralPermissions(req, res) {
   const { idRole } = req.params;
-  const { permissions } = req.body; 
+  const { permissions } = req.body;
 
   try {
     const role = await getRoleById(idRole);
@@ -217,9 +215,7 @@ export async function addSeveralPermissions(req, res) {
       }
     }
 
-    return res
-      .status(200)
-      .json({ message: "Operación completada", results });
+    return res.status(200).json({ message: "Operación completada", results });
   } catch (error) {
     return res.status(500).json({
       message: error.message,
@@ -227,11 +223,8 @@ export async function addSeveralPermissions(req, res) {
   }
 }
 
-
-
 export async function takePermission(req, res) {
-  const { idRole } = req.params;
-  const { idPermission } = req.body;
+  const { idRole, idPermission } = req.params;
 
   try {
     const role = await getRoleById(idRole);

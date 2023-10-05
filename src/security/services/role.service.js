@@ -49,7 +49,6 @@ export async function getEveryRol() {
         FROM roles
         LEFT JOIN rolePermissions ON roles.idRole = rolePermissions.idRole
         LEFT JOIN permissions ON rolePermissions.idPermission = permissions.idPermission
-        WHERE roles.active = true
         GROUP BY roles.idRole, roles.roleName`;
 
     const roles = await sequelize.query(query, {
