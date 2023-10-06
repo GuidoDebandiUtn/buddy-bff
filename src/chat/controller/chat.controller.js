@@ -54,11 +54,11 @@ export async function postCreateChat(req, res) {
 }
 
 export async function postArchiveChat(req, res) {
-  const { idChat } = req.params;
+  const { idChat,archive } = req.params;
   const idUser = req.user.idUser;
 
   try {
-    const data = await archiveChat(idUser, idChat);
+    const data = await archiveChat(idUser, idChat,archive);
 
     return res.status(200).json(data);
   } catch (error) {
