@@ -107,6 +107,9 @@ export async function createChat(idUserEmitter, idUserReceptor) {
 }
 
 export async function archiveChat(idUser, idChat, archive) {
+
+  const archiveValue = archive.toLowerCase() === "true" ? 1 : 0;
+
   try {
     const chat = await Chat.findByPk(idChat);
 
@@ -115,9 +118,9 @@ export async function archiveChat(idUser, idChat, archive) {
     }
 
     if (chat.idUserEmitter === idUser) {
-      chat.archivedEmitter = archive;
+      chat.archivedEmitter = archiveValue;
     } else if (chat.idUserReceptor === idUser) {
-      chat.archivedReceptor = archive;
+      chat.archivedReceptor = archiveValue;
     } else {
       throw { message: "Error en el usuario enviado", code: 400 };
     }
