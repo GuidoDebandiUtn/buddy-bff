@@ -354,3 +354,19 @@ export async function getUsersByRole(roleName) {
     throw error;
   }
 }
+
+
+export async function getUsersBylocality(idLocality) {
+  try {
+    const users = await User.findAll({
+      attributes: ['idUser', 'username', 'image','name','mail'],
+      where: {idLocality: idLocality, idLocality}
+    });
+    const formattedUsers = users.map(user => user.get({ plain: true }));
+
+    return formattedUsers;
+  } catch (error) {
+    console.log("error en la obtencion de usuarios por localidad, para localidad:",idLocality,error);
+    throw error;
+  }
+}
