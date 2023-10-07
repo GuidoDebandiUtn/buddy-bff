@@ -1,4 +1,4 @@
-import { retrieveNotificationsByUserDB } from "../service/notifications.services.js";
+import { readNotificationsForUser, retrieveNotificationsByUserDB } from "../service/notifications.services.js";
 
 export async function getNotificationsByUser(req, res) {
     const idUser = req.user.idUser;
