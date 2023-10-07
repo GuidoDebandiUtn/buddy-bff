@@ -12,6 +12,7 @@ const options = {
   },
   servers: [{ url: "http://localhost:4000" }],
   apis: [
+    "src/reports/routes/*.routes.js",
     "src/security/routes/*.routes.js",
     "src/parameters/routes/*.routes.js",
     "src/lost-adoption/routes/*.routes.js",
