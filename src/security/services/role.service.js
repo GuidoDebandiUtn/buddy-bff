@@ -24,7 +24,7 @@ export async function createRole(data) {
 export async function getAllRoles() {
   try {
     const query = `
-        SELECT roles.idRole, roles.roleName, GROUP_CONCAT(permissions.tokenClaim SEPARATOR ' - ') AS permisos, roles.active
+        SELECT roles.idRole, roles.roleName, GROUP_CONCAT(permissions.tokenClaim SEPARATOR ' - ') AS permissions, roles.active
         FROM roles
         LEFT JOIN rolePermissions ON roles.idRole = rolePermissions.idRole
         LEFT JOIN permissions ON rolePermissions.idPermission = permissions.idPermission
@@ -65,7 +65,7 @@ export async function getEveryRol() {
 export async function getRoleById(idRole) {
   try {
     const query = `
-    SELECT roles.idRole, roles.roleName, roles.roleDescription, GROUP_CONCAT(permissions.tokenClaim) AS permisos
+    SELECT roles.idRole, roles.roleName, roles.roleDescription, GROUP_CONCAT(permissions.tokenClaim) AS permissions
     FROM roles
     LEFT JOIN rolePermissions ON roles.idRole = rolePermissions.idRole
     LEFT JOIN permissions ON rolePermissions.idPermission = permissions.idPermission
@@ -171,17 +171,25 @@ export async function getRoleByUser(idUser) {
   }
 }
 
-export async function getPermissionByRole(idUser) {
+export async function getRolesByPermission(tokenClaim) {
   try {
     const query = `
-      SELECT`;
+      SELECT roles.* 
+      FROM roles
+      JOIN rolepermissions ON rolepermissions.idRole= roles.idRole
+      JOIN permissions ON rolepermissions.idPermission = permissions.idPermission
+      WHERE  permissions.tokenclaim = '${tokenClaim}'
+      `;
 
-    const role = await sequelize.query(query, {
+    const roles = await sequelize.query(query, {
       model: Role,
       mapToModel: true,
     });
 
-    return role;
+    const formattedRoles = roles.map(role => role.get({ plain: true }));
+
+    return formattedRoles;
+
   } catch (error) {
     throw error;
   }

@@ -1,6 +1,6 @@
 import { User } from "../../models/User.js";
 import { Notification } from "../../models/Notification.js";
-import { getUsersByRole, getUsersBylocality } from "../../security/services/user.service.js";
+import { getUsersByPermission, getUsersByRole, getUsersBylocality } from "../../security/services/user.service.js";
 
 export async function retrieveNotificationsByUserDB(idUser) {
   try {
@@ -37,11 +37,11 @@ export async function createNotificationForUser(idUser, content) {
 }
 
 
-export async function CreateNotificationForRole(roleName, content) {
+export async function CreateNotificationForPermission(tokenClaim, content) {
   try {
-    const users = await getUsersByRole(roleName);
+    const users = await getUsersByPermission(tokenClaim);
     if (!users || users.length === 0) {
-      throw { message: 'No se encontraron usuarios con el rol especificado', code: 400 };
+      throw { message: 'No se encontraron usuarios con el permiso especificado', code: 400 };
     }
 
     const notifications = [];
@@ -56,7 +56,7 @@ export async function CreateNotificationForRole(roleName, content) {
 
     return notifications;
   } catch (error) {
-    console.log("Error creando notificaciones para los usuarios del rol: ", roleName, error);
+    console.log("Error creando notificaciones para los usuarios del permiso: ", tokenClaim, error);
     throw error;
   }
 }

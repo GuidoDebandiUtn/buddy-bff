@@ -39,6 +39,12 @@ export async function createComplaint(data, idComplainant) {
 
     const newComplaint = await Complaint.create(newComplaintData);
 
+    try{
+      await CreateNotificationForPermission('READ_DENUNCIAS',`Se ha creado una nueva denuncia, referencia: ${referenceAtribute}: ${idReference}`);
+    }catch(error){
+      console.log("error creando notificacion para un los usuarios moderadores de una nueva denuncia: ",error);
+    }
+
     return newComplaint;
   } catch (error) {
     console.log(error);
@@ -69,13 +75,98 @@ export async function getAllComplaints(page = 1, recordsPerPage = 10) {
 }
 
 
-export async function deleteComplaint(idComplaint) {
+export async function aproveComplaint(validateComplaintDto) {
+  const complaint = validateComplaintDto.complaint;
+
+  await validateComplaint(complaint.idComplaint);
+
+  console.debug("valor de denuncia: ",complaint);
+
+  try {
+    switch (complaint.category) {
+      case 'SERVICE':
+        await deleteService(complaint.idService);
+        try{
+          await CreateNotificationForUser(complaint.idUserReported,
+            `Se ha eliminado tu servicio por que no cumple con nuestros terminos y condiciones.`);
+        }catch(error){
+          console.log("error creando notificacion para un servicio eliminado por denuncias: ",error);
+        }
+        break;
+      case 'SEARCH':
+        await publicationDelete(complaint.idPublicationSearch, 'SEARCH');
+        try{
+          await CreateNotificationForUser(complaint.idUserReported,
+            `Se ha eliminado tu Busqueda por que no cumple con nuestros terminos y condiciones.`);
+        }catch(error){
+          console.log("error creando notificacion para una busqueda eliminada por denuncias: ",error);
+        }
+        break;
+      case 'ADOPTION':
+        await publicationDelete(complaint.idPUblicationAdoption, 'ADOPTION');
+        try{
+          await CreateNotificationForUser(complaint.idUserReported,
+            `Se ha eliminado tu adopcion por que no cumple con nuestros terminos y condiciones.`);
+        }catch(error){
+          console.log("error creando notificacion para una adopcion eliminada por denuncias: ",error);
+        }
+        break;
+      default:
+        throw new Error("Error en la categoria del servicio");
+    }
+  } catch (error) {
+    console.log("Error ejecutando el borrado de la denuncia: ", error);
+    throw error;
+  }
+
+  try {
+    const userComplaints = await getComplaintsByUser(complaint.idUserReported);
+
+    console.debug("userComplaints: ", userComplaints);
+
+    if (userComplaints.length >= 3) {
+      const userState = await getStateForUser(complaint.idUserReported);
+      if (userState.userStateName == 'BLOQUEADO') {
+        throw new Error("El usuario ya se encuentra bloqueado!")
+      } 
+
+      const bloquedUserState = (await getUserStateByName('BLOQUEADO'))[0].dataValues;
+      console.log(bloquedUserState);
+      await updateUser(complaint.idUserReported,{blocked: true, blockedReason: "Maximo de denuncias superado"});
+      await changeStateUser(complaint.idUserReported, bloquedUserState.idUserState, validateComplaintDto.author.idUser);
+      try{
+        await CreateNotificationForUser(complaint.idUserReported,
+          `Has superado el maximo permitido de infracciones y por lo tanto tu usuario se encuentra bloqueado. Para poder desbloquearlo deberas comunicarte a projectapplicationbuddy@gmail.com`);
+      }catch(error){
+        console.log("error creando notificacion para un usuario bloqueado: ",error);
+      }
+    }
+    return;
+  } catch (error) {
+    console.log("error validando el bloqueo del usuario: ", error);
+    throw error;
+
+  }
+}
+
+
+
+
+
+
+
+export async function deleteComplaint(complaint) {
   try {
     await Complaint.update(
       { active: false },
-      { where: { idComplaint }, returning: true }
+      { where: { idComplaint:complaint.idComplaint }, returning: true }
     );
-
+  try{
+    await CreateNotificationForUser(complaint.idUserReporting,
+      `La denuncia que levantaste, fue analizada y rechazada por nuestro equipo, si crees que fue un error comunicate a porjectapplicationbuddy@gmail.com. Seguí contribuyendo a mejorar la app!`);
+    }catch(error){
+      console.log("error creando notificacion para una denuncia eliminada: ",error);
+    }
     return;
   } catch (error) {
     throw error;
@@ -136,52 +227,3 @@ export async function getComplaintsByUser(idUser) {
 }
 
 
-export async function aproveComplaint(validateComplaintDto) {
-  const complaint = validateComplaintDto.complaint;
-
-  await validateComplaint(complaint.idComplaint);
-
-  console.debug("valor de denuncia: ",complaint);
-
-  try {
-    switch (complaint.category) {
-      case 'SERVICE':
-        await deleteService(complaint.idService);
-        break;
-      case 'SEARCH':
-        await publicationDelete(complaint.idPublicationSearch, 'SEARCH');
-        break;
-      case 'ADOPTION':
-        await publicationDelete(complaint.idPUblicationAdoption, 'ADOPTION');
-        break;
-      default:
-        throw new Error("Error en la categoria del servicio");
-    }
-  } catch (error) {
-    console.log("Error ejecutando el borrado de la denuncia: ", error);
-    throw error;
-  }
-
-  try {
-    const userComplaints = await getComplaintsByUser(complaint.idUserReported);
-
-    console.debug("userComplaints: ", userComplaints);
-
-    if (userComplaints.length >= 3) {
-      const userState = await getStateForUser(complaint.idUserReported);
-      if (userState.userStateName == 'BLOQUEADO') {
-        throw new Error("El usuario ya se encuentra bloqueado!")
-      } 
-
-      const bloquedUserState = (await getUserStateByName('BLOQUEADO'))[0].dataValues;
-      console.log(bloquedUserState);
-      await updateUser(complaint.idUserReported,{blocked: true, blockedReason: "Maximo de denuncias superado"});
-      await changeStateUser(complaint.idUserReported, bloquedUserState.idUserState, validateComplaintDto.author.idUser);
-    }
-    return;
-  } catch (error) {
-    console.log("error validando el bloqueo del usuario: ", error);
-    throw error;
-
-  }
-}

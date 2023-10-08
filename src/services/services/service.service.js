@@ -219,9 +219,7 @@ export async function updateService(service, data) {
       ...(data.serviceTitle && { serviceTitle: data.serviceTitle }),
       ...(data.images && { images: data.images }),
       ...(data.emailService && { emailService: data.emailService }),
-      ...(data.serviceDescription && {
-        serviceDescription: data.serviceDescription,
-      }),
+      ...(data.serviceDescription && {serviceDescription: data.serviceDescription,}),
       ...(data.openTime && { openTime: data.openTime }),
       ...(data.closeTime && { closeTime: data.closeTime }),
       ...(data.address && { address: data.address }),

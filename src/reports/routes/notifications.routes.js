@@ -43,7 +43,7 @@ router.get("/",verifyToken,getNotificationsByUser);
 
 /**
  * @swagger
- * reports/notifications/:idUser:
+ * reports/notifications/:
  *   post:
  *     summary: Marca como leidas las notificaciones del usuario del token.
  *     tags: [NOTIFICATIONS]

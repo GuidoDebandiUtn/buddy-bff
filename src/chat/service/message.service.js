@@ -1,5 +1,7 @@
 import { Message } from "../../models/Message.js";
 import { Chat } from "../../models/Chat.js";
+import { createNotificationForUser } from "../../reports/service/notifications.services.js";
+import { getUserById } from "../../security/services/user.service.js";
 
 export async function getMessagesByChat(idUser, idChat) {
   try {
@@ -51,7 +53,19 @@ export async function createMessage(idUser, content, idChat) {
 
     chat.archivedEmitter = false;
     chat.archivedReceptor = false;
-    chat.save();
+    await chat.save();
+  try{
+    if(chat.idUserEmitter !== idUser){
+      const sender = await getUserById(chat.idUserReceptor);
+      await createNotificationForUser(chat.idUserEmitter,`${sender.username} te ha enviado un nuevo mensaje: ${content}`);
+    }else{
+      const sender = await getUserById(chat.idUserEmitter);
+      await createNotificationForUser(chat.idUserEmitter,`${sender.username} te ha enviado un nuevo mensaje: ${content}`);
+    }
+  }catch(error){
+    console.log("error creando notificacion para un nuevo mensaje de un chat",error);
+  }
+
 
     return message;
   } catch (error) {
