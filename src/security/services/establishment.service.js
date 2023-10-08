@@ -35,23 +35,6 @@ export async function getAllEstablishments() {
   }
 }
 
-export async function getEstablishmentById(idUser) {
-  try {
-    const query = `
-      SELECT idUser, mail, userName
-      FROM users
-      WHERE idUser = '${idUser}'
-      `;
-    const user = await sequelize.query(query, {
-      model: User,
-      mapToModel: true,
-    });
-
-    return user;
-  } catch (error) {
-    throw error;
-  }
-}
 export async function validateEstablishment(idUser, validateDto) {
   const userRevision = await getUserById(idUser);
 
@@ -108,6 +91,55 @@ export async function updateEstablishment(idUser, userData) {
     await User.update(updates, updateOptions);
 
     return;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getEstablishmentsRevision() {
+  try {
+    const query = `
+      SELECT users.idUser, users.mail, users.userName, userStates.userStateName, roles.roleName, users.image
+      FROM users
+      INNER JOIN (
+        SELECT idUser, idUserState
+        FROM stateUsers
+        where active = true
+      ) AS ultimosEstados ON users.idUser = ultimosEstados.idUser
+      INNER JOIN userStates ON ultimosEstados.idUserState = userStates.idUserState
+      INNER JOIN (
+        SELECT idUser, idRole
+        FROM userRoles 
+        where active = true
+      ) AS ultimosRoles ON users.idUser = ultimosRoles.idUser
+      INNER JOIN roles ON ultimosRoles.idRole = roles.idRole
+      WHERE userStates.userStateName IN ('EN REVISIÓN') and roles.roleName = "ESTABLECIMIENTO"
+    `;
+
+    const users = await sequelize.query(query, {
+      model: User,
+      mapToModel: true,
+    });
+
+    return users;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getEstablishmentById(idUser) {
+  try {
+    const query = `
+    SELECT idUser, mail, userName, name, lastName, image
+    FROM users
+    WHERE idUser = '${idUser}'
+    `;
+    const user = await sequelize.query(query, {
+      model: User,
+      mapToModel: true,
+    });
+
+    return user;
   } catch (error) {
     throw error;
   }

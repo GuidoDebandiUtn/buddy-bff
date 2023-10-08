@@ -1,7 +1,9 @@
 import { Router } from "express";
 import {
   establishmentUpdate,
+  getEstablishment,
   getEstablishments,
+  getRevisionEstablishments,
   postValidateEstablishment,
 } from "../controllers/establishment.controller.js";
 import { verifyToken } from "../controllers/auth.controller.js";
@@ -120,5 +122,81 @@ router.put("/:idUser", verifyToken, establishmentUpdate);
  *        description: Hubo un error
  */
 router.post("/validateEstablishment", verifyToken, postValidateEstablishment);
+
+/**
+ * @swagger
+ * /security/establishment/:
+ *  get:
+ *    summary: Obtener todos los establecimientos
+ *    tags: [ESTABLISHMENT]
+ *    responses:
+ *      200:
+ *        description: Lista de establecimientos activos
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                type: object
+ *                properties:
+ *                  mail:
+ *                    type: string
+ *                  establishmentName:
+ *                    type: string
+ *                  name:
+ *                    type: string
+ *                  lastName:
+ *                    type: string
+ *      404:
+ *        description: No se ha encotrado ningun establecimiento
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *      500:
+ *        description: Hubo un error
+ */
+router.get("/revision", verifyToken, getRevisionEstablishments);
+
+/**
+ * @swagger
+ * /security/establishment/:
+ *  get:
+ *    summary: Obtener todos los establecimientos
+ *    tags: [ESTABLISHMENT]
+ *    responses:
+ *      200:
+ *        description: Lista de establecimientos activos
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                type: object
+ *                properties:
+ *                  mail:
+ *                    type: string
+ *                  establishmentName:
+ *                    type: string
+ *                  name:
+ *                    type: string
+ *                  lastName:
+ *                    type: string
+ *      404:
+ *        description: No se ha encotrado ningun establecimiento
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *      500:
+ *        description: Hubo un error
+ */
+router.get("/:idUser", verifyToken, getEstablishment);
 
 export default router;

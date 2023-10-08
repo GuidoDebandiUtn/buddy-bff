@@ -1,11 +1,10 @@
 import {
   getAllEstablishments,
   getEstablishmentById,
+  getEstablishmentsRevision,
   updateEstablishment,
   validateEstablishment,
 } from "../services/establishment.service.js";
-import { getUserById } from "../services/user.service.js";
-
 
 export async function getEstablishments(req, res) {
   try {
@@ -23,30 +22,46 @@ export async function getEstablishments(req, res) {
   }
 }
 
+export async function getEstablishment(req, res) {
+  const { idUser } = req.params;
+  try {
+    const establishments = await getEstablishmentById(idUser);
+
+    if (!establishments[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ningun establecimiento" });
+    }
+
+    return res.status(200).json(establishments);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 
 export async function postValidateEstablishment(req, res) {
   const { idUser } = req.params;
 
   const userPermissions = req.userPermissions;
-  const permisionRequired = 'WRITE_DOCUMENTACION';
-  if(userPermissions.include(permisionRequired)){
-    res.status(401).json({ error: "No se cuenta con los permisos necesarios para ejecutar el EndPoint" });
-  }
-  
-  if(!idUser){
-    res.status(400).json({ error: "No se ha podido obtener el parametro IdUser" });
+  const permisionRequired = "WRITE_DOCUMENTACION";
+  if (userPermissions.include(permisionRequired)) {
+    res.status(401).json({
+      error:
+        "No se cuenta con los permisos necesarios para ejecutar el EndPoint",
+    });
   }
 
-  req.body.author= req.user;
-  
-  const validateResponse = await validateEstablishment(idUser,req.body);
+  if (!idUser) {
+    res
+      .status(400)
+      .json({ error: "No se ha podido obtener el parametro IdUser" });
+  }
+
+  req.body.author = req.user;
+
+  const validateResponse = await validateEstablishment(idUser, req.body);
   //manejar respuesta de servicio
-
-
-
-
 }
-
 
 export async function establishmentUpdate(req, res) {
   const { idUser } = req.params;
@@ -70,6 +85,18 @@ export async function establishmentUpdate(req, res) {
   }
 }
 
+export async function getRevisionEstablishments(req, res) {
+  try {
+    const establishments = await getEstablishmentsRevision();
 
+    if (!establishments[0]) {
+      return res
+        .status(404)
+        .json({ message: "No existe ningun establecimiento" });
+    }
 
-
+    return res.status(200).json(establishments);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}

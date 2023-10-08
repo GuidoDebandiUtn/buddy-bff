@@ -431,7 +431,7 @@ export async function getServicesEvery() {
   try {
     const query = `
     SELECT
-      services.serviceTitle, services.emailService, services.idService, serviceStates.serviceStateName,servicetypes.serviceTypeName 
+      services.serviceTitle, services.emailService, services.idService, serviceStates.serviceStateName,servicetypes.serviceTypeName, services.images 
     FROM services
     INNER JOIN (
       SELECT idService , idServiceState

@@ -13,7 +13,6 @@ import { Role } from "../../models/Role.js";
 export async function createUser(data) {
   const { mail, password, userName, name, image, userType } = data;
 
-
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     log.debug(
@@ -31,7 +30,7 @@ export async function createUser(data) {
         image,
       },
       {
-        fields: ["mail", "password", "userName","image"],
+        fields: ["mail", "password", "userName", "image"],
       }
     );
 
@@ -45,7 +44,6 @@ export async function createUser(data) {
     } else {
       role = await getRoleByName("ESTABLECIMIENTO");
     }
-
 
     await createUserRole(newUser.idUser, role[0].idRole);
 
@@ -90,7 +88,7 @@ export async function getAllUsers() {
 export async function getUserById(idUser) {
   try {
     const query = `
-    SELECT idUser, mail, userName,name,lastName, image
+    SELECT idUser, mail, userName, name, lastName, image
     FROM users
     WHERE idUser = '${idUser}'
     `;
@@ -191,7 +189,7 @@ export async function getStateForUser(idUser) {
 export async function getEveryUsers() {
   try {
     const query = `
-    SELECT users.idUser, users.mail, users.userName, userStates.userStateName, roles.roleName
+    SELECT users.idUser, users.mail, users.userName, userStates.userStateName, roles.roleName, users.image
     FROM users
     INNER JOIN (
       SELECT idUser, idUserState
@@ -278,11 +276,9 @@ export async function updateUser(idUser, data) {
       updates.lastName = lastName;
     }
 
-
     if (image) {
       updates.image = image;
     }
-   
 
     updates.updatedDate = new Date();
 
@@ -326,31 +322,37 @@ export async function destroyUser(mail) {
   }
 }
 
-
-
 export async function getUsersByRole(roleName) {
   roleName = roleName.toUpperCase();
   try {
     const users = await User.findAll({
-      attributes: ['idUser', 'username', 'image','name','mail'],
-      group: ['idUser'],
-      include: [{
-        model: UserRole,
-        limit: 1,
-        attributes: ["idRole","idUser"],
-        order: [['createdAt', 'DESC']], 
-        include: [{
-          model: Role,
-          attributes: ["idRole","roleName"],
-          where: { roleName: roleName },
-        },],
-      },],
+      attributes: ["idUser", "username", "image", "name", "mail"],
+      group: ["idUser"],
+      include: [
+        {
+          model: UserRole,
+          limit: 1,
+          attributes: ["idRole", "idUser"],
+          order: [["createdAt", "DESC"]],
+          include: [
+            {
+              model: Role,
+              attributes: ["idRole", "roleName"],
+              where: { roleName: roleName },
+            },
+          ],
+        },
+      ],
     });
-    const formattedUsers = users.map(user => user.get({ plain: true }));
+    const formattedUsers = users.map((user) => user.get({ plain: true }));
 
     return formattedUsers;
   } catch (error) {
-    console.log("error en la obtencion de usuarios para el rol:",roleName,error)
+    console.log(
+      "error en la obtencion de usuarios para el rol:",
+      roleName,
+      error
+    );
     throw error;
   }
 }
