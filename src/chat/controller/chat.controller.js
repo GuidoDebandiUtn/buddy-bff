@@ -7,11 +7,21 @@ import {
 export async function getChatsController(req, res) {
   const { archived } = req.params;
   const idUser = req.user.idUser;
+  const userPermissions = req.user.permissions[0].permisos.split(' - ');
+
+  const requiredPermissions = ['READ_CHAT',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+  }
+
+
 
   try {
     const data = await getChatsByUser(idUser, archived);
 
-    if (!data) {
+    if (!data[0]) {
       return res
         .status(204)
         .json({ message: "No se ha obtenido ningun chat para el usuario" });
@@ -33,6 +43,15 @@ export async function getChatsController(req, res) {
 export async function postCreateChat(req, res) {
   const { idUserReceptor } = req.params;
   const idUserEmitter = req.user.idUser;
+  const userPermissions = req.user.permissions[0].permisos.split(' - ');
+
+  const requiredPermissions = ['READ_CHAT', 'WRITE_CHAT'];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+  }
+
 
   try {
     const data = await createChat(idUserEmitter, idUserReceptor);
@@ -56,6 +75,15 @@ export async function postCreateChat(req, res) {
 export async function postArchiveChat(req, res) {
   const { idChat,archive } = req.params;
   const idUser = req.user.idUser;
+  const userPermissions = req.user.permissions[0].permisos.split(' - ');
+
+  const requiredPermissions = ['READ_CHAT', 'WRITE_CHAT'];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+  }
+
 
   try {
     const data = await archiveChat(idUser, idChat,archive);

@@ -43,6 +43,15 @@ const router = Router();
  *                properties:
  *                  message:
  *                    type: string
+ *       403:
+ *         description: no se cuentan con los permisos necesarios para esta accion
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
  *       500:
  *          description: Error interno del servicio
  */
@@ -89,6 +98,15 @@ router.get('/:archived', verifyToken,getChatsController);
  *                properties:
  *                  message:
  *                    type: string
+ *       403:
+ *         description: no se cuentan con los permisos necesarios para esta accion
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
  *       500:
  *          description: Error interno del servicio
  */
@@ -99,7 +117,7 @@ router.post('/:idUserReceptor', verifyToken,postCreateChat);
  * @swagger
  * chat/chat/archive/:idChat/:archive:
  *   post:
- *     summary: Archiva el chat enviado por parametro para el usuario enviado en el token
+ *     summary: Archiva o desarchiva el chat enviado por parametro para el usuario enviado en el token
  *     parameters:
  *       - in: query
  *         name: idChat
@@ -133,6 +151,15 @@ router.post('/:idUserReceptor', verifyToken,postCreateChat);
  *                    type: string
  *       401:
  *         description: error en el token enviado.
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *       403:
+ *         description: no se cuentan con los permisos necesarios para esta accion
  *         content:
  *            application/json:
  *              schema:

@@ -45,6 +45,15 @@ const router = Router();
  *                properties:
  *                  message:
  *                    type: string
+ *       403:
+ *         description: no se cuentan con los permisos necesarios para esta accion
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
  *       500:
  *          description: Error interno del servicio
  */
@@ -101,7 +110,7 @@ router.get("/:idChat", verifyToken, getMessagesController);
  *                  message:
  *                    type: string
  *       403:
- *         description: error en el usuario enviado, no participa en el chat.
+ *         description: error en el usuario enviado, no participa en el chat o no se cuentan con los permisos necesarios para la accion.
  *         content:
  *            application/json:
  *              schema:
