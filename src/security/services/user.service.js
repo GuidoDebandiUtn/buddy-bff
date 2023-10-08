@@ -8,43 +8,40 @@ import { createUserRole } from "./userRole.service.js";
 import bcrypt from "bcryptjs";
 import { UserState } from "../../models/UserState.js";
 import { Role } from "../../models/Role.js";
+import { Document } from "../../models/Document.js";
 
 export async function createUser(data) {
-  const { mail, password, userName, name, image, userType } = data;
+  const { mail, password, userName, name, image, userType, documents } = data;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    log.debug(
-      "Hased password for user %s, original: %s, hashed: %s",
-      userName,
-      password,
-      hashedPassword
-    );
+    log.debug("Hased password for user %s, original: %s, hashed: %s", userName, password, hashedPassword);
     const newUser = await User.create(
-      {
-        mail,
-        password: hashedPassword,
-        userName,
-        name,
-        image,
-      },
-      {
-        fields: ["mail", "password", "userName", "image"],
-      }
+      { mail, password: hashedPassword, userName, name, image, },
+      {fields: ["mail", "password", "userName", "image"],}
     );
 
     const userState = await getUserStateByName("ACTIVO");
+    const idUser= newUser.idUser;
 
-    await createStateUser(newUser.idUser, userState[0].idUserState);
+    await createStateUser(idUser, userState[0].idUserState);
 
     let role;
-    if (userType == "BASICO") {
+    if (userType == "ESTABLECIMIENTO") {
       role = await getRoleByName("BÁSICO");
+      for(const document of documents){
+        const title = document.title;
+        const file = document.file;
+        await Document.create(
+          {idUser,title,file,},
+          {fields:["idUser","title","file"]}
+        )
+      }
     } else {
-      role = await getRoleByName("ESTABLECIMIENTO");
+      role = await getRoleByName("BASICO");
     }
 
-    await createUserRole(newUser.idUser, role[0].idRole);
+    await createUserRole(idUser, role[0].idRole);
 
     return newUser;
   } catch (error) {
