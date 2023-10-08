@@ -11,7 +11,7 @@ import { getPetById } from "../services/pet.service.js";
 
 export async function informationCreate(req, res) {
   const { idPet } = req.params;
-
+  
   try {
     const pet = await getPetById(idPet);
 

@@ -8,6 +8,7 @@ import {
   turnDelete,
   turnUpdate,
 } from "../controllers/turn.controller.js";
+import { verifyToken } from "../../security/controllers/auth.controller.js";
 
 const router = Router();
 

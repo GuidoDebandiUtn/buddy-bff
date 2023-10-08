@@ -1,4 +1,3 @@
-import { getIdToken } from "../../helpers/authHelper.js";
 import {
   createService,
   deleteService,
@@ -9,11 +8,21 @@ import {
   retriveServiceTypesDB,
   updateService,
 } from "../services/service.service.js";
-import { getServiceStateByName } from "../services/serviceState.service.js";
+
 
 export async function serviceCreate(req, res) {
   const idUser = req.user.idUser;
   const { idServiceType, petTypes } = req.body;
+    
+  const userPermissions = req.user.permissions[0].permisos.split(' - ');
+
+  const requiredPermissions = ["CREATE_SERVICIOS",];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+  }
 
   const errorMessage =
     !idServiceType && !petTypes
@@ -50,6 +59,15 @@ export async function serviceCreate(req, res) {
 
 export async function getServicesByUser(req, res) {
   const idUser = req.user.idUser;
+  const userPermissions = req.user.permissions[0].permisos.split(' - ');
+
+  const requiredPermissions = ["READ_SERVICIOS",];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+  }
 
   try {
     const services = await getServicesByIdUser(idUser);
@@ -76,6 +94,15 @@ export async function getServicesByUser(req, res) {
 
 export async function getServices(req, res) {
   try {
+    const userPermissions = req.user.permissions[0].permisos.split(' - ');
+
+    const requiredPermissions = ["READ_SERVICIOS",];
+    const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  
+  
+    if (!hasAllPermissions) {
+      return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+    }
     const services = await getAllServices();
 
     if (!services[0]) {
@@ -92,6 +119,15 @@ export async function getServices(req, res) {
 
 export async function getEveryServices(req, res) {
   try {
+    const userPermissions = req.user.permissions[0].permisos.split(' - ');
+
+    const requiredPermissions = ["READ_SERVICIOS","READ_LISTA_SERVICIOS",];
+    const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  
+  
+    if (!hasAllPermissions) {
+      return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+    }
     const services = await getServicesEvery();
 
     if (!services[0]) {
@@ -108,6 +144,11 @@ export async function getEveryServices(req, res) {
 
 export async function serviceUpdate(req, res) {
   const { idService } = req.params;
+  const idAuthor = req.user.idUser;
+  const userPermissions = req.user.permissions[0].permisos.split(' - ');
+
+  const requiredPermissions = ["WRITE_SERVICIOS",];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   try {
     const services = await getServiceById(idService);
@@ -117,6 +158,11 @@ export async function serviceUpdate(req, res) {
         .status(204)
         .json({ message: "Error en la obtencion del servicio a modificar" });
     }
+
+    if (!hasAllPermissions && services[0].idUser !== idAuthor) {
+      return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+    }
+
 
     await updateService(services[0], req.body);
 
@@ -138,6 +184,12 @@ export async function serviceUpdate(req, res) {
 export async function serviceDelete(req, res) {
   const idAuthor = req.user.idUser;
   const { idService } = req.params;
+  
+  const userPermissions = req.user.permissions[0].permisos.split(' - ');
+
+  const requiredPermissions = ["WRITE_SERVICIOS",];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
 
   try {
     const services = await getServiceById(idService);
@@ -146,6 +198,10 @@ export async function serviceDelete(req, res) {
       return res
         .status(404)
         .json({ message: "No existe ningún servicio con ese id" });
+    }
+
+    if (!hasAllPermissions && services[0].idUser !== idAuthor) {
+      return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
     }
 
     await deleteService(services[0], idAuthor);
@@ -161,6 +217,16 @@ export async function serviceDelete(req, res) {
 }
 
 export async function getServiceTypes(req, res) {
+  
+  const userPermissions = req.user.permissions[0].permisos.split(' - ');
+
+  const requiredPermissions = ["READ_SERVICIOS",];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+  }
   try {
     const types = await retriveServiceTypesDB();
 
@@ -178,6 +244,16 @@ export async function getServiceTypes(req, res) {
 
 export async function getService(req, res) {
   const { idService } = req.params;
+    
+  const userPermissions = req.user.permissions[0].permisos.split(' - ');
+
+  const requiredPermissions = ["READ_SERVICIOS",];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+  }
 
   try {
     const services = await getServiceById(idService);
