@@ -1,5 +1,5 @@
 import { User } from "../../models/User.js";
-import { User } from "../../models/Document.js";
+import { Document } from "../../models/Document.js";
 import { getUserStateByName } from "./userState.service.js";
 import { sequelize } from "../../database/database.js";
 import bcrypt from "bcryptjs";
