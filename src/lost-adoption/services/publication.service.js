@@ -130,11 +130,11 @@ export async function createAdoption(adoptionDto,idUser) {
     });
 
     try{
-      CreateNotificationForZone(searchDto.idLocality,`Se ha creado una adopcion en tu zona, ${adoptionDto.title}`);
+      CreateNotificationForZone(adoptionDto.idLocality,`Se ha creado una adopcion en tu zona, ${adoptionDto.title}`);
     }catch(error){
       console.log("error creando notificacion para una nueva publicacion de adopcion: ",error)
     }
-    
+
     return newPublication;
   } catch (error) {
     console.error("Error creating a publication:", error);

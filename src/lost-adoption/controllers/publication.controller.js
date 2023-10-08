@@ -14,12 +14,27 @@ import {
 
 export async function getPublications(req, res) {
   const { modelType, page, size } = req.query;
+  
+  if(!modelType){
+    return res
+    .status(400)
+    .json({ message: `El parametro modelType es obligatorio`, code: 400 });
+  }
 
-    if(!modelType){
-      return res
-      .status(400)
-      .json({ message: `El parametro modelType es obligatorio`, code: 400 });
-    }
+
+  const userPermissions = req.user.permissions[0].permisos.split(' - ');
+
+  const requiredPermissions=[];
+  if(modelType.toUpperCase() == 'ADOPTION'){
+    requiredPermissions=['READ_PUBLICACION_ADOPCION',];
+  }else{
+    requiredPermissions=['READ_PUBLICACION_BUSQUEDA',];
+  }
+
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+  }
 
   try {
     const data = await retrivePaginatedPublications(page, size, modelType);
@@ -38,6 +53,15 @@ export async function getPublications(req, res) {
 
 export async function obtainPublicationsByUser(req,res){
   const idUser = req.user.idUser;
+  const userPermissions = req.user.permissions[0].permisos.split(' - ');
+
+  const requiredPermissions=['READ_PUBLICACION_BUSQUEDA','READ_PUBLICACION_ADOPCION'];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+  }
+
 
   try {
     const user = await  getUserById(idUser);
@@ -71,8 +95,15 @@ export async function obtainPublicationsByUser(req,res){
 
 
 export async function postSearch(req, res) {
+  const idUser = req.user.idUser;
+  const userPermissions = req.user.permissions[0].permisos.split(' - ');
 
-  const idUser = await getIdToken(req.header("auth-token"));
+  const requiredPermissions=['CREATE_PUBLICACION_BUSQUEDA',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+  }
 
   try {
     let publication;
@@ -89,8 +120,16 @@ export async function postSearch(req, res) {
 }
 
 export async function postAdoption(req, res) {
+  const idUser = req.user.idUser;
+  const userPermissions = req.user.permissions[0].permisos.split(' - ');
 
-  const idUser = await getIdToken(req.header("auth-token"));
+  const requiredPermissions=['CREATE_PUBLICACION_ADOPCION',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+  }
+
 
   try {
     checkParameters(req.body,'ADOPTION');
@@ -107,6 +146,23 @@ export async function postAdoption(req, res) {
 export async function deletePublication(req, res) {
   const { idPublication } = req.params;
   const { modelType } = req.query;
+  const idUser = req.user.idUser;
+
+  const userPermissions = req.user.permissions[0].permisos.split(' - ');
+
+  const requiredPermissions=['WRITE_PUBLICACION_ADOPCION','WRITE_PUBLICACION_BUSQUEDA'];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+
+  const publication = await getPublicationById(idPublication, modelType);
+  console.debug(`publicacion obtenida correctamente. entidad obtenida: '${publication}'`);
+  if (!publication[0]) {
+    return res.status(404).json({message: `No se ha podido encontrar la publicacion a eliminar`,});
+  }
+
+  if (!hasAllPermissions && publication[0].idUser != idUser) {
+    return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+  }
 
 
   if(!modelType){
@@ -118,17 +174,7 @@ export async function deletePublication(req, res) {
   console.log(`Iniciado proceso de eliminacion de publicacion - Parametros modelType='${modelType}', idPublication= '${idPublication}'`);
 
   try {
-    const publication = await getPublicationById(idPublication, modelType);
-    console.log(
-      `publicacion obtenida correctamente. entidad obtenida: '${publication}'`
-    );
-    if (!publication) {
-      return res
-        .status(404)
-        .json({
-          message: `No se ha podido encontrar la publicacion a eliminar`,
-        });
-    }
+
 
     await publicationDelete(idPublication, modelType);
 
@@ -148,27 +194,40 @@ export async function deletePublication(req, res) {
 export async function putPublication(req, res) {
   const { modelType } = req.query;
   const { idPublication } = req.params;
+  const userPermissions = req.user.permissions[0].permisos.split(' - ');
+  const idUser = req.user.idUser;
 
-  
   if(!modelType){
     return res
     .status(400)
     .json({ message: `El parametro modelType es obligatorio`, code: 400 });
   }
-  
+
+  const requiredPermissions=[];
+  if(modelType.toUpperCase() == 'ADOPTION'){
+    requiredPermissions=['WRITE_PUBLICACION_ADOPCION','READ_PUBLICACION_ADOPCION'];
+  }else{
+    requiredPermissions=['WRITE_PUBLICACION_BUSQUEDA','READ_PUBLICACION_BUSQUEDA'];
+  }
+
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  let publication = await getPublicationById(idPublication, modelType);
+  if (!publication[0]) {
+    return res
+      .status(404).json({message: `No se ha podido encontrar la publicacion de Id: '${idPublication}'.`,});
+  }
+
+  if (!hasAllPermissions && publication[0].idUser != idUser) {
+    return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+  }
+
  
   
   try {
     checkParameters(req.body,modelType);
     
-    let publication = await getPublicationById(idPublication, modelType);
-    if (!publication) {
-      return res
-        .status(404)
-        .json({
-          message: `No se ha podido encontrar la publicacion de Id: '${idPublication}'.`,
-        });
-    }
+
     publication = await updatePublication(req.body, idPublication, modelType);
 
     return res

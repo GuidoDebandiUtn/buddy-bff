@@ -50,13 +50,73 @@ const router = Router();
  *                    type: string
  *       400:
  *         description: No existe el tipo de publicacion seleccionado.
+ *       403:
+ *         description: no se cuentan con los permisos necesarios para esta accion
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
  *       500:
  *          description: Error interno del servicio
  */
-router.get('/',getPublications);
+router.get('/',verifyToken,getPublications);
 
 
-
+/**
+ * @swagger
+ * /publications/publication:
+ *   get:
+ *     summary: Obtiene una lista de publiaciones para un usuario.
+ *     tags: [PUBLICATION]
+ *     parameters:
+ *       - in: path
+ *         name: page
+ *         description: numero de hoja a mostrar
+ *         required: false
+ *         default: 0
+ *         schema:
+ *           type: Integer
+ *       - in: path
+ *         name: size
+ *         description: tamaño de la hoja a mostrar, cantidad de elementos
+ *         required: false
+ *         default: 10
+ *         schema:
+ *           type:Integer
+ *       - in: path
+ *         name: modelType
+ *         description: tipo de publicacion a mostrar, puede ser PublicationAdoption o PublicationSearch
+ *         required: false
+ *         default: PublicationSearch
+ *         schema:
+ *           type:String
+ *     responses:
+ *       200:
+ *         description: Lista de publicaciones obtenida.
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *       400:
+ *         description: No existe el tipo de publicacion seleccionado.
+ *       403:
+ *         description: no se cuentan con los permisos necesarios para esta accion
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *       500:
+ *          description: Error interno del servicio
+ */
 router.get('/ByUser',verifyToken,obtainPublicationsByUser);
 
 
@@ -102,6 +162,15 @@ router.get('/ByUser',verifyToken,obtainPublicationsByUser);
  *                    type: string
  *       400:
  *         description: Error en los atributos de la publicacion.
+ *       403:
+ *         description: no se cuentan con los permisos necesarios para esta accion
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
  *       500:
  *          description: Error interno del servicio
  */
@@ -174,6 +243,15 @@ router.post('/search', verifyToken,postSearch);
  *                    type: string
  *       400:
  *         description: Error en los atributos de la publicacion.
+ *       403:
+ *         description: no se cuentan con los permisos necesarios para esta accion
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
  *       500:
  *          description: Error interno del servicio
  */
@@ -212,7 +290,7 @@ router.post('/adoption', verifyToken,postAdoption);
  *       500:
  *          description: Error interno del servicio
  */
-router.delete('/:idPublication',deletePublication);
+router.delete('/:idPublication',verifyToken,deletePublication);
 /**
  * @swagger
  * /publications/publication/:idPublication:
@@ -299,9 +377,18 @@ router.delete('/:idPublication',deletePublication);
  *                    type: string
  *       400:
  *         description: Error en los atributos de la publicacion.
+ *       403:
+ *         description: no se cuentan con los permisos necesarios para esta accion
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
  *       500:
  *          description: Error interno del servicio
  */
-router.put('/:idPublication',putPublication);
+router.put('/:idPublication',verifyToken,putPublication);
 
 export default router;

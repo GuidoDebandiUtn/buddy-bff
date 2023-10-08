@@ -41,6 +41,15 @@ const router = Router();
  *         description: No se ha encontrado la publicacion solicitada.
  *       204:
  *         description: No se ha trazas para la publicacion solicitada.
+ *       403:
+ *         description: no se cuentan con los permisos necesarios para esta accion
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
  *       500:
  *          description: Error interno del servicio
  */
@@ -93,6 +102,15 @@ router.get('/:idPublicationSearch', verifyToken,getTracesByPublication);
  *                    type: string
  *       400:
  *         description: Error en los atributos de la traza.
+ *       403:
+ *         description: no se cuentan con los permisos necesarios para esta accion
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
  *       500:
  *          description: Error interno del servicio
  */
@@ -149,6 +167,15 @@ router.post('/', verifyToken,postTrace);
  *                    type: string
  *       400:
  *         description: Error en los atributos de la traza.
+ *       403:
+ *         description: no se cuentan con los permisos necesarios para esta accion
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
  *       500:
  *          description: Error interno del servicio
  */
@@ -178,6 +205,15 @@ router.put('/:idTrace', verifyToken,putTrace);
  *                    type: string
  *       400:
  *         description: Error en el id de la traza.
+ *       403:
+ *         description: no se cuentan con los permisos necesarios para esta accion
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
  *       500:
  *          description: Error interno del servicio
  */

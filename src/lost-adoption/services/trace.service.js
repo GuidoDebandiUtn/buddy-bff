@@ -1,16 +1,9 @@
 import { Trace } from "../../models/Trace.js";
-import { getPublicationById } from "./publication.service.js";
+
 
 
 export async function createTrace(traceDto,idUser) {
     try {
-      let publication = await getPublicationById(traceDto.idPublicationSearch);
-
-  
-      if (!publication) {
-        throw new Error("No se ha podido obtener la pulicacion asociada a la traza");
-      }
-  
   
       console.log(`Calling Trace.create with: ${JSON.stringify(traceDto)}`);
       const newTrace = await Trace.create({
