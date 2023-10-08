@@ -7,6 +7,7 @@ import {
   regionDelete,
   regionUpdate,
 } from "../controllers/region.controller.js";
+import { verifyToken } from "../../security/controllers/auth.controller.js";
 
 const router = Router();
 
@@ -49,7 +50,7 @@ const router = Router();
  *      500:
  *        description: Hubo un error
  */
-router.post("/", regionCreate);
+router.post("/",verifyToken, regionCreate);
 
 /**
  * @swagger
@@ -73,7 +74,7 @@ router.post("/", regionCreate);
  *       500:
  *          description: Hubo un error
  */
-router.get("/", getRegions);
+router.get("/",verifyToken, getRegions);
 
 /**
  * @swagger
@@ -96,7 +97,7 @@ router.get("/", getRegions);
  *       500:
  *          description: Hubo un error
  */
-router.get("/:idRegion", getRegion);
+router.get("/:idRegion",verifyToken, getRegion);
 
 /**
  * @swagger
@@ -130,7 +131,7 @@ router.get("/:idRegion", getRegion);
  *       500:
  *          description: Hubo un error
  */
-router.put("/:idRegion", regionUpdate);
+router.put("/:idRegion",verifyToken, regionUpdate);
 
 /**
  * @swagger
@@ -153,7 +154,7 @@ router.put("/:idRegion", regionUpdate);
  *       500:
  *          description: Hubo un error
  */
-router.delete("/:idRegion", regionDelete);
+router.delete("/:idRegion",verifyToken, regionDelete);
 
 /**
  * @swagger
@@ -176,6 +177,6 @@ router.delete("/:idRegion", regionDelete);
  *       500:
  *          description: Hubo un error
  */
-router.post("/active/:idRegion", regionActive);
+router.post("/active/:idRegion",verifyToken, regionActive);
 
 export default router;

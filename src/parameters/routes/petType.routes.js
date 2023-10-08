@@ -7,6 +7,7 @@ import {
   petTypeDelete,
   petTypeUpdate,
 } from "../controllers/petType.controller.js";
+import { verifyToken } from "../../security/controllers/auth.controller.js";
 
 const router = Router();
 
@@ -47,7 +48,7 @@ const router = Router();
  *       500:
  *          description: Hubo un error
  */
-router.post("/", petTypeCreate);
+router.post("/",verifyToken, petTypeCreate);
 
 /**
  * @swagger
@@ -71,7 +72,7 @@ router.post("/", petTypeCreate);
  *       500:
  *          description: Hubo un error
  */
-router.get("/", getPetTypes);
+router.get("/",verifyToken, getPetTypes);
 
 /**
  * @swagger
@@ -96,7 +97,7 @@ router.get("/", getPetTypes);
  *       500:
  *          description: Hubo un error
  */
-router.get("/:idPetType", getPetType);
+router.get("/:idPetType",verifyToken, getPetType);
 
 /**
  * @swagger
@@ -130,7 +131,7 @@ router.get("/:idPetType", getPetType);
  *       500:
  *          description: Hubo un error
  */
-router.put("/:idPetType", petTypeUpdate);
+router.put("/:idPetType",verifyToken, petTypeUpdate);
 
 /**
  * @swagger
@@ -153,7 +154,7 @@ router.put("/:idPetType", petTypeUpdate);
  *       500:
  *          description: Hubo un error
  */
-router.delete("/:idPetType", petTypeDelete);
+router.delete("/:idPetType",verifyToken, petTypeDelete);
 
 /**
  * @swagger
@@ -176,6 +177,6 @@ router.delete("/:idPetType", petTypeDelete);
  *       500:
  *          description: Hubo un error
  */
-router.post("/active/:idPetType", petTypeActive);
+router.post("/active/:idPetType",verifyToken, petTypeActive);
 
 export default router;

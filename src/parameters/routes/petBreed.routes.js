@@ -8,6 +8,7 @@ import {
   getPetBreedsByType,
   petBreedActive,
 } from "../controllers/petBreed.controller.js";
+import { verifyToken } from "../../security/controllers/auth.controller.js";
 
 const router = Router();
 
@@ -48,7 +49,7 @@ const router = Router();
  *       500:
  *          description: Hubo un error
  */
-router.post("/", petBreedCreate);
+router.post("/",verifyToken, petBreedCreate);
 
 /**
  * @swagger
@@ -72,7 +73,7 @@ router.post("/", petBreedCreate);
  *       500:
  *          description: Hubo un error
  */
-router.get("/", getPetBreeds);
+router.get("/",verifyToken, getPetBreeds);
 
 /**
  * @swagger
@@ -97,7 +98,7 @@ router.get("/", getPetBreeds);
  *       500:
  *          description: Hubo un error
  */
-router.get("/byId/:idPetBreed", getPetBreed);
+router.get("/byId/:idPetBreed",verifyToken, getPetBreed);
 
 /**
  * @swagger
@@ -131,7 +132,7 @@ router.get("/byId/:idPetBreed", getPetBreed);
  *       500:
  *          description: Hubo un error
  */
-router.put("/:idPetBreed", petBreedUpdate);
+router.put("/:idPetBreed",verifyToken, petBreedUpdate);
 
 /**
  * @swagger
@@ -154,7 +155,7 @@ router.put("/:idPetBreed", petBreedUpdate);
  *       500:
  *          description: Hubo un error
  */
-router.delete("/:idPetBreed", petBreedDelete);
+router.delete("/:idPetBreed",verifyToken, petBreedDelete);
 
 /**
  * @swagger
@@ -177,7 +178,7 @@ router.delete("/:idPetBreed", petBreedDelete);
  *       500:
  *          description: Hubo un error
  */
-router.post("/active/:idPetBreed", petBreedActive);
+router.post("/active/:idPetBreed",verifyToken, petBreedActive);
 
 /**
  * @swagger
@@ -201,6 +202,6 @@ router.post("/active/:idPetBreed", petBreedActive);
  *       500:
  *          description: Hubo un error
  */
-router.get("/byType/:petTypeName", getPetBreedsByType);
+router.get("/byType/:petTypeName",verifyToken, getPetBreedsByType);
 
 export default router;

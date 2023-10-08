@@ -8,6 +8,7 @@ import {
   vaccineDelete,
   vaccineUpdate,
 } from "../controllers/vaccine.controller.js";
+import { verifyToken } from "../../security/controllers/auth.controller.js";
 
 const router = Router();
 
@@ -48,7 +49,7 @@ const router = Router();
  *       500:
  *          description: Hubo un error
  */
-router.post("/:idPet", vaccineCreate);
+router.post("/:idPet",verifyToken, vaccineCreate);
 
 /**
  * @swagger
@@ -74,7 +75,7 @@ router.post("/:idPet", vaccineCreate);
  *       500:
  *          description: Hubo un error
  */
-router.get("/:idPet", getVaccines);
+router.get("/:idPet",verifyToken, getVaccines);
 
 /**
  * @swagger
@@ -99,7 +100,7 @@ router.get("/:idPet", getVaccines);
  *       500:
  *          description: Hubo un error
  */
-router.get("/:idPet/:idVaccine", getVaccine);
+router.get("/:idPet/:idVaccine",verifyToken, getVaccine);
 
 /**
  * @swagger
@@ -133,7 +134,7 @@ router.get("/:idPet/:idVaccine", getVaccine);
  *       500:
  *          description: Hubo un error
  */
-router.put("/:idPet/:idVaccine", vaccineUpdate);
+router.put("/:idPet/:idVaccine",verifyToken, vaccineUpdate);
 
 /**
  * @swagger
@@ -156,7 +157,7 @@ router.put("/:idPet/:idVaccine", vaccineUpdate);
  *       500:
  *          description: Hubo un error
  */
-router.delete("/:idPet/:idVaccine", vaccineDelete);
+router.delete("/:idPet/:idVaccine",verifyToken, vaccineDelete);
 
 /**
  * @swagger
@@ -179,7 +180,7 @@ router.delete("/:idPet/:idVaccine", vaccineDelete);
  *       500:
  *          description: Hubo un error
  */
-router.post("/:idPet/active/:idVaccine", vaccineActive);
+router.post("/:idPet/active/:idVaccine",verifyToken, vaccineActive);
 
 /**
  * @swagger
@@ -202,6 +203,6 @@ router.post("/:idPet/active/:idVaccine", vaccineActive);
  *       500:
  *          description: Hubo un error
  */
-router.put("/:idPet/archive/:idVaccine", vaccineArchive);
+router.put("/:idPet/archive/:idVaccine",verifyToken, vaccineArchive);
 
 export default router;

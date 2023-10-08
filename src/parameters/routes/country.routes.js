@@ -7,6 +7,7 @@ import {
   getCountries,
   getCountry,
 } from "../controllers/country.controller.js";
+import { verifyToken } from "../../security/controllers/auth.controller.js";
 
 const router = Router();
 
@@ -47,7 +48,7 @@ const router = Router();
  *       500:
  *          description: Hubo un error
  */
-router.post("/", countryCreate);
+router.post("/",verifyToken, countryCreate);
 
 /**
  * @swagger
@@ -71,7 +72,7 @@ router.post("/", countryCreate);
  *       500:
  *          description: Hubo un error
  */
-router.get("/", getCountries);
+router.get("/",verifyToken, getCountries);
 
 /**
  * @swagger
@@ -96,7 +97,7 @@ router.get("/", getCountries);
  *       500:
  *          description: Hubo un error
  */
-router.get("/:idCountry", getCountry);
+router.get("/:idCountry",verifyToken, getCountry);
 
 /**
  * @swagger
@@ -130,7 +131,7 @@ router.get("/:idCountry", getCountry);
  *       500:
  *          description: Hubo un error
  */
-router.put("/:idCountry", countryUpdate);
+router.put("/:idCountry",verifyToken, countryUpdate);
 
 /**
  * @swagger
@@ -153,7 +154,7 @@ router.put("/:idCountry", countryUpdate);
  *       500:
  *          description: Hubo un error
  */
-router.delete("/:idCountry", countryDelete);
+router.delete("/:idCountry",verifyToken, countryDelete);
 
 /**
  * @swagger
@@ -176,6 +177,6 @@ router.delete("/:idCountry", countryDelete);
  *       500:
  *          description: Hubo un error
  */
-router.post("/active/:idCountry", countryActive);
+router.post("/active/:idCountry",verifyToken, countryActive);
 
 export default router;

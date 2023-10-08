@@ -60,10 +60,6 @@ const router = Router();
  *      500:
  *        description: Hubo un error
  */
-router.post(
-  "/changeState/:idService/:serviceStateName",
-  verifyToken,
-  changeServiceState
-);
+router.post("/changeState/:idService/:serviceStateName", verifyToken, changeServiceState);
 
 export default router;

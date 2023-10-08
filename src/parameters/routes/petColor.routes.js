@@ -7,6 +7,7 @@ import {
   petColorDelete,
   petColorUpdate,
 } from "../controllers/petColor.controller.js";
+import { verifyToken } from "../../security/controllers/auth.controller.js";
 
 const router = Router();
 
@@ -47,7 +48,7 @@ const router = Router();
  *       500:
  *          description: Hubo un error
  */
-router.post("/", petColorCreate);
+router.post("/",verifyToken, petColorCreate);
 
 /**
  * @swagger
@@ -71,7 +72,7 @@ router.post("/", petColorCreate);
  *       500:
  *          description: Hubo un error
  */
-router.get("/", getPetColors);
+router.get("/",verifyToken, getPetColors);
 
 /**
  * @swagger
@@ -96,7 +97,7 @@ router.get("/", getPetColors);
  *       500:
  *          description: Hubo un error
  */
-router.get("/:idPetColor", getPetColor);
+router.get("/:idPetColor",verifyToken, getPetColor);
 
 /**
  * @swagger
@@ -130,7 +131,7 @@ router.get("/:idPetColor", getPetColor);
  *       500:
  *          description: Hubo un error
  */
-router.put("/:idPetColor", petColorUpdate);
+router.put("/:idPetColor",verifyToken, petColorUpdate);
 
 /**
  * @swagger
@@ -153,7 +154,7 @@ router.put("/:idPetColor", petColorUpdate);
  *       500:
  *          description: Hubo un error
  */
-router.delete("/:idPetColor", petColorDelete);
+router.delete("/:idPetColor",verifyToken, petColorDelete);
 
 /**
  * @swagger
@@ -176,6 +177,6 @@ router.delete("/:idPetColor", petColorDelete);
  *       500:
  *          description: Hubo un error
  */
-router.post("/active/:idPetColor", petColorActive);
+router.post("/active/:idPetColor",verifyToken, petColorActive);
 
 export default router;

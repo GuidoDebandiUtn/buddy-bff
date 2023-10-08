@@ -50,7 +50,7 @@ const router = Router();
  *       500:
  *          description: Hubo un error
  */
-router.post("/:idPet", turnCreate);
+router.post("/:idPet",verifyToken, turnCreate);
 
 /**
  * @swagger
@@ -78,7 +78,7 @@ router.post("/:idPet", turnCreate);
  *       500:
  *          description: Hubo un error
  */
-router.get("/:idPet", getTurns);
+router.get("/:idPet",verifyToken, getTurns);
 
 /**
  * @swagger
@@ -105,7 +105,7 @@ router.get("/:idPet", getTurns);
  *       500:
  *          description: Hubo un error
  */
-router.get("/:idPet/:idTurn", getTurn);
+router.get("/:idPet/:idTurn",verifyToken, getTurn);
 
 /**
  * @swagger
@@ -141,7 +141,7 @@ router.get("/:idPet/:idTurn", getTurn);
  *       500:
  *          description: Hubo un error
  */
-router.put("/:idPet/:idTurn", turnUpdate);
+router.put("/:idPet/:idTurn",verifyToken, turnUpdate);
 
 /**
  * @swagger
@@ -164,7 +164,7 @@ router.put("/:idPet/:idTurn", turnUpdate);
  *       500:
  *          description: Hubo un error
  */
-router.delete("/:idPet/:idTurn", turnDelete);
+router.delete("/:idPet/:idTurn",verifyToken, turnDelete);
 
 /**
  * @swagger
@@ -187,7 +187,7 @@ router.delete("/:idPet/:idTurn", turnDelete);
  *       500:
  *          description: Hubo un error
  */
-router.post("/:idPet/active/:idTurn", turnActive);
+router.post("/:idPet/active/:idTurn",verifyToken, turnActive);
 
 /**
  * @swagger
@@ -210,6 +210,6 @@ router.post("/:idPet/active/:idTurn", turnActive);
  *       500:
  *          description: Hubo un error
  */
-router.put("/:idPet/archive/:idTurn", turnArchive);
+router.put("/:idPet/archive/:idTurn",verifyToken, turnArchive);
 
 export default router;

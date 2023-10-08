@@ -7,6 +7,7 @@ import {
   serviceTypeDelete,
   serviceTypeUpdate,
 } from "../controllers/serviceType.controller.js";
+import { verifyToken } from "../../security/controllers/auth.controller.js";
 
 const router = Router();
 
@@ -47,7 +48,7 @@ const router = Router();
  *       500:
  *          description: Hubo un error
  */
-router.post("/", serviceTypeCreate);
+router.post("/",verifyToken, serviceTypeCreate);
 
 /**
  * @swagger
@@ -71,7 +72,7 @@ router.post("/", serviceTypeCreate);
  *       500:
  *          description: Hubo un error
  */
-router.get("/", getServiceTypes);
+router.get("/",verifyToken, getServiceTypes);
 
 /**
  * @swagger
@@ -96,7 +97,7 @@ router.get("/", getServiceTypes);
  *       500:
  *          description: Hubo un error
  */
-router.get("/:idServiceType", getServiceType);
+router.get("/:idServiceType",verifyToken, getServiceType);
 
 /**
  * @swagger
@@ -130,7 +131,7 @@ router.get("/:idServiceType", getServiceType);
  *       500:
  *          description: Hubo un error
  */
-router.put("/:idServiceType", serviceTypeUpdate);
+router.put("/:idServiceType",verifyToken, serviceTypeUpdate);
 
 /**
  * @swagger
@@ -153,7 +154,7 @@ router.put("/:idServiceType", serviceTypeUpdate);
  *       500:
  *          description: Hubo un error
  */
-router.delete("/:idServiceType", serviceTypeDelete);
+router.delete("/:idServiceType",verifyToken, serviceTypeDelete);
 
 /**
  * @swagger
@@ -176,6 +177,6 @@ router.delete("/:idServiceType", serviceTypeDelete);
  *       500:
  *          description: Hubo un error
  */
-router.post("/active/:idServiceType", serviceTypeActive);
+router.post("/active/:idServiceType",verifyToken, serviceTypeActive);
 
 export default router;

@@ -7,6 +7,7 @@ import {
   provinceDelete,
   provinceUpdate,
 } from "../controllers/province.controller.js";
+import { verifyToken } from "../../security/controllers/auth.controller.js";
 
 const router = Router();
 
@@ -49,7 +50,7 @@ const router = Router();
  *      500:
  *        description: Hubo un error
  */
-router.post("/", provinceCreate);
+router.post("/",verifyToken, provinceCreate);
 
 /**
  * @swagger
@@ -73,7 +74,7 @@ router.post("/", provinceCreate);
  *       500:
  *          description: Hubo un error
  */
-router.get("/", getProvinces);
+router.get("/",verifyToken, getProvinces);
 
 /**
  * @swagger
@@ -96,7 +97,7 @@ router.get("/", getProvinces);
  *       500:
  *          description: Hubo un error
  */
-router.get("/:idProvince", getProvince);
+router.get("/:idProvince",verifyToken, getProvince);
 
 /**
  * @swagger
@@ -130,7 +131,7 @@ router.get("/:idProvince", getProvince);
  *       500:
  *          description: Hubo un error
  */
-router.put("/:idProvince", provinceUpdate);
+router.put("/:idProvince",verifyToken, provinceUpdate);
 
 /**
  * @swagger
@@ -153,7 +154,7 @@ router.put("/:idProvince", provinceUpdate);
  *       500:
  *          description: Hubo un error
  */
-router.delete("/:idProvince", provinceDelete);
+router.delete("/:idProvince",verifyToken, provinceDelete);
 
 /**
  * @swagger
@@ -176,6 +177,6 @@ router.delete("/:idProvince", provinceDelete);
  *       500:
  *          description: Hubo un error
  */
-router.post("/active/:idProvince", provinceActive);
+router.post("/active/:idProvince",verifyToken, provinceActive);
 
 export default router;

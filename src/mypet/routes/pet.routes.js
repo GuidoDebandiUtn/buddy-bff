@@ -106,7 +106,7 @@ router.get("/",verifyToken, getPets);
  *       500:
  *          description: Hubo un error
  */
-router.get("/:idPet", getPet);
+router.get("/:idPet",verifyToken, getPet);
 
 /**
  * @swagger
@@ -140,7 +140,7 @@ router.get("/:idPet", getPet);
  *       500:
  *          description: Hubo un error
  */
-router.put("/:idPet", petUpdate);
+router.put("/:idPet",verifyToken, petUpdate);
 
 /**
  * @swagger
@@ -163,7 +163,7 @@ router.put("/:idPet", petUpdate);
  *       500:
  *          description: Hubo un error
  */
-router.delete("/:idPet", petDelete);
+router.delete("/:idPet",verifyToken, petDelete);
 
 /**
  * @swagger
@@ -186,6 +186,6 @@ router.delete("/:idPet", petDelete);
  *       500:
  *          description: Hubo un error
  */
-router.post("/active/:idPet", petActive);
+router.post("/active/:idPet",verifyToken, petActive);
 
 export default router;

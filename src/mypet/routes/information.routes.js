@@ -8,6 +8,7 @@ import {
   informationDelete,
   informationUpdate,
 } from "../controllers/information.controller.js";
+import { verifyToken } from "../../security/controllers/auth.controller.js";
 
 const router = Router();
 
@@ -48,7 +49,7 @@ const router = Router();
  *      500:
  *        description: Hubo un error
  */
-router.post("/:idPet", informationCreate);
+router.post("/:idPet",verifyToken, informationCreate);
 
 /**
  * @swagger
@@ -74,7 +75,7 @@ router.post("/:idPet", informationCreate);
  *       500:
  *          description: Hubo un error
  */
-router.get("/:idPet", getInformations);
+router.get("/:idPet",verifyToken, getInformations);
 
 /**
  * @swagger
@@ -99,7 +100,7 @@ router.get("/:idPet", getInformations);
  *       500:
  *          description: Hubo un error
  */
-router.get("/:idPet/:idInformation", getInformation);
+router.get("/:idPet/:idInformation",verifyToken, getInformation);
 
 /**
  * @swagger
@@ -133,7 +134,7 @@ router.get("/:idPet/:idInformation", getInformation);
  *       500:
  *          description: Hubo un error
  */
-router.put("/:idPet/:idInformation", informationUpdate);
+router.put("/:idPet/:idInformation",verifyToken, informationUpdate);
 
 /**
  * @swagger
@@ -156,7 +157,7 @@ router.put("/:idPet/:idInformation", informationUpdate);
  *       500:
  *          description: Hubo un error
  */
-router.delete("/:idPet/:idInformation", informationDelete);
+router.delete("/:idPet/:idInformation",verifyToken, informationDelete);
 
 /**
  * @swagger
@@ -179,7 +180,7 @@ router.delete("/:idPet/:idInformation", informationDelete);
  *       500:
  *          description: Hubo un error
  */
-router.post("/:idPet/active/:idInformation", informationActive);
+router.post("/:idPet/active/:idInformation",verifyToken, informationActive);
 
 /**
  * @swagger
@@ -202,6 +203,6 @@ router.post("/:idPet/active/:idInformation", informationActive);
  *       500:
  *          description: Hubo un error
  */
-router.put("/:idPet/archive/:idInformation", informationArchive);
+router.put("/:idPet/archive/:idInformation",verifyToken, informationArchive);
 
 export default router;

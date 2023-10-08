@@ -7,6 +7,7 @@ import {
   localityDelete,
   localityUpdate,
 } from "../controllers/locality.controller.js";
+import { verifyToken } from "../../security/controllers/auth.controller.js";
 
 const router = Router();
 
@@ -49,7 +50,7 @@ const router = Router();
  *      500:
  *        description: Hubo un error
  */
-router.post("/", localityCreate);
+router.post("/",verifyToken, localityCreate);
 
 /**
  * @swagger
@@ -73,7 +74,7 @@ router.post("/", localityCreate);
  *       500:
  *          description: Hubo un error
  */
-router.get("/", getLocalities);
+router.get("/",verifyToken, getLocalities);
 
 /**
  * @swagger
@@ -96,7 +97,7 @@ router.get("/", getLocalities);
  *       500:
  *          description: Hubo un error
  */
-router.get("/:idLocality", getLocality);
+router.get("/:idLocality",verifyToken, getLocality);
 
 /**
  * @swagger
@@ -130,7 +131,7 @@ router.get("/:idLocality", getLocality);
  *       500:
  *          description: Hubo un error
  */
-router.put("/:idLocality", localityUpdate);
+router.put("/:idLocality",verifyToken, localityUpdate);
 
 /**
  * @swagger
@@ -153,7 +154,7 @@ router.put("/:idLocality", localityUpdate);
  *       500:
  *          description: Hubo un error
  */
-router.delete("/:idLocality", localityDelete);
+router.delete("/:idLocality",verifyToken, localityDelete);
 
 /**
  * @swagger
@@ -176,6 +177,6 @@ router.delete("/:idLocality", localityDelete);
  *       500:
  *          description: Hubo un error
  */
-router.post("/active/:idLocality", localityActive);
+router.post("/active/:idLocality",verifyToken, localityActive);
 
 export default router;
