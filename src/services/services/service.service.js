@@ -95,7 +95,7 @@ export async function createService(idUser, data) {
 export async function getServiceByUserIdAndServiceType(idUser, idServiceType) {
   try {
     const query = `
-          SELECT services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.images,services.closeTime, services.open24hs,services.avgRating,
+          SELECT services.images,services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs,services.avgRating,
           FROM services
           INNER JOIN (
               SELECT idService, idServiceState, MAX(createdAt) AS ultimaFecha , active
@@ -128,7 +128,7 @@ export async function getServicesByIdUser(idUser) {
   try {
     const query = `
       SELECT
-        services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs, services.idService,services.avgRating,services.emailService, services.idUser,
+        services.images,services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs, services.idService,services.avgRating,services.emailService, services.idUser,
         serviceStates.serviceStateName,serviceStates.idServiceState,
         GROUP_CONCAT(petTypes.idPetType) AS idPetTypes, GROUP_CONCAT(petTypes.petTypeName) AS petTypesName,
         servicetypes.idServiceType,servicetypes.serviceTypeName 
@@ -182,7 +182,7 @@ export async function getAllServices() {
   try {
     const query = `
       SELECT
-        services.serviceTitle, services.serviceDescription, services.address, services.openTime,services.images, services.closeTime, services.open24hs, services.idService,services.avgRating,services.emailService, services.idUser,
+        services.images,services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs, services.idService,services.avgRating,services.emailService, services.idUser,
         serviceStates.serviceStateName,serviceStates.idServiceState,
         GROUP_CONCAT(petTypes.idPetType) AS idPetTypes, GROUP_CONCAT(petTypes.petTypeName) AS petTypesName,
         servicetypes.idServiceType,servicetypes.serviceTypeName 
@@ -285,7 +285,7 @@ export async function getServiceById(idService) {
   try {
     const query = `      
       SELECT
-        services.serviceTitle, services.serviceDescription, services.address, services.images,services.openTime, services.closeTime, services.open24hs, services.idService,services.avgRating, services.emailService, services.idUser,
+        services.images,services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs, services.idService,services.avgRating, services.emailService, services.idUser,
         serviceStates.serviceStateName,serviceStates.idServiceState,
         GROUP_CONCAT(petTypes.idPetType) AS idPetTypes, GROUP_CONCAT(petTypes.petTypeName) AS petTypesName,
         servicetypes.idServiceType,servicetypes.serviceTypeName 
