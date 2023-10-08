@@ -46,7 +46,7 @@ export async function postValidateEstablishment(req, res) {
   const userPermissions = req.userPermissions;
   const permisionRequired = "WRITE_DOCUMENTACION";
   if (userPermissions.include(permisionRequired)) {
-    res.status(401).json({
+    res.status(403).json({
       error:
         "No se cuenta con los permisos necesarios para ejecutar el EndPoint",
     });
