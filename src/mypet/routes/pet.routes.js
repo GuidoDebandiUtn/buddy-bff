@@ -40,7 +40,7 @@ const router = Router();
  *                 type: string
  *               birthDate:
  *                 type: Date
- *              image:
+ *               image:
  *                 type: string
  *     responses:
  *       201:

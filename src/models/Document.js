@@ -15,10 +15,6 @@ Document.init(
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    idUser: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
     validDate: {
       type: DataTypes.DATE,
     },

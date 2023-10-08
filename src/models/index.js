@@ -1,7 +1,7 @@
 import { Chat } from "./Chat.js";
 import { Complaint } from "./Complaint.js";
 import { Country } from "./Country.js";
-// import {} from "./Document.js";
+import {Document} from "./Document.js";
 // import {} from "./Image.js";
 import { Information } from "./Information.js";
 import { Locality } from "./Locality.js";
@@ -45,6 +45,9 @@ User.hasMany(UserRole, { foreignKey: "idUser" });
 User.hasMany(Service, { foreignKey: "idUser" });
 User.hasMany(Chat, { foreignKey: "idUserEmitter" });
 User.hasMany(Notification, { foreignKey: "idUser" });
+
+User.hasMany(Document, { foreignKey: "idUser" });
+Document.belongsTo(User, { foreignKey: "idUser" });
 
 Chat.belongsTo(User, { foreignKey: "idUserEmitter" });
 Chat.hasMany(Message, { foreignKey: "idChat" });
