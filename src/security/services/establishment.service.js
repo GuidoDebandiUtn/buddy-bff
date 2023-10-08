@@ -1,4 +1,5 @@
 import { User } from "../../models/User.js";
+import { User } from "../../models/Document.js";
 import { getUserStateByName } from "./userState.service.js";
 import { sequelize } from "../../database/database.js";
 import bcrypt from "bcryptjs";
@@ -122,6 +123,25 @@ export async function getEstablishmentsRevision() {
     });
 
     return users;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getEstablishmentDocuments(idUser) {
+  try {
+    const query = `
+      SELECT file, validDate, title
+      FROM documents
+      WHERE idUser = ${idUser}
+    `;
+
+    const documents = await sequelize.query(query, {
+      model: Document,
+      mapToModel: true,
+    });
+
+    return documents;
   } catch (error) {
     throw error;
   }

@@ -1,6 +1,7 @@
 import {
   getAllEstablishments,
   getEstablishmentById,
+  getEstablishmentDocuments,
   getEstablishmentsRevision,
   updateEstablishment,
   validateEstablishment,
@@ -96,6 +97,22 @@ export async function getRevisionEstablishments(req, res) {
     }
 
     return res.status(200).json(establishments);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+export async function getDocumentsEstablishment(req, res) {
+  const { idUser } = req.params;
+
+  try {
+    const documents = await getEstablishmentDocuments(idUser);
+
+    if (!documents[0]) {
+      return res.status(404).json({ message: "No existe ningun documentos" });
+    }
+
+    return res.status(200).json(documents);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   establishmentUpdate,
+  getDocumentsEstablishment,
   getEstablishment,
   getEstablishments,
   getRevisionEstablishments,
@@ -198,5 +199,7 @@ router.get("/revision", verifyToken, getRevisionEstablishments);
  *        description: Hubo un error
  */
 router.get("/:idUser", verifyToken, getEstablishment);
+
+router.get("/document/:idUser", verifyToken, getDocumentsEstablishment);
 
 export default router;
