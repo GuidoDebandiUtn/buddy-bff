@@ -90,7 +90,7 @@ export async function createChat(idUserEmitter, idUserReceptor) {
     if (existingChat) {
       throw {
         message: "Ya existe un chat entre esos usuarios",
-        code: 400,
+        code: 200,
         chat: existingChat,
       };
     }
@@ -106,7 +106,10 @@ export async function createChat(idUserEmitter, idUserReceptor) {
   }
 }
 
-export async function archiveChat(idUser, idChat) {
+export async function archiveChat(idUser, idChat, archive) {
+
+  const archiveValue = archive.toLowerCase() === "true" ? 1 : 0;
+
   try {
     const chat = await Chat.findByPk(idChat);
 
@@ -115,9 +118,9 @@ export async function archiveChat(idUser, idChat) {
     }
 
     if (chat.idUserEmitter === idUser) {
-      chat.archivedEmitter = true;
+      chat.archivedEmitter = archiveValue;
     } else if (chat.idUserReceptor === idUser) {
-      chat.archivedReceptor = true;
+      chat.archivedReceptor = archiveValue;
     } else {
       throw { message: "Error en el usuario enviado", code: 400 };
     }

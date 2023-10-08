@@ -11,6 +11,7 @@ import { getPetBreedById } from "../../parameters/services/petBreed.service.js";
 import { getPetColorById } from "../../parameters/services/petColor.service.js";
 import { getPetTypeById } from "../../parameters/services/petType.service.js";
 import { User } from "../../models/User.js";
+import { CreateNotificationForZone } from "../../reports/service/notifications.services.js";
 
 export async function retrivePaginatedPublications(  page = 1,  recordsPerPage = 10,  modelType = "SEARCH") {
   
@@ -57,8 +58,6 @@ export async function getPublicationsByUser(idUser) {
 };
 
 
-
-
 export async function createSearch(searchDto,idUser) {
   try {
     let locality = await getLocalityById(searchDto.idLocality);
@@ -87,6 +86,13 @@ export async function createSearch(searchDto,idUser) {
       idUser: idUser,
       ...searchDto,
     });
+
+    try{
+    CreateNotificationForZone(searchDto.idLocality,`Se ha creado una busqueda de una mascota en tu zona, por favor si llegas a verla, da aviso!`);
+    }catch(error){
+      console.log("error creando notificacion para una nueva publicacion de busqueda: ",error)
+    }
+
 
     return newPublication;
   } catch (error) {
@@ -123,6 +129,12 @@ export async function createAdoption(adoptionDto,idUser) {
       ...adoptionDto,
     });
 
+    try{
+      CreateNotificationForZone(searchDto.idLocality,`Se ha creado una adopcion en tu zona, ${adoptionDto.title}`);
+    }catch(error){
+      console.log("error creando notificacion para una nueva publicacion de adopcion: ",error)
+    }
+    
     return newPublication;
   } catch (error) {
     console.error("Error creating a publication:", error);

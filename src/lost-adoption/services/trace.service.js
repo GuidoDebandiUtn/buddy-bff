@@ -17,7 +17,15 @@ export async function createTrace(traceDto,idUser) {
         idAuthorUser: idUser,
         ...traceDto,
       });
-  
+
+      if(idUser !== publication.idUser){
+        try{
+          CreateNotificationForuser(publication.idUse,`Se ha agregado una nueva traza a tu publicacion!`);
+        }catch(error){
+          console.log("error creando notificacion para una nueva traza de una publicacion",error)
+        }
+      }
+
       return newTrace;
     } catch (error) {
       console.error("Error creating a trace:", error);

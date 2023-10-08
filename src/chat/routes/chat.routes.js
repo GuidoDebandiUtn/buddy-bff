@@ -97,7 +97,7 @@ router.post('/:idUserReceptor', verifyToken,postCreateChat);
 
 /**
  * @swagger
- * chat/chat/archive/:idChat:
+ * chat/chat/archive/:idChat/:archive:
  *   post:
  *     summary: Archiva el chat enviado por parametro para el usuario enviado en el token
  *     parameters:
@@ -106,6 +106,11 @@ router.post('/:idUserReceptor', verifyToken,postCreateChat);
  *         schema:
  *           type: uuid
  *         description: uuid del chat a archivar.
+ *       - in: query
+ *         name: archive
+ *         schema:
+ *           type: boolean
+ *         description: bandera para archivar o desarchivar el chat.
  *     tags: [CHAT]
  *     responses:
  *       200:
@@ -138,7 +143,7 @@ router.post('/:idUserReceptor', verifyToken,postCreateChat);
  *       500:
  *          description: Error interno del servicio
  */
-router.post('/archive/:idChat', verifyToken,postArchiveChat);
+router.post('/archive/:idChat/:archive', verifyToken,postArchiveChat);
 
 
 export default router;

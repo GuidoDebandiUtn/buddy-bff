@@ -65,7 +65,7 @@ export async function complaintDelete(req, res) {
         .json({ message: "No se ha encontrado la denuncia que se quiere eliminar" });
     }
 
-    await deleteComplaint(idComplaint);
+    await deleteComplaint(complaint[0].dataValues);
 
     return res
       .status(200)
@@ -79,6 +79,8 @@ export async function complaintDelete(req, res) {
 
 export async function complaintExecute(req, res) {
   const { idComplaint,validate } = req.params;
+  validate = validate.toLowerCase() === "true" ? true : false;
+
   let validateDto = {};
 
   try {
@@ -99,7 +101,7 @@ export async function complaintExecute(req, res) {
       .status(200)
       .json({ message: "Se ha ejecutado correctamente la denuncia" });
     }else{
-      await deleteComplaint(complaint.idComplaint);
+      await deleteComplaint(complaint[0].dataValues);
       return res
       .status(200)
       .json({ message: "Se ha dado de baja correctamente la denuncia" });

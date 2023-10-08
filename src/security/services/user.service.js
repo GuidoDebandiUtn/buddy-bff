@@ -3,11 +3,10 @@ import { UserRole } from "../../models/UserRole.js";
 import { getUserStateByName } from "./userState.service.js";
 import { createStateUser } from "./stateUser.service.js";
 import { sequelize } from "../../database/database.js";
-import { getRoleByName } from "./role.service.js";
+import { getRoleByName, getRolesByPermission } from "./role.service.js";
 import { createUserRole } from "./userRole.service.js";
 import bcrypt from "bcryptjs";
 import { UserState } from "../../models/UserState.js";
-import { StateUser } from "../../models/StateUser.js";
 import { Role } from "../../models/Role.js";
 
 export async function createUser(data) {
@@ -144,7 +143,7 @@ export async function getUserByMail(mail) {
 export async function getPermissionsForUser(idUser) {
   try {
     const query = `
-      SELECT GROUP_CONCAT(p.tokenClaim SEPARATOR ' - ') AS permisos
+      SELECT GROUP_CONCAT(p.tokenClaim SEPARATOR ' - ') AS permissions
       FROM users AS u
       JOIN userroles AS ur ON u.idUser = ur.idUser
       JOIN roles AS r ON r.idRole = ur.idRole
@@ -318,6 +317,66 @@ export async function destroyUser(mail) {
 
     return;
   } catch (error) {
+    throw error;
+  }
+}
+
+export async function getUsersByPermission(tokenClaim) {
+  tokenClaim = tokenClaim.toUpperCase();
+
+  try {
+    const roleIds = await getRolesByPermission(tokenClaim).map(
+      (role) => role.idRole
+    );
+    if (!roleIds || roleIds.length === 0) {
+      throw {
+        message: "No se encontraron roles con el permiso especificado",
+        code: 400,
+      };
+    }
+
+    const users = await User.findAll({
+      attributes: ["idUser", "username", "image", "name", "mail"],
+      group: ["idUser"],
+      include: [
+        {
+          model: UserRole,
+          attributes: ["idRole", "idUser"],
+          where: {
+            idRole: roleIds,
+          },
+        },
+      ],
+    });
+
+    const formattedUsers = users.map((user) => user.get({ plain: true }));
+
+    return formattedUsers;
+  } catch (error) {
+    console.log(
+      "error en la obtencion de usuarios para el permiso:",
+      permission,
+      error
+    );
+    throw error;
+  }
+}
+
+export async function getUsersBylocality(idLocality) {
+  try {
+    const users = await User.findAll({
+      attributes: ["idUser", "username", "image", "name", "mail"],
+      where: { idLocality: idLocality, idLocality },
+    });
+    const formattedUsers = users.map((user) => user.get({ plain: true }));
+
+    return formattedUsers;
+  } catch (error) {
+    console.log(
+      "error en la obtencion de usuarios por localidad, para localidad:",
+      idLocality,
+      error
+    );
     throw error;
   }
 }
