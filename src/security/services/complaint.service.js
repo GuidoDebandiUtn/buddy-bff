@@ -4,6 +4,7 @@ import { Complaint } from "../../models/Complaint.js";
 import { PublicationAdoption } from "../../models/PublicationAdoption.js";
 import { PublicationSearch } from "../../models/PublicationSearch.js";
 import { Service } from "../../models/Service.js";
+import { CreateNotificationForPermission } from "../../reports/service/notifications.services.js";
 import { deleteService } from "../../services/services/service.service.js";
 import { changeStateUser } from "./stateUser.service.js";
 import { getStateForUser, updateUser } from "./user.service.js";
@@ -66,9 +67,28 @@ export async function getAllComplaints(page = 1, recordsPerPage = 10) {
     const where = { active: 1, verified: 0 };
 
 
-    const complaints = Complaint.findAll({ offset, limit, order, attributes, include, where })
-
-    return complaints;
+    const complaints = await Complaint.findAll({ offset, limit, order, attributes, include, where });
+    const transformedComplaints = complaints.map(complaint => {
+      let publication = null;
+    
+      if (complaint.publicationSearch) {
+        publication = { ...complaint.publicationSearch.dataValues };
+        delete complaint.dataValues.publicationSearch;
+      } else if (complaint.publicationAdoption) {
+        publication = { ...complaint.publicationAdoption.dataValues };
+        delete complaint.dataValues.publicationAdoption;
+      } else if (complaint.service) {
+        publication = { ...complaint.service.dataValues };
+        delete complaint.dataValues.service;
+      }
+    
+      return { ...complaint.toJSON(), publication };
+    });
+    
+    console.log('transformedComplaints:', transformedComplaints);
+    
+    return transformedComplaints;
+    
   } catch (error) {
     throw error;
   }

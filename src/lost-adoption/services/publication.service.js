@@ -88,9 +88,9 @@ export async function createSearch(searchDto,idUser) {
     });
 
     try{
-    CreateNotificationForZone(searchDto.idLocality,`Se ha creado una busqueda de una mascota en tu zona, por favor si llegas a verla, da aviso!`);
+    await CreateNotificationForZone(searchDto.idLocality,`Se ha creado una busqueda de una mascota en tu zona, por favor si llegas a verla, da aviso!`);
     }catch(error){
-      console.log("error creando notificacion para una nueva publicacion de busqueda: ",error)
+      console.log("error creando notificacion para una nueva publicacion de busqueda: ",error);
     }
 
 
@@ -130,7 +130,7 @@ export async function createAdoption(adoptionDto,idUser) {
     });
 
     try{
-      CreateNotificationForZone(searchDto.idLocality,`Se ha creado una adopcion en tu zona, ${adoptionDto.title}`);
+      await CreateNotificationForZone(searchDto.idLocality,`Se ha creado una adopcion en tu zona, ${adoptionDto.title}`);
     }catch(error){
       console.log("error creando notificacion para una nueva publicacion de adopcion: ",error)
     }

@@ -32,7 +32,7 @@ export async function userCreate(req, res) {
 
     const newUser = await createUser(data);
 
-    console.log(`usuario: ${user[0].mail} creado con exito`);
+    console.log(`usuario: ${newUser.mail} creado con exito`);
 
     await validateMail(newUser.mail, newUser.idUser);
 
@@ -40,6 +40,7 @@ export async function userCreate(req, res) {
       .status(201)
       .json({ message: "Se creó correctamente el ususario" });
   } catch (error) {
+    console.log(`error en el registro del nuevo usuario, error: ${error}`);
     await destroyUser(data.mail);
     return res.status(500).json({
       message: error.message,

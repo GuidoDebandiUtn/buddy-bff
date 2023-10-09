@@ -6,7 +6,7 @@ export async function retrieveNotificationsByUserDB(idUser) {
   try {
     const notifications = await Notification.findAll({
       where: { idUser: idUser, active: true },
-      order: [['createdAt', 'ASC']],
+      order: [['createdAt', 'DESC']],
     });
 
     return notifications;
@@ -22,7 +22,7 @@ export async function createNotificationForUser(idUser, content) {
   try {
     const user = await User.findByPk(idUser);
     if (!user) {
-      throw { message: 'Error obteniendo el chat asociado al mensaje', code: 400 };
+      throw { message: `Error obteniendo el usuario a notificar, valor idUser: ${idUser}`, code: 400 };
     }
 
     const notification = await Notification.create({
@@ -52,7 +52,7 @@ export async function CreateNotificationForPermission(tokenClaim, content) {
       });
 
       notifications.push(notification);
-    }
+    };
 
     return notifications;
   } catch (error) {
