@@ -32,6 +32,8 @@ export async function userCreate(req, res) {
 
     const newUser = await createUser(data);
 
+    console.log(`usuario: ${user[0].mail} creado con exito`);
+
     await validateMail(newUser.mail, newUser.idUser);
 
     return res

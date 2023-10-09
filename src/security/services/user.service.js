@@ -15,7 +15,7 @@ export async function createUser(data) {
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    log.debug("Hased password for user %s, original: %s, hashed: %s", userName, password, hashedPassword);
+    console.debug("Hased password for user %s, original: %s, hashed: %s", userName, password, hashedPassword);
     const newUser = await User.create(
       { mail, password: hashedPassword, userName, name, image, },
       {fields: ["mail", "password", "userName", "image"],}
@@ -62,7 +62,7 @@ export async function createUser(data) {
 
     return newUser;
   } catch (error) {
-    console.error("Error creating user: %s, error: ", userName, error);
+    console.log("Error creating user: %s, error: ", userName, error);
     throw error;
   }
 }

@@ -111,10 +111,11 @@ export async function getServiceByUserIdAndServiceType(idUser, idServiceType) {
     });
 
     for (let service of services) {
+      console.debug("entidad service a validar:", service);
       if (service.images[0]) {
-        console.log("imagen antes del parse: ", service.image);
+        console.debug("imagen antes del parse: ", service.images);
         service.images = JSON.parse(service.images);
-        console.log("imagen desíes del parse: ", service.image);
+        console.debug("imagen desíes del parse: ", service.image);
       }
     }
 
@@ -164,10 +165,11 @@ export async function getServicesByIdUser(idUser) {
       };
     });
     for (let service of servicesWithPetTypes) {
-      if (service.images) {
-        console.log("imagen antes del parse: ", service.image);
+      console.debug("entidad service a validar:", service);
+      if (service.images[0]) {
+        console.debug("imagen antes del parse: ", service.images);
         service.images = JSON.parse(service.images);
-        console.log("imagen desíes del parse: ", service.image);
+        console.debug("imagen desíes del parse: ", service.images);
       }
     }
 
@@ -219,11 +221,11 @@ export async function getAllServices() {
       };
     });
     for (let service of servicesWithPetTypes) {
-      console.log("entidad del for: ", service);
-      if (service.images) {
-        console.log("imagen antes del parse: ", service.image);
+      console.debug("entidad del for: ", service);
+      if (service.images[0]) {
+        console.debug("imagen antes del parse: ", service.images);
         service.images = JSON.parse(service.images);
-        console.log("imagen desíes del parse: ", service.image);
+        console.debug("imagen desíes del parse: ", service.images);
       }
     }
 
@@ -322,10 +324,11 @@ export async function getServiceById(idService) {
     });
 
     for (let service of servicesWithPetTypes) {
-      if (service.images) {
-        console.log("imagen antes del parse: ", service.image);
+      console.debug("entidad service a validar:", service);
+      if (service.images[0]) {
+        console.debug("imagen antes del parse: ", service.images);
         service.images = JSON.parse(service.images);
-        console.log("imagen desíes del parse: ", service.image);
+        console.debug("imagen desíes del parse: ", service.images);
       }
     }
 
@@ -450,8 +453,9 @@ export async function calculateAverageRating(service) {
 export async function retriveServiceTypesDB() {
   try {
     const types = await ServiceType.findAll({ where: { active: true } });
+    const formattedTypes = types.map((type) => type.get({ plain: true }));
 
-    return types;
+    return formattedTypes;
   } catch (err) {
     console.error("Error al obtener los tipos de servicio: ", err);
     throw err;
