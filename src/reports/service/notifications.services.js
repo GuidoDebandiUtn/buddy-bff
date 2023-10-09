@@ -37,7 +37,7 @@ export async function createNotificationForUser(idUser, content) {
 }
 
 
-export async function CreateNotificationForPermission(tokenClaim, content) {
+export async function createNotificationForPermission(tokenClaim, content) {
   try {
     const users = await getUsersByPermission(tokenClaim);
     if (!users || users.length === 0) {
@@ -62,7 +62,7 @@ export async function CreateNotificationForPermission(tokenClaim, content) {
 }
 
 
-export async function CreateNotificationForZone(idLocality, content) {
+export async function createNotificationForZone(idLocality, content) {
   try {
     const users = await getUsersBylocality(idLocality);
     if (!users || users.length === 0) {

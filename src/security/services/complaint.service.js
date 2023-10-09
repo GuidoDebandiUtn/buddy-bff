@@ -4,8 +4,8 @@ import { Complaint } from "../../models/Complaint.js";
 import { PublicationAdoption } from "../../models/PublicationAdoption.js";
 import { PublicationSearch } from "../../models/PublicationSearch.js";
 import { Service } from "../../models/Service.js";
-import { CreateNotificationForPermission } from "../../reports/service/notifications.services.js";
-import { deleteService } from "../../services/services/service.service.js";
+import { createNotificationForPermission, createNotificationForUser } from "../../reports/service/notifications.services.js";
+import { deleteService, getServiceById } from "../../services/services/service.service.js";
 import { changeStateUser } from "./stateUser.service.js";
 import { getStateForUser, updateUser } from "./user.service.js";
 import { getUserStateByName } from "./userState.service.js";
@@ -41,7 +41,7 @@ export async function createComplaint(data, idComplainant) {
     const newComplaint = await Complaint.create(newComplaintData);
 
     try{
-      await CreateNotificationForPermission('READ_DENUNCIAS',`Se ha creado una nueva denuncia, referencia: ${referenceAtribute}: ${idReference}`);
+      await createNotificationForPermission('READ_DENUNCIAS',`Se ha creado una nueva denuncia, referencia: ${referenceAtribute}: ${idReference}`);
     }catch(error){
       console.log("error creando notificacion para un los usuarios moderadores de una nueva denuncia: ",error);
     }
@@ -72,20 +72,21 @@ export async function getAllComplaints(page = 1, recordsPerPage = 10) {
       let publication = null;
     
       if (complaint.publicationSearch) {
+        complaint.dataValues.category = "Búsqueda de Mascota";
         publication = { ...complaint.publicationSearch.dataValues };
         delete complaint.dataValues.publicationSearch;
       } else if (complaint.publicationAdoption) {
+        complaint.dataValues.category = "Adopción de Mascota";
         publication = { ...complaint.publicationAdoption.dataValues };
         delete complaint.dataValues.publicationAdoption;
       } else if (complaint.service) {
+        complaint.dataValues.category = "Servicio";
         publication = { ...complaint.service.dataValues };
         delete complaint.dataValues.service;
       }
     
       return { ...complaint.toJSON(), publication };
     });
-    
-    console.log('transformedComplaints:', transformedComplaints);
     
     return transformedComplaints;
     
@@ -105,9 +106,10 @@ export async function aproveComplaint(validateComplaintDto) {
   try {
     switch (complaint.category) {
       case 'SERVICE':
-        await deleteService(complaint.idService);
+        const service = await getServiceById(complaint.idService);
+        await deleteService(service[0]);
         try{
-          await CreateNotificationForUser(complaint.idUserReported,
+          await createNotificationForUser(complaint.idUserReported,
             `Se ha eliminado tu servicio por que no cumple con nuestros terminos y condiciones.`);
         }catch(error){
           console.log("error creando notificacion para un servicio eliminado por denuncias: ",error);
@@ -116,16 +118,16 @@ export async function aproveComplaint(validateComplaintDto) {
       case 'SEARCH':
         await publicationDelete(complaint.idPublicationSearch, 'SEARCH');
         try{
-          await CreateNotificationForUser(complaint.idUserReported,
+          await createNotificationForUser(complaint.idUserReported,
             `Se ha eliminado tu Busqueda por que no cumple con nuestros terminos y condiciones.`);
         }catch(error){
           console.log("error creando notificacion para una busqueda eliminada por denuncias: ",error);
         }
         break;
       case 'ADOPTION':
-        await publicationDelete(complaint.idPUblicationAdoption, 'ADOPTION');
+        await publicationDelete(complaint.idPublicationAdoption, 'ADOPTION');
         try{
-          await CreateNotificationForUser(complaint.idUserReported,
+          await createNotificationForUser(complaint.idUserReported,
             `Se ha eliminado tu adopcion por que no cumple con nuestros terminos y condiciones.`);
         }catch(error){
           console.log("error creando notificacion para una adopcion eliminada por denuncias: ",error);
@@ -155,7 +157,7 @@ export async function aproveComplaint(validateComplaintDto) {
       await updateUser(complaint.idUserReported,{blocked: true, blockedReason: "Maximo de denuncias superado"});
       await changeStateUser(complaint.idUserReported, bloquedUserState.idUserState, validateComplaintDto.author.idUser);
       try{
-        await CreateNotificationForUser(complaint.idUserReported,
+        await createNotificationForUser(complaint.idUserReported,
           `Has superado el maximo permitido de infracciones y por lo tanto tu usuario se encuentra bloqueado. Para poder desbloquearlo deberas comunicarte a projectapplicationbuddy@gmail.com`);
       }catch(error){
         console.log("error creando notificacion para un usuario bloqueado: ",error);
@@ -182,7 +184,7 @@ export async function deleteComplaint(complaint) {
       { where: { idComplaint:complaint.idComplaint }, returning: true }
     );
   try{
-    await CreateNotificationForUser(complaint.idUserReporting,
+    await createNotificationForUser(complaint.idUserReporting,
       `La denuncia que levantaste, fue analizada y rechazada por nuestro equipo, si crees que fue un error comunicate a porjectapplicationbuddy@gmail.com. Seguí contribuyendo a mejorar la app!`);
     }catch(error){
       console.log("error creando notificacion para una denuncia eliminada: ",error);

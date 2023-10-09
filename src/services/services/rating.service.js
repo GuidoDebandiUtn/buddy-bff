@@ -21,7 +21,7 @@ export async function createRating(idUser, data) {
 
       await calculateAverageRating(service[0]);
     try{
-      await CreateNotificationForUser(service.idUser,`Alguien ha calificado tu servicio!`);
+      await createNotificationForUser(service.idUser,`Alguien ha calificado tu servicio!`);
     }catch(error){
       console.error("error creando notificacion para una nueva traza de una publicacion: ",error);
     }

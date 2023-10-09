@@ -287,7 +287,7 @@ export async function getServiceById(idService) {
   try {
     const query = `      
       SELECT
-        services.images,services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs, services.idService,services.avgRating, services.emailService, services.idUser,
+      services.idService,services.images,services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs, services.idService,services.avgRating, services.emailService, services.idUser,
         serviceStates.serviceStateName,serviceStates.idServiceState,
         GROUP_CONCAT(petTypes.idPetType) AS idPetTypes, GROUP_CONCAT(petTypes.petTypeName) AS petTypesName,
         servicetypes.idServiceType,servicetypes.serviceTypeName 
@@ -341,6 +341,7 @@ export async function getServiceById(idService) {
 
 export async function deleteService(service, idAuthor) {
   try {
+    console.log("servicio enviado a eliminar: ",service);
     const serviceState = (await getStateForService(service.idService))[0];
     const serviceStateInactive = (await getServiceStateByName("INACTIVO"))[0];
 
