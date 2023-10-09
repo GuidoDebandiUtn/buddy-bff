@@ -202,7 +202,7 @@ export async function getEstablishmentsRevision() {
 export async function getEstablishmentDocuments(idUser) {
   try {
     const query = `
-      SELECT file, validDate, title
+      SELECT idDocument, file, title
       FROM documents
       WHERE idUser = '${idUser}'
     `;
