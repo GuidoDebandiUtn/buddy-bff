@@ -99,7 +99,7 @@ router.put("/:idUser", verifyToken, establishmentUpdate);
  * /security/establishment/validateEstablishment/:idUser:
  *  post:
  *    summary: Validar la documentacion del establecimiento y modificar el estado en base a eso
- *     parameters:
+ *    parameters:
  *       - in: query
  *         name: idUser
  *         schema:
@@ -183,15 +183,6 @@ router.get("/revision", verifyToken, getRevisionEstablishments);
  *              type: array
  *              items:
  *                type: object
- *                properties:
- *                  mail:
- *                    type: string
- *                  establishmentName:
- *                    type: string
- *                  name:
- *                    type: string
- *                  lastName:
- *                    type: string
  *      404:
  *        description: No se ha encotrado ningun establecimiento
  *        content:
