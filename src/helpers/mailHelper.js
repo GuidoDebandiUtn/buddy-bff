@@ -45,7 +45,7 @@ export async function sendValidationUserEmail(mail, html) {
   await transport.sendMail({
     from: "applicationbuddyproject@gmail.com",
     to: mail,
-    subject: "Valida tu usario",
+    subject: "Solicitud de validacion de usuario",
     text: "",
     html: html,
   });
@@ -61,4 +61,3 @@ export async function infoTransport() {
   });
   return transport;
 }
-

@@ -11,47 +11,60 @@ import { Role } from "../../models/Role.js";
 import { Document } from "../../models/Document.js";
 
 export async function createUser(data) {
-  const { mail, password, userName, name, image, userType, documents,serviceType } = data;
+  const {
+    mail,
+    password,
+    userName,
+    name,
+    image,
+    userType,
+    documents,
+    serviceType,
+  } = data;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.debug("Hased password for user %s, original: %s, hashed: %s", userName, password, hashedPassword);
+    console.debug(
+      "Hased password for user %s, original: %s, hashed: %s",
+      userName,
+      password,
+      hashedPassword
+    );
     const newUser = await User.create(
-      { mail, password: hashedPassword, userName, name, image, },
-      {fields: ["mail", "password", "userName", "image"],}
+      { mail, password: hashedPassword, userName, name, image },
+      { fields: ["mail", "password", "userName", "image"] }
     );
 
-    const idUser= newUser.idUser;
+    const idUser = newUser.idUser;
 
     let role;
     if (userType == "ESTABLECIMIENTO") {
-      switch(serviceType){
+      switch (serviceType) {
         case "VETERINARIA":
           role = await getRoleByName("VETERINARIA");
-        break;
+          break;
         case "PETSHOP":
           role = await getRoleByName("PETSHOP");
-        break;
-        case "REFUGIO": 
+          break;
+        case "REFUGIO":
           role = await getRoleByName("REFUGIO");
-        break;
+          break;
         default:
           role = await getRoleByName("ESTABLECIMIENTO");
-        break;
+          break;
       }
-      
-      for(const document of documents){
+
+      for (const document of documents) {
         const title = document.title;
         const file = document.file;
         await Document.create(
-          {idUser,title,file,},
-          {fields:["idUser","title","file"]}
-        )
-      };
+          { idUser, title, file },
+          { fields: ["idUser", "title", "file"] }
+        );
+      }
 
       const userState = await getUserStateByName("EN REVISION");
       await createStateUser(idUser, userState[0].idUserState);
-      
     } else {
       role = await getRoleByName("BÁSICO");
       const userState = await getUserStateByName("ACTIVO");
@@ -181,12 +194,14 @@ export async function getPermissionsForUser(idUser) {
 export async function getStateForUser(idUser) {
   try {
     const query = `
-      select state.*  from userstates as state 
-      join stateusers change_sate on change_sate.idUserState = state.idUserState
-      join users u on u.idUser = change_sate.idUser
-      where u.idUser= '${idUser}' and change_sate.active = 1 
-      order by change_sate.createdAt desc 
-      limit 1;`;
+      select state.*  
+      from userstates as state 
+      join stateusers change_state on change_state.idUserState = state.idUserState
+      join users u on u.idUser = change_state.idUser
+      where u.idUser= '${idUser}' and change_state.active = 1 
+      order by change_state.createdAt desc 
+      limit 1;
+      `;
 
     const user = await sequelize.query(query, {
       model: UserState,

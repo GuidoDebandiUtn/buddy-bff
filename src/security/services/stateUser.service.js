@@ -36,6 +36,7 @@ export async function createStateUser(idUser, idUserState, idUserAuthor) {
 
 export async function changeStateUser(idUser, idUserState, idUserAuthor) {
   try {
+    console.log(idUser, idUserState);
     const state = await StateUser.findOne({
       where: {
         idUser,

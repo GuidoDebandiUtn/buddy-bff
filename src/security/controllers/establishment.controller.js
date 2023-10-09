@@ -6,6 +6,7 @@ import {
   updateEstablishment,
   validateEstablishment,
 } from "../services/establishment.service.js";
+import { getUserById } from "../services/user.service.js";
 
 export async function getEstablishments(req, res) {
   try {
@@ -43,39 +44,49 @@ export async function getEstablishment(req, res) {
 export async function postValidateEstablishment(req, res) {
   const { idUser } = req.params;
 
-  const userPermissions = req.user.permissions[0];
-  const permisionRequired = "WRITE_DOCUMENTACION";
-  if (userPermissions.include(permisionRequired)) {
-    res.status(403).json({
-      error:
-        "No se cuenta con los permisos necesarios para ejecutar el EndPoint",
-    });
-  }
+  try {
+    const userPermissions = req.user.permissions[0].permissions.split("-");
 
-  if (!idUser) {
-    res
-      .status(400)
-      .json({ error: "No se ha podido obtener el parametro IdUser" });
-  }
-
-  req.body.author = req.user;
-  try{
-    const validateResponse = await validateEstablishment(idUser, req.body);
-    return res.status(200).json({message:"Se ha procesado la solicitud e informado al usuario."});
-  }catch(error){
-    if (error.code) {
-      return res.status(error.code).json({
-        error: error.message,
+    const permisionRequired = "WRITE_DOCUMENTACION";
+    if (userPermissions.includes(permisionRequired)) {
+      return res.status(403).json({
+        error:
+          "No se cuenta con los permisos necesarios para ejecutar el EndPoint",
       });
     }
+
+    if (!idUser) {
+      return res
+        .status(400)
+        .json({ error: "No se ha podido obtener el parametro IdUser" });
+    }
+
+    const userRevision = await getUserById(idUser);
+
+    if (!userRevision[0]) {
+      return res.status(404).json({
+        error: "Error obteniendo el usuario para validacion",
+      });
+    }
+
+    req.body.author = req.user;
+
+    const validateResponse = await validateEstablishment(
+      idUser,
+      userRevision[0].mail,
+      req.body
+    );
+
+    return res.status(200).json({
+      message: "Se ha procesado la solicitud e informado al usuario.",
+    });
+  } catch (error) {
     return res.status(500).json({
       error: error.message,
     });
   }
 }
 
-
-  
 export async function establishmentUpdate(req, res) {
   const { idUser } = req.params;
 
