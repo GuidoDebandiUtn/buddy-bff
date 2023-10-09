@@ -133,7 +133,7 @@ export async function getEstablishmentDocuments(idUser) {
     const query = `
       SELECT file, validDate, title
       FROM documents
-      WHERE idUser = ${idUser}
+      WHERE idUser = '${idUser}'
     `;
 
     const documents = await sequelize.query(query, {
