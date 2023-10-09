@@ -82,7 +82,7 @@ export async function verifyToken(req, res, next) {
 
     req.user = verified;
     req.userPermissions = permissions;
-    console.log("usuario obtenido del token : ", verified);
+    // console.log("usuario obtenido del token : ", verified);
 
     next();
   } catch (error) {

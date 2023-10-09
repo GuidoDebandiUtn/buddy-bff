@@ -95,7 +95,7 @@ export async function createService(idUser, data) {
 export async function getServiceByUserIdAndServiceType(idUser, idServiceType) {
   try {
     const query = `
-          SELECT services.images,services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs,services.avgRating,
+          SELECT services.images,services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs,services.avgRating
           FROM services
           INNER JOIN (
               SELECT idService, idServiceState, MAX(createdAt) AS ultimaFecha , active
@@ -111,7 +111,7 @@ export async function getServiceByUserIdAndServiceType(idUser, idServiceType) {
     });
 
     for (let service of services) {
-      if (service.images) {
+      if (service.images[0]) {
         console.log("imagen antes del parse: ", service.image);
         service.images = JSON.parse(service.images);
         console.log("imagen desíes del parse: ", service.image);
@@ -258,12 +258,12 @@ export async function updateService(service, data) {
     }
 
     if (data.idServiceType) {
-      let service = await getServiceByUserIdAndServiceType(
-        data.idUser,
+      let servicio = await getServiceByUserIdAndServiceType(
+        service.idUser,
         data.idServiceType
       );
 
-      if (service[0]) {
+      if (servicio[0]) {
         throw {
           message:
             "Ya se ha registrado un servicio de este tipo para el Usuario",

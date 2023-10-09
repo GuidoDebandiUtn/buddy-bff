@@ -42,51 +42,72 @@ export async function getAllEstablishments() {
 
 export async function validateEstablishment(idUser, validateDto) {
   const userRevision = await getUserById(idUser);
-  const approvedBoolean = validateDto.approved.toUpperCase() == "TRUE"? true:false;
+  const approvedBoolean =
+    validateDto.approved.toUpperCase() == "TRUE" ? true : false;
 
   if (!userRevision[0]) {
-    throw new {message:"Error obteniendo el usuario para validacion",code:500};
+    throw new {
+      message: "Error obteniendo el usuario para validacion",
+      code: 500,
+    }();
   }
 
   const userState = await getStateForUser(idUser);
 
   if (!userState[0]) {
-    throw new {message:"Error obteniendo el estado del usuario",code:500};
+    throw new {
+      message: "Error obteniendo el estado del usuario",
+      code: 500,
+    }();
   }
 
   if (!userState.userStateName == "EN REVISION") {
-    throw new {message:"El usuario no esta esperando revision",code:500};
+    throw new { message: "El usuario no esta esperando revision", code: 500 }();
   }
 
   if (approvedBoolean) {
     const activeState = await getUserStateByName("ACTIVO");
     if (!activeState[0]) {
-      throw new {message:"Error obteniendo el estado de activo para el usuario",code:500};
+      throw new {
+        message: "Error obteniendo el estado de activo para el usuario",
+        code: 500,
+      }();
     }
 
-    await changeStateUser(idUser,activeState.idUserState,validateDto.author.idUser);
+    await changeStateUser(
+      idUser,
+      activeState.idUserState,
+      validateDto.author.idUser
+    );
 
-    for(document of validateDto.documents){
+    for (document of validateDto.documents) {
       const idDocument = document.idDocument;
       const validDate = document.validDate;
-      if(!dateRegex.test(validDate)){
-        throw new {message:"Error en el formato de la fecha enviada",code:400};
+      if (!dateRegex.test(validDate)) {
+        throw new {
+          message: "Error en el formato de la fecha enviada",
+          code: 400,
+        }();
       }
-  
+
       const dia = parseInt(partesFecha[0], 10);
       const mes = parseInt(partesFecha[1], 10) - 1;
       const ano = parseInt(partesFecha[2], 10);
 
       const fechaIngresada = new Date(ano, mes, dia);
       const fechaActual = new Date();
-      
-      if(fechaIngresada > fechaActual){
-        throw new {message:"Ha ingresado una fecha invalida para un documento",code:400};
+
+      if (fechaIngresada > fechaActual) {
+        throw new {
+          message: "Ha ingresado una fecha invalida para un documento",
+          code: 400,
+        }();
       }
-  
-      Document.update({ validDate: validDate },{where:{idDocument}})
-    };
-    await sendValidationUserEmail(userRevision[0].mail,
+
+      Document.update({ validDate: validDate }, { where: { idDocument } });
+    }
+    await sendValidationUserEmail(
+      userRevision[0].mail,
       `
       <p>Hola! Nos complace avisarte que tu usuario ha sido validado correctamente por nuestro equipo!</p>
 
@@ -94,11 +115,13 @@ export async function validateEstablishment(idUser, validateDto) {
 
       <p>Saludos!</p>
       <p>Equipo de BUDDY!<p>
-      `);
-  }else{
-    await Document.destroy({where:{idUser: idUser},force: true,});
+      `
+    );
+  } else {
+    await Document.destroy({ where: { idUser: idUser }, force: true });
     await destroyUser(userRevision[0].mail);
-    await sendValidationUserEmail(userRevision[0].mail,
+    await sendValidationUserEmail(
+      userRevision[0].mail,
       `
       <p>Hola!Lamentamos informarte que no ha sido posible validar la informacion brindada para tu establecimiento</p>
 
@@ -106,9 +129,9 @@ export async function validateEstablishment(idUser, validateDto) {
 
       <p>Esperamos contar con tu establecimiento pronto. Saludos!</p>
       <p>Equipo de BUDDY!<p>
-      `);
+      `
+    );
   }
-  
 }
 
 export async function updateEstablishment(idUser, userData) {
@@ -162,7 +185,7 @@ export async function getEstablishmentsRevision() {
         where active = true
       ) AS ultimosRoles ON users.idUser = ultimosRoles.idUser
       INNER JOIN roles ON ultimosRoles.idRole = roles.idRole
-      WHERE userStates.userStateName IN ('EN REVISIÓN') and roles.roleName = "ESTABLECIMIENTO"
+      WHERE userStates.userStateName IN ('EN REVISIÓN') and roles.roleName IN ("REFUGIO", "VETERINARIA", "PETSHOP")
     `;
 
     const users = await sequelize.query(query, {

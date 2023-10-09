@@ -1,4 +1,3 @@
-
 import {
   createService,
   deleteService,
@@ -10,30 +9,42 @@ import {
   updateService,
 } from "../services/service.service.js";
 
-
 export async function serviceCreate(req, res) {
   const idUser = req.user.idUser;
 
   const { idServiceType, petTypes } = req.body;
 
   const errorMessage =
-    !idServiceType && !petTypes? "Error en el tipo del Servicio y en los tipos de mascotas enviados"
-      : !idServiceType? "Error en el tipo del Servicio enviado"
-      : !petTypes? "Error en los tipos de mascotas del servicio": null;
+    !idServiceType && !petTypes
+      ? "Error en el tipo del Servicio y en los tipos de mascotas enviados"
+      : !idServiceType
+      ? "Error en el tipo del Servicio enviado"
+      : !petTypes
+      ? "Error en los tipos de mascotas del servicio"
+      : null;
 
   if (errorMessage) {
-    return res
-      .status(400)
-      .json({ message:errorMessage, code: 400 });
+    return res.status(400).json({ message: errorMessage, code: 400 });
   }
 
-  const userPermissions = req.user.permissions[0].permisos.split(' - ');
-  
-  const requiredPermissions = ['CREATE_SERVICIO_REFUGIO', 'CREATE_SERVICIO_PETSHOP','CREATE_SERVICIO_VETERINARIA'];
-  const hasPermissions = requiredPermissions.some(permission => userPermissions.includes(permission));
+  const userPermissions = req.user.permissions[0].permissions.split(" - ");
+
+  const requiredPermissions = [
+    "CREATE_SERVICIO_REFUGIO",
+    "CREATE_SERVICIO_PETSHOP",
+    "CREATE_SERVICIO_VETERINARIA",
+  ];
+  const hasPermissions = requiredPermissions.some((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasPermissions) {
-    return res.status(403).json({ message: "No se cuenta con los permisos necesarios para realizar la creacion" });
+    return res
+      .status(403)
+      .json({
+        message:
+          "No se cuenta con los permisos necesarios para realizar la creacion",
+      });
   }
 
   try {
@@ -167,20 +178,28 @@ export async function serviceDelete(req, res) {
 }
 
 export async function getServiceTypes(req, res) {
-  const userPermissions = req.user.permissions[0].permisos.split(' - ');
-  
-  const requiredPermissions = ['CREATE_SERVICIO_REFUGIO', 'CREATE_SERVICIO_PETSHOP','CREATE_SERVICIO_VETERINARIA'];
-  const hasPermissions = requiredPermissions.some(permission => userPermissions.includes(permission));
+  const userPermissions = req.user.permissions[0].permissions.split(" - ");
+
+  const requiredPermissions = [
+    "CREATE_SERVICIO_REFUGIO",
+    "CREATE_SERVICIO_PETSHOP",
+    "CREATE_SERVICIO_VETERINARIA",
+  ];
+  const hasPermissions = requiredPermissions.some((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasPermissions) {
-    return res.status(403).json({ message: "No se cuenta con los permisos necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con los permisos necesarios" });
   }
 
   try {
     const types = await retriveServiceTypesDB();
 
-    const filteredTypes = types.filter(type => {
-      const formattedType = type.toUpperCase().replace(' ', '');
+    const filteredTypes = types.filter((type) => {
+      const formattedType = type.toUpperCase().replace(" ", "");
       return userPermissions.includes(`CREATE_SERVICIO_${formattedType}`);
     });
 
