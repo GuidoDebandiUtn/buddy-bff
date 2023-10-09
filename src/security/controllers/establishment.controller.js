@@ -43,7 +43,7 @@ export async function getEstablishment(req, res) {
 export async function postValidateEstablishment(req, res) {
   const { idUser } = req.params;
 
-  const userPermissions = req.userPermissions;
+  const userPermissions = req.user.permissions[0];
   const permisionRequired = "WRITE_DOCUMENTACION";
   if (userPermissions.include(permisionRequired)) {
     res.status(403).json({
@@ -59,11 +59,23 @@ export async function postValidateEstablishment(req, res) {
   }
 
   req.body.author = req.user;
-
-  const validateResponse = await validateEstablishment(idUser, req.body);
-  //manejar respuesta de servicio
+  try{
+    const validateResponse = await validateEstablishment(idUser, req.body);
+    return res.status(200).json({message:"Se ha procesado la solicitud e informado al usuario."});
+  }catch(error){
+    if (error.code) {
+      return res.status(error.code).json({
+        error: error.message,
+      });
+    }
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
 }
 
+
+  
 export async function establishmentUpdate(req, res) {
   const { idUser } = req.params;
 

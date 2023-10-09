@@ -96,9 +96,15 @@ router.put("/:idUser", verifyToken, establishmentUpdate);
 
 /**
  * @swagger
- * /security/establishment/validateEstablishment:
+ * /security/establishment/validateEstablishment/:idUser:
  *  post:
  *    summary: Validar la documentacion del establecimiento y modificar el estado en base a eso
+ *     parameters:
+ *       - in: query
+ *         name: idUser
+ *         schema:
+ *           type: uuid
+ *         description: uuid del usuario a validar.
  *    tags: [ESTABLISHMENT]
  *    responses:
  *      200:
@@ -122,7 +128,7 @@ router.put("/:idUser", verifyToken, establishmentUpdate);
  *      500:
  *        description: Hubo un error
  */
-router.post("/validateEstablishment", verifyToken, postValidateEstablishment);
+router.post("/validateEstablishment/:idUser", verifyToken, postValidateEstablishment);
 
 /**
  * @swagger
