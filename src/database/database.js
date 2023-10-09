@@ -23,7 +23,7 @@ export const sequelize = new Sequelize(
     host: "us-cdbr-east-06.cleardb.net",
     dialect: "mysql",
     timezone: "-03:00",
-   /* logging: (msg) => {
+    logging: (msg) => {
       if (!msg.startsWith('Executing (default): SHOW INDEX') && !msg.startsWith('Executing (default): SELECT TABLE_NAME')) {
         console.log(msg);
       }
@@ -31,7 +31,7 @@ export const sequelize = new Sequelize(
         console.log('Initializing Database processes...');
         backgroundProcessLogShown = true;
       }
-    },*/
+    },
   },
   
 );

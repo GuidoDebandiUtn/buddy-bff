@@ -11,7 +11,7 @@ import { Role } from "../../models/Role.js";
 import { Document } from "../../models/Document.js";
 
 export async function createUser(data) {
-  const { mail, password, userName, name, image, userType, documents } = data;
+  const { mail, password, userName, name, image, userType, documents,serviceType } = data;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -21,14 +21,25 @@ export async function createUser(data) {
       {fields: ["mail", "password", "userName", "image"],}
     );
 
-    const userState = await getUserStateByName("ACTIVO");
     const idUser= newUser.idUser;
-
-    await createStateUser(idUser, userState[0].idUserState);
 
     let role;
     if (userType == "ESTABLECIMIENTO") {
-      role = await getRoleByName("BÁSICO");
+      switch(serviceType){
+        case "VETERINARIA":
+          role = await getRoleByName("VETERINARIA");
+        break;
+        case "PETSHOP":
+          role = await getRoleByName("PETSHOP");
+        break;
+        case "REFUGIO": 
+          role = await getRoleByName("REFUGIO");
+        break;
+        default:
+          role = await getRoleByName("ESTABLECIMIENTO");
+        break;
+      }
+      
       for(const document of documents){
         const title = document.title;
         const file = document.file;
@@ -36,9 +47,15 @@ export async function createUser(data) {
           {idUser,title,file,},
           {fields:["idUser","title","file"]}
         )
-      }
+      };
+
+      const userState = await getUserStateByName("EN REVISION");
+      await createStateUser(idUser, userState[0].idUserState);
+      
     } else {
-      role = await getRoleByName("BASICO");
+      role = await getRoleByName("BÁSICO");
+      const userState = await getUserStateByName("ACTIVO");
+      await createStateUser(idUser, userState[0].idUserState);
     }
 
     await createUserRole(idUser, role[0].idRole);
