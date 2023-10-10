@@ -300,7 +300,7 @@ export async function getServiceById(idService) {
       INNER JOIN servicepets   ON services.idService = ServicePets.idService
       INNER JOIN PetTypes ON ServicePets.idPetType = PetTypes.idPetType
       INNER JOIN servicetypes ON servicetypes.idServiceType = services.idServiceType
-      WHERE  ultimosEstados.active = 1 AND services.idService = '${idService}'
+      WHERE  services.idService = '${idService}'
       GROUP BY services.serviceTitle,services.serviceDescription,services.address,services.openTime,services.closeTime, services.open24hs
     `;
 
@@ -341,7 +341,7 @@ export async function getServiceById(idService) {
 
 export async function deleteService(service, idAuthor) {
   try {
-    console.log("servicio enviado a eliminar: ",service);
+    console.log("servicio enviado a eliminar: ", service);
     const serviceState = (await getStateForService(service.idService))[0];
     const serviceStateInactive = (await getServiceStateByName("INACTIVO"))[0];
 
