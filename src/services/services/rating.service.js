@@ -11,6 +11,11 @@ export async function createRating(idUser, data) {
     if(!service[0]){
         throw {message: "Error obteniendo el servicio asociado a la valoracion", code: 400};
     }
+
+
+    if(service[0].idUser == idUser){
+      throw {message: "No es posible calificar un servicio propio", code: 400};
+    }
     
     try {
       const newRating = await Rating.create(
