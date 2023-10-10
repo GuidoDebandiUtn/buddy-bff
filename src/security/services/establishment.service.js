@@ -99,8 +99,8 @@ export async function validateEstablishment(idUser, mail, validateDto) {
       `
       );
     } else {
-      // await Document.destroy({ where: { idUser: idUser }, force: true });
-      // await destroyUser(mail);
+      await Document.destroy({ where: { idUser: idUser }, force: true });
+      await destroyUser(mail);
       await sendValidationUserEmail(
         mail,
         `
