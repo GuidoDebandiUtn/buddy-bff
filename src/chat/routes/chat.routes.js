@@ -63,7 +63,7 @@ router.get('/:archived', verifyToken,getChatsController);
  *         description: Id de referencia a una publicacion, por la que es originado un chat.
  *       - in: path
  *         name: referenceType
- *         required: true
+ *         required: false
  *         schema:
  *           type: string
  *         description: Tipo de publicacion de la referencia, puede ser Search o Adoption.
