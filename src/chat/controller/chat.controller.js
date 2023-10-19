@@ -32,15 +32,16 @@ export async function getChatsController(req, res) {
 
 export async function postCreateChat(req, res) {
   const { idUserReceptor } = req.params;
+  const { referenceType,idReference } = req.query;
   const idUserEmitter = req.user.idUser;
 
   try {
-    const data = await createChat(idUserEmitter, idUserReceptor);
+    const data = await createChat(idUserEmitter, idUserReceptor,referenceType,idReference);
 
-    return res.status(200).json(data);
+    return res.status(201).json(data);
   } catch (error) {
     if (error.chat) {
-      return res.status(error.code).json({ chat: error.chat });
+      return res.status(error.code).json({ message:error.message,chat: error.chat });
     }
     if (error.code) {
       return res.status(error.code).json({

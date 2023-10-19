@@ -132,7 +132,7 @@ export async function createAdoption(adoptionDto,idUser) {
     try{
       await createNotificationForZone(searchDto.idLocality,`Se ha creado una adopcion en tu zona, ${adoptionDto.title}`);
     }catch(error){
-      console.log("error creando notificacion para una nueva publicacion de adopcion: ",error)
+      console.error("error creando notificacion para una nueva publicacion de adopcion: ",error)
     }
     
     return newPublication;
@@ -161,7 +161,6 @@ export async function publicationDelete(idPublication, modelType) {
     publication = await modelParams.model.update(
       {
         idPublicationState: inactivePublicationState.idPublicationState,
-        updatedDate: new Date(),
       },
       { where: whereClause, returning: true }
     );
@@ -240,6 +239,48 @@ export async function updatePublication(  publicationDto,  idPublication,  model
     throw new Error(
       `Error durante la actualizacion de los datos de la publicacion. error: '${error}'.`
     );
+  }
+}
+
+export async function closePublication(idPublication, modelType) {
+  const modelParams = getModel(modelType);
+  const whereClause = {};
+  whereClause[modelParams.attributes.pop()] = idPublication;
+
+  let publication;
+  let solvedPublicationState;
+  try{
+    solvedPublicationState = await PublicationState.findOne({
+      attributes: ["idPublicationState"],
+      where: { name: "RESUELTO" },
+    });
+    console.log(
+      `estado Resuelto obtenido correctamente. entidad obtenida: '${solvedPublicationState}'`
+    );
+  
+  }catch (error){
+    console.error("error en la obtencion del estado resuelto, ", error);
+    throw error;
+  }
+
+
+  try {
+    publication = await modelParams.model.update(
+      {
+        idPublicationState: solvedPublicationState.idPublicationState,
+      },
+      { where: whereClause, returning: true }
+    );
+
+    console.log(
+      `Se ha modificado correctamente la publicacion. Nueva entidad: '${publication}'`
+    );
+
+    return publication;
+  } catch (error) {
+    console.error("Error solving the publication with id:", idPublication);
+    console.error(error);
+    throw error;
   }
 }
 

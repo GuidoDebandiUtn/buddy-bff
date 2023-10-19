@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {    getPublications, postAdoption, postSearch,deletePublication, putPublication, obtainPublicationsByUser} from "../controllers/publication.controller.js";
+import {    getPublications, postAdoption, postSearch,deletePublication, putPublication, obtainPublicationsByUser, postSolvePublication} from "../controllers/publication.controller.js";
 import { verifyToken } from "../../security/controllers/auth.controller.js";
 
 const router = Router();
@@ -55,10 +55,7 @@ const router = Router();
  */
 router.get('/',getPublications);
 
-
-
 router.get('/ByUser',verifyToken,obtainPublicationsByUser);
-
 
 /**
  * @swagger
@@ -106,7 +103,6 @@ router.get('/ByUser',verifyToken,obtainPublicationsByUser);
  *          description: Error interno del servicio
  */
 router.post('/search', verifyToken,postSearch);
-
 
 /**
  * @swagger
@@ -213,6 +209,7 @@ router.post('/adoption', verifyToken,postAdoption);
  *          description: Error interno del servicio
  */
 router.delete('/:idPublication',deletePublication);
+
 /**
  * @swagger
  * /publications/publication/:idPublication:
@@ -303,5 +300,40 @@ router.delete('/:idPublication',deletePublication);
  *          description: Error interno del servicio
  */
 router.put('/:idPublication',putPublication);
+
+/**
+ * @swagger
+ * /publications/publication/solve/:idPublication:
+ *   post:
+ *     summary: Modifica el estado de una publicacion para que sea resuelto.
+ *     parameters:
+ *       - in: path
+ *         name: modelType
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Tipo de publicacion, puede ser Search o Adoption.
+ *       - in: query
+ *         name: idPublication
+ *         schema:
+ *           type: uuid
+ *         description: Id de la publicacion a modificar.
+ *     tags: [PUBLICATION]
+ *     responses:
+ *       200:
+ *         description: Publicacion resuelta correctamente.
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *       400:
+ *         description: Error en los atributos de la publicacion.
+ *       500:
+ *          description: Error interno del servicio
+ */
+router.post('/solve/:idPublication',postSolvePublication);
 
 export default router;

@@ -59,13 +59,21 @@ export async function getChatsByUser(idUser, archived) {
   return result;
 }
 
-export async function createChat(idUserEmitter, idUserReceptor) {
+export async function createChat(idUserEmitter, idUserReceptor,referenceType,idReference) {
   try {
+    
     const userEmitter = await getUserById(idUserEmitter);
     const userReceptor = await getUserById(idUserReceptor);
 
     if (!userEmitter[0] || !userReceptor[0]) {
       throw { message: "Uno o ambos usuarios no existen", code: 400 };
+    }
+
+    if((idReference && !referenceType) || (!idReference && referenceType) ){
+      throw { message: "La referencias deben ser creadas con tipo y id", code: 400 };
+    }
+    if(referenceType){
+      referenceType=referenceType.toUpperCase();
     }
 
     const existingChat = await Chat.findOne({
@@ -88,16 +96,31 @@ export async function createChat(idUserEmitter, idUserReceptor) {
     });
 
     if (existingChat) {
-      throw {
-        message: "Ya existe un chat entre esos usuarios",
-        code: 200,
-        chat: existingChat,
-      };
+      if(existingChat.idReference && idReference){
+        throw {
+          message: "No es posible crear mas de 1 chat con una persona por una publicacion",
+          code: 400,
+          chat: existingChat,
+        };
+      }else{
+        if(idReference){
+          await existingChat.update(
+            { idReference: idReference, referenceType: referenceType },
+            { where: {  idChat:existingChat.idChat  } , returning: true}
+          );
+        }
+        throw {
+          message: "Ya existe un chat entre esos usuarios",
+          code: 200,
+          chat: existingChat,
+        };
+      }
     }
-
     const chat = await Chat.create({
       idUserEmitter,
       idUserReceptor,
+      idReference,
+      referenceType,
     });
 
     return chat;

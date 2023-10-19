@@ -8,6 +8,7 @@ import {
     createAdoption,
     updatePublication,
     getPublicationsByUser,
+    closePublication,
 } from "../services/publication.service.js";
 
 
@@ -182,10 +183,52 @@ export async function putPublication(req, res) {
 }
 
 
+export async function postSolvePublication(req, res) {
+  const { idPublication } = req.params;
+  const { modelType } = req.query;
+
+
+  if(!modelType){
+    return res
+    .status(400)
+    .json({ message: `El parametro modelType es obligatorio`, code: 400 });
+  }
+
+  console.debug(`Iniciado proceso de resolucion de publicacion - Parametros modelType='${modelType}', idPublication= '${idPublication}'`);
+
+  try {
+    const publication = await getPublicationById(idPublication, modelType);
+    console.log(
+      `publicacion obtenida correctamente. entidad obtenida: '${publication}'`
+    );
+    if (!publication) {
+      return res
+        .status(404)
+        .json({
+          message: `Error en la publicacion a modificar, validar dato enviado`,
+        });
+    }
+
+    await closePublication(idPublication, modelType);
+
+    return res
+      .status(200)
+      .json({
+        message:
+          "Se ha resuelto correctamente la publicacion de la mascota",
+      });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+
 
 
 function checkParameters(publicationDto,modelType ){
-  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+  const dateRegex = /^\d{2}-\d{2}-\d{4}$/;
   
 
   /* TODO: 
