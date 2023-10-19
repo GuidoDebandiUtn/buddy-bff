@@ -21,23 +21,15 @@ export async function createUser(data) {
     documents,
     serviceType,
   } = data;
-
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.debug(
-      "Hased password for user %s, original: %s, hashed: %s",
-      userName,
-      password,
-      hashedPassword
-    );
+
     const newUser = await User.create(
       { mail, password: hashedPassword, userName, name, image },
       { fields: ["mail", "password", "userName", "image"] }
     );
 
-
-    const idUser= newUser.idUser;
-    console.log(`usuario creado correctamente,nuevo id:${idUser}, mail: ${mail}`);
+    const idUser = newUser.idUser;
 
     let role;
     if (userType == "ESTABLECIMIENTO") {
@@ -55,10 +47,8 @@ export async function createUser(data) {
           role = await getRoleByName("ESTABLECIMIENTO");
           break;
       }
-      console.log("se ha obtenido corretamente el rol: ", role[0].idRole);
 
-      console.log("documentos a guardar:", documents);
-      for(const document of documents){
+      for (const document of documents) {
         const title = document.title;
         const file = document.file;
         await Document.create(
@@ -67,11 +57,8 @@ export async function createUser(data) {
         );
       }
 
-
       const userState = await getUserStateByName("EN REVISION");
-      const stateUser = await createStateUser(idUser, userState[0].idUserState);
-      console.log("se ha creado correctamente el usuario de estado EN REVISION. id de cambio de estado: ",stateUser.idStateUser);
-      
+      await createStateUser(idUser, userState[0].idUserState);
     } else {
       role = await getRoleByName("BÁSICO");
       const userState = await getUserStateByName("ACTIVO");
@@ -79,9 +66,6 @@ export async function createUser(data) {
     }
 
     await createUserRole(idUser, role[0].idRole);
-
-    console.log(`se ha creado correctamente la relacion con el rol: ${role[0].idRole} y el usuario: ${idUser}`);
-
 
     return newUser;
   } catch (error) {
@@ -364,9 +348,9 @@ export async function getUsersByPermission(tokenClaim) {
   tokenClaim = tokenClaim.toUpperCase();
 
   try {
-    let roleIds = await getRolesByPermission(tokenClaim);
-
-    roleIds = roleIds.map((role) => role.idRole);
+    const roleIds = await getRolesByPermission(tokenClaim).map(
+      (role) => role.idRole
+    );
     if (!roleIds || roleIds.length === 0) {
       throw {
         message: "No se encontraron roles con el permiso especificado",
@@ -394,7 +378,7 @@ export async function getUsersByPermission(tokenClaim) {
   } catch (error) {
     console.log(
       "error en la obtencion de usuarios para el permiso:",
-      tokenClaim,
+      permission,
       error
     );
     throw error;
