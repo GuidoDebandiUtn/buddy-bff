@@ -17,12 +17,13 @@ export async function createUserRole(idUser, idRole, idUserAuthor) {
         idRole,
       },
       {
-        fields: ["idUserAuthor", "createdAt", "updatedAt", "idUser", "idRole"],
+        fields: ["idUserAuthor", "idUser", "idRole"],
       }
     );
 
     return newUserRole;
   } catch (error) {
+    console.log("error creando el nuevo rol del usuario");
     throw error;
   }
 }

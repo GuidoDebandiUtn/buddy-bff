@@ -39,6 +39,17 @@ export async function resetPasswordMail(mail, idUser) {
         `,
   });
 }
+export async function sendValidationUserEmail(mail, html) {
+  const transport = await infoTransport();
+
+  await transport.sendMail({
+    from: "applicationbuddyproject@gmail.com",
+    to: mail,
+    subject: "Solicitud de validacion de usuario",
+    text: "",
+    html: html,
+  });
+}
 
 export async function infoTransport() {
   const transport = nodemailer.createTransport({

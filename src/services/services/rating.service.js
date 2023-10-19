@@ -5,7 +5,18 @@ import { calculateAverageRating, getServiceById } from "./service.service.js";
 
 export async function createRating(idUser, data) {
     const { titleRating,descriptionRating,idService,numberRating } = data;
-   
+
+
+    const service = await getServiceById(idService);
+
+    if(!service[0]){
+        throw {message: "Error obteniendo el servicio asociado a la valoracion", code: 400};
+    }
+
+    if(service[0].idUser == idUser){
+      throw {message: "No es posible calificar un servicio propio", code: 400};
+    }
+    
     try {
       const newRating = await Rating.create(
         { titleRating,descriptionRating, numberRating, idService,idUser},
@@ -15,7 +26,7 @@ export async function createRating(idUser, data) {
 
       await calculateAverageRating(service[0]);
     try{
-      await CreateNotificationForUser(service.idUser,`Alguien ha calificado tu servicio!`);
+      await createNotificationForUser(service.idUser,`Alguien ha calificado tu servicio!`);
     }catch(error){
       console.error("error creando notificacion para una nueva traza de una publicacion: ",error);
     }

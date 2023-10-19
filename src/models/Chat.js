@@ -31,6 +31,12 @@ Chat.init(
       type: DataTypes.STRING,
       defaultValue:"español",
     },
+    idReference: {
+      type: DataTypes.UUID,
+    },    
+    referenceType: {
+      type: DataTypes.STRING,
+    },
   },
   {
     sequelize,

@@ -1,5 +1,4 @@
 import { StateUser } from "../../models/StateUser.js";
-import { getStateForUser } from "./user.service.js";
 
 export async function createStateUser(idUser, idUserState, idUserAuthor) {
   let idAuthor;
@@ -20,8 +19,6 @@ export async function createStateUser(idUser, idUserState, idUserAuthor) {
       {
         fields: [
           "idUserAuthor",
-          "createdAt",
-          "updatedAt",
           "idUser",
           "idUserState",
         ],
@@ -36,6 +33,7 @@ export async function createStateUser(idUser, idUserState, idUserAuthor) {
 
 export async function changeStateUser(idUser, idUserState, idUserAuthor) {
   try {
+    console.log(idUser, idUserState);
     const state = await StateUser.findOne({
       where: {
         idUser,

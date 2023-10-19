@@ -78,7 +78,7 @@ export async function complaintDelete(req, res) {
 
 
 export async function complaintExecute(req, res) {
-  const { idComplaint,validate } = req.params;
+  let { idComplaint,validate } = req.params;
   validate = validate.toLowerCase() === "true" ? true : false;
 
   let validateDto = {};

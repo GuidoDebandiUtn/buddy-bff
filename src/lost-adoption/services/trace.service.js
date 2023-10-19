@@ -1,19 +1,22 @@
 import { Trace } from "../../models/Trace.js";
-
+import { createNotificationForUser } from "../../reports/service/notifications.services.js";
+import { getPublicationById } from "./publication.service.js";
 
 
 export async function createTrace(traceDto,idUser) {
     try {
   
-      console.log(`Calling Trace.create with: ${JSON.stringify(traceDto)}`);
+      //console.log(`Calling Trace.create with: ${JSON.stringify(traceDto)}`);
       const newTrace = await Trace.create({
         idAuthorUser: idUser,
         ...traceDto,
       });
 
-      if(idUser !== publication.idUser){
+      //console.log(`publicacion referida a la traza : ${JSON.stringify(publication)}`);
+      //console.log(`IdAuthor: ${idUser}, publication.user: ${publication.user.idUser}`);
+      if(idUser !== publication.user.idUser){
         try{
-          CreateNotificationForuser(publication.idUse,`Se ha agregado una nueva traza a tu publicacion!`);
+          await createNotificationForUser(publication.user.idUser,`Se ha agregado una nueva traza a tu publicacion!`);
         }catch(error){
           console.log("error creando notificacion para una nueva traza de una publicacion",error)
         }

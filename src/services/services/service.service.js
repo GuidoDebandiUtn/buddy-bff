@@ -95,7 +95,7 @@ export async function createService(idUser, data) {
 export async function getServiceByUserIdAndServiceType(idUser, idServiceType) {
   try {
     const query = `
-          SELECT services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs,services.avgRating
+          SELECT services.images,services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs,services.avgRating
           FROM services
           INNER JOIN (
               SELECT idService, idServiceState, MAX(createdAt) AS ultimaFecha , active
@@ -110,6 +110,15 @@ export async function getServiceByUserIdAndServiceType(idUser, idServiceType) {
       mapToModel: true,
     });
 
+    for (let service of services) {
+      console.debug("entidad service a validar:", service);
+      if (service.images[0]) {
+        console.debug("imagen antes del parse: ", service.images);
+        service.images = JSON.parse(service.images);
+        console.debug("imagen desíes del parse: ", service.image);
+      }
+    }
+
     return services;
   } catch (error) {
     throw error;
@@ -120,7 +129,7 @@ export async function getServicesByIdUser(idUser) {
   try {
     const query = `
       SELECT
-        services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs, services.idService,services.avgRating,services.emailService, services.idUser,
+        services.images,services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs, services.idService,services.avgRating,services.emailService, services.idUser,
         serviceStates.serviceStateName,serviceStates.idServiceState,
         GROUP_CONCAT(petTypes.idPetType) AS idPetTypes, GROUP_CONCAT(petTypes.petTypeName) AS petTypesName,
         servicetypes.idServiceType,servicetypes.serviceTypeName 
@@ -155,6 +164,14 @@ export async function getServicesByIdUser(idUser) {
         petTypes,
       };
     });
+    for (let service of servicesWithPetTypes) {
+      console.debug("entidad service a validar:", service);
+      if (service.images[0]) {
+        console.debug("imagen antes del parse: ", service.images);
+        service.images = JSON.parse(service.images);
+        console.debug("imagen desíes del parse: ", service.images);
+      }
+    }
 
     return servicesWithPetTypes;
   } catch (error) {
@@ -167,7 +184,7 @@ export async function getAllServices() {
   try {
     const query = `
       SELECT
-        services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs, services.idService,services.avgRating,services.emailService, services.idUser,
+        services.images,services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs, services.idService,services.avgRating,services.emailService, services.idUser,
         serviceStates.serviceStateName,serviceStates.idServiceState,
         GROUP_CONCAT(petTypes.idPetType) AS idPetTypes, GROUP_CONCAT(petTypes.petTypeName) AS petTypesName,
         servicetypes.idServiceType,servicetypes.serviceTypeName 
@@ -203,6 +220,14 @@ export async function getAllServices() {
         petTypes,
       };
     });
+    for (let service of servicesWithPetTypes) {
+      console.debug("entidad del for: ", service);
+      if (service.images[0]) {
+        console.debug("imagen antes del parse: ", service.images);
+        service.images = JSON.parse(service.images);
+        console.debug("imagen desíes del parse: ", service.images);
+      }
+    }
 
     return servicesWithPetTypes;
   } catch (error) {
@@ -219,7 +244,9 @@ export async function updateService(service, data) {
       ...(data.serviceTitle && { serviceTitle: data.serviceTitle }),
       ...(data.images && { images: data.images }),
       ...(data.emailService && { emailService: data.emailService }),
-      ...(data.serviceDescription && {serviceDescription: data.serviceDescription,}),
+      ...(data.serviceDescription && {
+        serviceDescription: data.serviceDescription,
+      }),
       ...(data.openTime && { openTime: data.openTime }),
       ...(data.closeTime && { closeTime: data.closeTime }),
       ...(data.address && { address: data.address }),
@@ -233,12 +260,12 @@ export async function updateService(service, data) {
     }
 
     if (data.idServiceType) {
-      let service = await getServiceByUserIdAndServiceType(
-        data.idUser,
+      let servicio = await getServiceByUserIdAndServiceType(
+        service.idUser,
         data.idServiceType
       );
 
-      if (service[0]) {
+      if (servicio[0]) {
         throw {
           message:
             "Ya se ha registrado un servicio de este tipo para el Usuario",
@@ -260,7 +287,7 @@ export async function getServiceById(idService) {
   try {
     const query = `      
       SELECT
-        services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs, services.idService,services.avgRating, services.emailService, services.idUser,
+      services.idService,services.images,services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs, services.idService,services.avgRating, services.emailService, services.idUser,
         serviceStates.serviceStateName,serviceStates.idServiceState,
         GROUP_CONCAT(petTypes.idPetType) AS idPetTypes, GROUP_CONCAT(petTypes.petTypeName) AS petTypesName,
         servicetypes.idServiceType,servicetypes.serviceTypeName 
@@ -273,7 +300,7 @@ export async function getServiceById(idService) {
       INNER JOIN servicepets   ON services.idService = ServicePets.idService
       INNER JOIN PetTypes ON ServicePets.idPetType = PetTypes.idPetType
       INNER JOIN servicetypes ON servicetypes.idServiceType = services.idServiceType
-      WHERE  serviceStates.serviceStateName = 'ACTIVO' AND ultimosEstados.active = 1 and services.idService = '${idService}'
+      WHERE  ultimosEstados.active = 1 AND services.idService = '${idService}'
       GROUP BY services.serviceTitle,services.serviceDescription,services.address,services.openTime,services.closeTime, services.open24hs
     `;
 
@@ -296,6 +323,15 @@ export async function getServiceById(idService) {
       };
     });
 
+    for (let service of servicesWithPetTypes) {
+      console.debug("entidad service a validar:", service);
+      if (service.images[0]) {
+        console.debug("imagen antes del parse: ", service.images);
+        service.images = JSON.parse(service.images);
+        console.debug("imagen desíes del parse: ", service.images);
+      }
+    }
+
     return servicesWithPetTypes;
   } catch (error) {
     console.log(error);
@@ -305,6 +341,7 @@ export async function getServiceById(idService) {
 
 export async function deleteService(service, idAuthor) {
   try {
+    console.log("servicio enviado a eliminar: ",service);
     const serviceState = (await getStateForService(service.idService))[0];
     const serviceStateInactive = (await getServiceStateByName("INACTIVO"))[0];
 
@@ -417,8 +454,9 @@ export async function calculateAverageRating(service) {
 export async function retriveServiceTypesDB() {
   try {
     const types = await ServiceType.findAll({ where: { active: true } });
+    const formattedTypes = types.map((type) => type.get({ plain: true }));
 
-    return types;
+    return formattedTypes;
   } catch (err) {
     console.error("Error al obtener los tipos de servicio: ", err);
     throw err;
@@ -429,7 +467,7 @@ export async function getServicesEvery() {
   try {
     const query = `
     SELECT
-      services.serviceTitle, services.emailService, services.idService, services.idUser, serviceStates.serviceStateName,servicetypes.serviceTypeName 
+      services.serviceTitle, services.emailService, services.idService, serviceStates.serviceStateName,servicetypes.serviceTypeName, services.images 
     FROM services
     INNER JOIN (
       SELECT idService , idServiceState

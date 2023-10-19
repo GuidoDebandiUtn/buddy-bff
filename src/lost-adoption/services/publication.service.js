@@ -11,7 +11,7 @@ import { getPetBreedById } from "../../parameters/services/petBreed.service.js";
 import { getPetColorById } from "../../parameters/services/petColor.service.js";
 import { getPetTypeById } from "../../parameters/services/petType.service.js";
 import { User } from "../../models/User.js";
-import { CreateNotificationForZone } from "../../reports/service/notifications.services.js";
+import { createNotificationForZone } from "../../reports/service/notifications.services.js";
 
 export async function retrivePaginatedPublications(  page = 1,  recordsPerPage = 10,  modelType = "SEARCH") {
   
@@ -88,9 +88,9 @@ export async function createSearch(searchDto,idUser) {
     });
 
     try{
-    CreateNotificationForZone(searchDto.idLocality,`Se ha creado una busqueda de una mascota en tu zona, por favor si llegas a verla, da aviso!`);
+    await createNotificationForZone(searchDto.idLocality,`Se ha creado una busqueda de una mascota en tu zona, por favor si llegas a verla, da aviso!`);
     }catch(error){
-      console.log("error creando notificacion para una nueva publicacion de busqueda: ",error)
+      console.log("error creando notificacion para una nueva publicacion de busqueda: ",error);
     }
 
 
@@ -130,9 +130,9 @@ export async function createAdoption(adoptionDto,idUser) {
     });
 
     try{
-      CreateNotificationForZone(adoptionDto.idLocality,`Se ha creado una adopcion en tu zona, ${adoptionDto.title}`);
+      await createNotificationForZone(searchDto.idLocality,`Se ha creado una adopcion en tu zona, ${adoptionDto.title}`);
     }catch(error){
-      console.log("error creando notificacion para una nueva publicacion de adopcion: ",error)
+      console.error("error creando notificacion para una nueva publicacion de adopcion: ",error)
     }
 
     return newPublication;
@@ -161,7 +161,6 @@ export async function publicationDelete(idPublication, modelType) {
     publication = await modelParams.model.update(
       {
         idPublicationState: inactivePublicationState.idPublicationState,
-        updatedDate: new Date(),
       },
       { where: whereClause, returning: true }
     );
@@ -243,6 +242,71 @@ export async function updatePublication(  publicationDto,  idPublication,  model
   }
 }
 
+export async function closePublication(idPublication, modelType, adoptionDto) {
+  const modelParams = getModel(modelType);
+  const whereClause = {};
+  whereClause[modelParams.attributes.pop()] = idPublication;
+  let publication;
+  let solvedPublicationState;
+  try{
+    const activePublicationState = await PublicationState.findOne({
+      attributes: ["idPublicationState"],
+      where: { name: "ACTIVO" },
+    });
+
+    publication = (await modelParams.model.findOne(
+      { where: whereClause, returning: true }
+    )).get({ plain: true });
+
+    if(!publication){
+      throw {message: "Error en la obtencion de la publicacion a resolver, validar dato enviado", code: 400}
+    }
+    console.log(`publicacion obtenida correctamente. entidad obtenida: `,publication);
+    if(publication.idPublicationState != activePublicationState.idPublicationState){
+      throw {message: "la publicacion no se encuentra activa y por lo tanto no se puede resolver", code: 400}
+    }
+  }catch(error){
+    console.error("error en la validacion de estado de la publicacion, ", error);
+    throw error;
+  }
+  
+  
+  try{
+    solvedPublicationState = await PublicationState.findOne({
+      attributes: ["idPublicationState"],
+      where: { name: "RESUELTO" },
+    });
+    console.log(
+      `estado Resuelto obtenido correctamente. entidad obtenida: '${solvedPublicationState}'`
+    );
+  
+  }catch (error){
+    console.error("error en la obtencion del estado resuelto, ", error);
+    throw error;
+  }
+
+
+  try {
+    await modelParams.model.update(
+      {
+        idPublicationState: solvedPublicationState.idPublicationState,
+        newOwnerName: adoptionDto.newOwnerName,
+        newOwnerId: adoptionDto.newOwnerId
+      },
+      { where: whereClause, returning: true }
+    );
+    publication = (await modelParams.model.findOne(
+      { where: whereClause, returning: true }
+    )).get({ plain: true });
+      
+    return publication;
+  } catch (error) {
+    console.error("Error solving the publication with id:", idPublication);
+    console.error(error);
+    throw error;
+  }
+}
+
 function getModel(modelType) {
   let orderBy;
   let model;
@@ -254,7 +318,7 @@ function getModel(modelType) {
       include: [{ model: PetType, attributes: ["petTypeName"] }],
       attributes: ["petBreedName","size","intelligence","temperament","lifespan","idPetType","idPetBreed",],
     },
-    {model: PublicationState,attributes: ["name"],where: { name: "ACTIVO" },},
+    {model: PublicationState,attributes: ["name","idPublicationState"],where: { name: "ACTIVO" },},
 
   ];
   let attributes = ["title", "images", "description"];

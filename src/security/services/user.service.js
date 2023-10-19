@@ -8,49 +8,68 @@ import { createUserRole } from "./userRole.service.js";
 import bcrypt from "bcryptjs";
 import { UserState } from "../../models/UserState.js";
 import { Role } from "../../models/Role.js";
+import { Document } from "../../models/Document.js";
 
 export async function createUser(data) {
-  const { mail, password, userName, name, image, userType } = data;
-
-
+  const {
+    mail,
+    password,
+    userName,
+    name,
+    image,
+    userType,
+    documents,
+    serviceType,
+  } = data;
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    log.debug(
-      "Hased password for user %s, original: %s, hashed: %s",
-      userName,
-      password,
-      hashedPassword
-    );
+
     const newUser = await User.create(
-      {
-        mail,
-        password: hashedPassword,
-        userName,
-        name,
-        image,
-      },
-      {
-        fields: ["mail", "password", "userName","image"],
-      }
+      { mail, password: hashedPassword, userName, name, image },
+      { fields: ["mail", "password", "userName", "image"] }
     );
 
-    const userState = await getUserStateByName("ACTIVO");
-
-    await createStateUser(newUser.idUser, userState[0].idUserState);
+    const idUser = newUser.idUser;
 
     let role;
-    if (userType == "BASICO") {
-      role = await getRoleByName("BÁSICO");
+    if (userType == "ESTABLECIMIENTO") {
+      switch (serviceType) {
+        case "VETERINARIA":
+          role = await getRoleByName("VETERINARIA");
+          break;
+        case "PETSHOP":
+          role = await getRoleByName("PETSHOP");
+          break;
+        case "REFUGIO":
+          role = await getRoleByName("REFUGIO");
+          break;
+        default:
+          role = await getRoleByName("ESTABLECIMIENTO");
+          break;
+      }
+
+      for (const document of documents) {
+        const title = document.title;
+        const file = document.file;
+        await Document.create(
+          { idUser, title, file },
+          { fields: ["idUser", "title", "file"] }
+        );
+      }
+
+      const userState = await getUserStateByName("EN REVISION");
+      await createStateUser(idUser, userState[0].idUserState);
     } else {
-      role = await getRoleByName("ESTABLECIMIENTO");
+      role = await getRoleByName("BÁSICO");
+      const userState = await getUserStateByName("ACTIVO");
+      await createStateUser(idUser, userState[0].idUserState);
     }
 
-
-    await createUserRole(newUser.idUser, role[0].idRole);
+    await createUserRole(idUser, role[0].idRole);
 
     return newUser;
   } catch (error) {
-    console.error("Error creating user: %s, error: ", userName, error);
+    console.log("Error creating user: %s, error: ", userName, error);
     throw error;
   }
 }
@@ -89,7 +108,7 @@ export async function getAllUsers() {
 export async function getUserById(idUser) {
   try {
     const query = `
-    SELECT idUser, mail, userName,name,lastName, image
+    SELECT idUser, mail, userName, name, lastName, image
     FROM users
     WHERE idUser = '${idUser}'
     `;
@@ -169,12 +188,14 @@ export async function getPermissionsForUser(idUser) {
 export async function getStateForUser(idUser) {
   try {
     const query = `
-      select state.*  from userstates as state 
-      join stateusers change_sate on change_sate.idUserState = state.idUserState
-      join users u on u.idUser = change_sate.idUser
-      where u.idUser= '${idUser}' and change_sate.active = 1 
-      order by change_sate.createdAt desc 
-      limit 1;`;
+      select state.*  
+      from userstates as state 
+      join stateusers change_state on change_state.idUserState = state.idUserState
+      join users u on u.idUser = change_state.idUser
+      where u.idUser= '${idUser}' and change_state.active = 1 
+      order by change_state.createdAt desc 
+      limit 1;
+      `;
 
     const user = await sequelize.query(query, {
       model: UserState,
@@ -190,7 +211,7 @@ export async function getStateForUser(idUser) {
 export async function getEveryUsers() {
   try {
     const query = `
-    SELECT users.idUser, users.mail, users.userName, userStates.userStateName, roles.roleName
+    SELECT users.idUser, users.mail, users.userName, userStates.userStateName, roles.roleName, users.image
     FROM users
     INNER JOIN (
       SELECT idUser, idUserState
@@ -277,11 +298,9 @@ export async function updateUser(idUser, data) {
       updates.lastName = lastName;
     }
 
-
     if (image) {
       updates.image = image;
     }
-   
 
     updates.updatedDate = new Date();
 
@@ -325,77 +344,97 @@ export async function destroyUser(mail) {
   }
 }
 
-
 export async function getUsersByPermission(tokenClaim) {
   tokenClaim = tokenClaim.toUpperCase();
 
   try {
-    const roleIds = await getRolesByPermission(tokenClaim).map(role => role.idRole);
+    const roleIds = await getRolesByPermission(tokenClaim).map(
+      (role) => role.idRole
+    );
     if (!roleIds || roleIds.length === 0) {
-      throw { message: 'No se encontraron roles con el permiso especificado', code: 400 };
+      throw {
+        message: "No se encontraron roles con el permiso especificado",
+        code: 400,
+      };
     }
 
     const users = await User.findAll({
-      attributes: ['idUser', 'username', 'image', 'name', 'mail'],
-      group: ['idUser'],
-      include: [{
-        model: UserRole,
-        attributes: ["idRole", "idUser"],
-        where: {
-          idRole: roleIds
-        }
-      }]
+      attributes: ["idUser", "username", "image", "name", "mail"],
+      group: ["idUser"],
+      include: [
+        {
+          model: UserRole,
+          attributes: ["idRole", "idUser"],
+          where: {
+            idRole: roleIds,
+          },
+        },
+      ],
     });
 
-    const formattedUsers = users.map(user => user.get({ plain: true }));
+    const formattedUsers = users.map((user) => user.get({ plain: true }));
 
     return formattedUsers;
   } catch (error) {
-    console.log("error en la obtencion de usuarios para el permiso:", permission, error);
+    console.log(
+      "error en la obtencion de usuarios para el permiso:",
+      permission,
+      error
+    );
     throw error;
   }
 }
-
 
 export async function getUsersBylocality(idLocality) {
   try {
     const users = await User.findAll({
-      attributes: ['idUser', 'username', 'image','name','mail'],
-      where: {idLocality: idLocality, idLocality}
+      attributes: ["idUser", "username", "image", "name", "mail"],
+      where: { idLocality: idLocality, idLocality },
     });
-    const formattedUsers = users.map(user => user.get({ plain: true }));
+    const formattedUsers = users.map((user) => user.get({ plain: true }));
 
     return formattedUsers;
   } catch (error) {
-    console.log("error en la obtencion de usuarios por localidad, para localidad:",idLocality,error);
+    console.log(
+      "error en la obtencion de usuarios por localidad, para localidad:",
+      idLocality,
+      error
+    );
     throw error;
   }
 }
-
 
 export async function getUsersByRole(roleName) {
   roleName = roleName.toUpperCase();
   try {
     const users = await User.findAll({
-      attributes: ['idUser', 'username', 'image','name','mail'],
-      group: ['idUser'],
-      include: [{
-        model: UserRole,
-        limit: 1,
-        attributes: ["idRole","idUser"],
-        order: [['createdAt', 'DESC']], 
-        include: [{
-          model: Role,
-          attributes: ["idRole","roleName"],
-          where: { roleName: roleName },
-        },],
-      },],
+      attributes: ["idUser", "username", "image", "name", "mail"],
+      group: ["idUser"],
+      include: [
+        {
+          model: UserRole,
+          limit: 1,
+          attributes: ["idRole", "idUser"],
+          order: [["createdAt", "DESC"]],
+          include: [
+            {
+              model: Role,
+              attributes: ["idRole", "roleName"],
+              where: { roleName: roleName },
+            },
+          ],
+        },
+      ],
     });
-    const formattedUsers = users.map(user => user.get({ plain: true }));
+    const formattedUsers = users.map((user) => user.get({ plain: true }));
 
     return formattedUsers;
   } catch (error) {
-    console.log("error en la obtencion de usuarios para el rol:",roleName,error)
+    console.log(
+      "error en la obtencion de usuarios para el rol:",
+      roleName,
+      error
+    );
     throw error;
   }
 }
