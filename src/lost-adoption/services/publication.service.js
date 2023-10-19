@@ -242,13 +242,35 @@ export async function updatePublication(  publicationDto,  idPublication,  model
   }
 }
 
-export async function closePublication(idPublication, modelType) {
+export async function closePublication(idPublication, modelType, adoptionDto) {
   const modelParams = getModel(modelType);
   const whereClause = {};
   whereClause[modelParams.attributes.pop()] = idPublication;
-
   let publication;
   let solvedPublicationState;
+  try{
+    const activePublicationState = await PublicationState.findOne({
+      attributes: ["idPublicationState"],
+      where: { name: "ACTIVO" },
+    });
+
+    publication = (await modelParams.model.findOne(
+      { where: whereClause, returning: true }
+    )).get({ plain: true });
+
+    if(!publication){
+      throw {message: "Error en la obtencion de la publicacion a resolver, validar dato enviado", code: 400}
+    }
+    console.log(`publicacion obtenida correctamente. entidad obtenida: `,publication);
+    if(publication.idPublicationState != activePublicationState.idPublicationState){
+      throw {message: "la publicacion no se encuentra activa y por lo tanto no se puede resolver", code: 400}
+    }
+  }catch(error){
+    console.error("error en la validacion de estado de la publicacion, ", error);
+    throw error;
+  }
+  
+  
   try{
     solvedPublicationState = await PublicationState.findOne({
       attributes: ["idPublicationState"],
@@ -265,17 +287,18 @@ export async function closePublication(idPublication, modelType) {
 
 
   try {
-    publication = await modelParams.model.update(
+    await modelParams.model.update(
       {
         idPublicationState: solvedPublicationState.idPublicationState,
+        newOwnerName: adoptionDto.newOwnerName,
+        newOwnerId: adoptionDto.newOwnerId
       },
       { where: whereClause, returning: true }
     );
-
-    console.log(
-      `Se ha modificado correctamente la publicacion. Nueva entidad: '${publication}'`
-    );
-
+    publication = (await modelParams.model.findOne(
+      { where: whereClause, returning: true }
+    )).get({ plain: true });
+      
     return publication;
   } catch (error) {
     console.error("Error solving the publication with id:", idPublication);
@@ -295,7 +318,7 @@ function getModel(modelType) {
       include: [{ model: PetType, attributes: ["petTypeName"] }],
       attributes: ["petBreedName","size","intelligence","temperament","lifespan","idPetType","idPetBreed",],
     },
-    {model: PublicationState,attributes: ["name"],where: { name: "ACTIVO" },},
+    {model: PublicationState,attributes: ["name","idPublicationState"],where: { name: "ACTIVO" },},
 
   ];
   let attributes = ["title", "images", "description"];

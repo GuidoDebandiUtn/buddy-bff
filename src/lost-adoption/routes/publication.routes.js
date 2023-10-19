@@ -319,6 +319,19 @@ router.put('/:idPublication',putPublication);
  *           type: uuid
  *         description: Id de la publicacion a modificar.
  *     tags: [PUBLICATION]
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               newOwnerName:
+ *                 type: String
+ *                 description: Nombre del nuevo dueño de la mascota si es que el usuario llena el campo
+ *               newOwnerId:
+ *                 type: uuid
+ *                 description: id del nuevo dueño de la mascota si es que se encuentra en el sistema
  *     responses:
  *       200:
  *         description: Publicacion resuelta correctamente.

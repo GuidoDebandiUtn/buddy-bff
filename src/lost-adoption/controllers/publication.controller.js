@@ -197,30 +197,26 @@ export async function postSolvePublication(req, res) {
   console.debug(`Iniciado proceso de resolucion de publicacion - Parametros modelType='${modelType}', idPublication= '${idPublication}'`);
 
   try {
-    const publication = await getPublicationById(idPublication, modelType);
-    console.log(
-      `publicacion obtenida correctamente. entidad obtenida: '${publication}'`
-    );
-    if (!publication) {
-      return res
-        .status(404)
-        .json({
-          message: `Error en la publicacion a modificar, validar dato enviado`,
-        });
-    }
-
-    await closePublication(idPublication, modelType);
+   let publication =  await closePublication( idPublication, modelType, req.body);
 
     return res
       .status(200)
       .json({
         message:
           "Se ha resuelto correctamente la publicacion de la mascota",
+          publication: publication
       });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    if(error.code){
+      return res.status(error.code).json({
+        message: error.message,
+      });
+    }else{
+      res.status(500).json({
+        message: error.message,
+      });
+    }
+
   }
 }
 
