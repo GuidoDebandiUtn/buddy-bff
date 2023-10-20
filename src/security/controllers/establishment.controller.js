@@ -10,7 +10,7 @@ import { getUserById } from "../services/user.service.js";
 
 export async function getEstablishments(req, res) {
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['READ_USER',];
+  const requiredPermissions=['READ_USUARIOS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -35,7 +35,7 @@ export async function getEstablishments(req, res) {
 export async function getEstablishment(req, res) {
   const { idUser } = req.params;
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['READ_USER',];
+  const requiredPermissions=['READ_USUARIOS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -106,7 +106,7 @@ export async function establishmentUpdate(req, res) {
   const { idUser } = req.params;
 
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['WRITE_USER',];
+  const requiredPermissions=['WRITE_USUARIOS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -136,7 +136,7 @@ export async function establishmentUpdate(req, res) {
 export async function getRevisionEstablishments(req, res) {
 
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['READ_USER_LIST',];
+  const requiredPermissions=['READ_LISTA_USUARIOS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {

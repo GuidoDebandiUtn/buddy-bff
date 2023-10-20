@@ -33,7 +33,7 @@ export async function vaccineCreate(req, res) {
         .status(404)
         .json({ message: "No existe ninguna mascota con ese id" });
     }
-    const requiredPermissions=['WRITE_PET',];
+    const requiredPermissions=['WRITE_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pet[0].idUser != idUser) {
@@ -64,7 +64,7 @@ export async function getVaccines(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    const requiredPermissions=['READ_PET',];
+    const requiredPermissions=['READ_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pet[0].idUser != idUser) {
@@ -98,7 +98,7 @@ export async function getVaccine(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    const requiredPermissions=['READ_PET',];
+    const requiredPermissions=['READ_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pet[0].idUser != idUser) {
@@ -133,7 +133,7 @@ export async function vaccineUpdate(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    const requiredPermissions=['WRITE_PET',];
+    const requiredPermissions=['WRITE_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pet[0].idUser != idUser) {
@@ -179,7 +179,7 @@ export async function vaccineDelete(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    const requiredPermissions=['WRITE_PET',];
+    const requiredPermissions=['WRITE_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pet[0].idUser != idUser) {
@@ -218,7 +218,7 @@ export async function vaccineActive(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    const requiredPermissions=['WRITE_PET',];
+    const requiredPermissions=['WRITE_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pet[0].idUser != idUser) {
@@ -257,7 +257,7 @@ export async function vaccineArchive(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    const requiredPermissions=['WRITE_PET',];
+    const requiredPermissions=['WRITE_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pet[0].idUser != idUser) {

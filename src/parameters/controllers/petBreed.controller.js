@@ -13,7 +13,7 @@ import { getPetTypeById } from "../services/petType.service.js";
 
 export async function petBreedCreate(req, res) {
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['WRITE_PETBREEDS',];
+  const requiredPermissions=['WRITE_MI_MASCOTABREEDS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -52,7 +52,7 @@ export async function petBreedCreate(req, res) {
 
 export async function getPetBreeds(req, res) {
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['READ_PETBREEDS',];
+  const requiredPermissions=['READ_MI_MASCOTABREEDS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -77,7 +77,7 @@ export async function getPetBreeds(req, res) {
 
 export async function getPetBreedsEvery(req, res) {
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['READ_PETBREEDS_LIST',];
+  const requiredPermissions=['READ_MI_MASCOTABREEDS_LIST','READ_PARAMETROS'];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -103,7 +103,7 @@ export async function getPetBreedsEvery(req, res) {
 export async function getPetBreed(req, res) {
   const { idPetBreed } = req.params;
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['READ_PETBREEDS',];
+  const requiredPermissions=['READ_MI_MASCOTABREEDS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -130,7 +130,7 @@ export async function getPetBreed(req, res) {
 export async function petBreedUpdate(req, res) {
   const { idPetBreed } = req.params;
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['WRITE_PETBREEDS',];
+  const requiredPermissions=['WRITE_MI_MASCOTABREEDS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -168,7 +168,7 @@ export async function petBreedUpdate(req, res) {
 export async function petBreedDelete(req, res) {
   const { idPetBreed } = req.params;
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['WRITE_PETBREEDS',];
+  const requiredPermissions=['WRITE_MI_MASCOTABREEDS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -198,7 +198,7 @@ export async function petBreedDelete(req, res) {
 export async function getPetBreedsByType(req, res) {
   const { petTypeName } = req.params;
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['READ_PETBREEDS',];
+  const requiredPermissions=['READ_MI_MASCOTABREEDS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -224,7 +224,7 @@ export async function getPetBreedsByType(req, res) {
 export async function petBreedActive(req, res) {
   const { idPetBreed } = req.params;
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['WRITE_PETBREEDS',];
+  const requiredPermissions=['WRITE_MI_MASCOTABREEDS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {

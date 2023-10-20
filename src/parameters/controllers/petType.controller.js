@@ -11,7 +11,7 @@ import {
 
 export async function petTypeCreate(req, res) {
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['WRITE_PET_TYPE',];
+  const requiredPermissions=['WRITE_MI_MASCOTA_TYPE',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -38,7 +38,7 @@ export async function petTypeCreate(req, res) {
 
 export async function getPetTypes(req, res) {
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['READ_PET_TYPE',];
+  const requiredPermissions=['READ_MI_MASCOTA_TYPE',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -63,7 +63,7 @@ export async function getPetTypes(req, res) {
 
 export async function getPetTypesEvery(req, res) {
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['READ_PET_TYPE_LIST',];
+  const requiredPermissions=['READ_MI_MASCOTA_TYPE_LIST','READ_PARAMETROS'];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -89,7 +89,7 @@ export async function getPetTypesEvery(req, res) {
 export async function getPetType(req, res) {
   const { idPetType } = req.params;
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['READ_PET_TYPE',];
+  const requiredPermissions=['READ_MI_MASCOTA_TYPE',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -116,7 +116,7 @@ export async function getPetType(req, res) {
 export async function petTypeUpdate(req, res) {
   const { idPetType } = req.params;
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['WRITE_PET_TYPE',];
+  const requiredPermissions=['WRITE_MI_MASCOTA_TYPE',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -154,7 +154,7 @@ export async function petTypeUpdate(req, res) {
 export async function petTypeDelete(req, res) {
   const { idPetType } = req.params;
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['WRITE_PET_TYPE',];
+  const requiredPermissions=['WRITE_MI_MASCOTA_TYPE',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -184,7 +184,7 @@ export async function petTypeDelete(req, res) {
 export async function petTypeActive(req, res) {
   const { idPetType } = req.params;
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['WRITE_PET_TYPE',];
+  const requiredPermissions=['WRITE_MI_MASCOTA_TYPE',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {

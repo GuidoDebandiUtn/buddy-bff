@@ -78,7 +78,7 @@ export async function getRegions(req, res) {
 
 export async function getRegionsEvery(req, res) {
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['READ_REGION_LIST',];
+  const requiredPermissions=['READ_REGION_LIST','READ_PARAMETROS'];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {

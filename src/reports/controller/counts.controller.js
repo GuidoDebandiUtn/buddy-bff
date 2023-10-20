@@ -31,7 +31,7 @@ export async function getSucessLosts(req, res) {
 export async function getSucessAdoptions(req, res) {
   try {
       const userPermissions = req.user.permissions[0].permissions.split(' - ');
-      const requiredPermissions=['READ_REPORTS_SUCCESS_ADOPTIONS',];
+      const requiredPermissions=['READ_REPORTS_SUCCESS_ADOPTIONS','READ_REPORTES'];
       const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
     
       if (!hasAllPermissions) {
@@ -53,7 +53,7 @@ export async function getActiveUsers(req, res) {
 
     try {
       const userPermissions = req.user.permissions[0].permissions.split(' - ');
-      const requiredPermissions=['READ_REPORTS_ACTIVE_USERS',];
+      const requiredPermissions=['READ_REPORTS_ACTIVE_USERS','READ_REPORTES'];
       const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
     
       if (!hasAllPermissions) {
@@ -75,7 +75,7 @@ export async function getActiveLosts(req, res) {
 
     try {
       const userPermissions = req.user.permissions[0].permissions.split(' - ');
-      const requiredPermissions=['READ_REPORTS_ACTIVE_LOSTS',];
+      const requiredPermissions=['READ_REPORTS_ACTIVE_LOSTS','READ_REPORTES'];
       const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
     
       if (!hasAllPermissions) {
@@ -98,7 +98,7 @@ export async function getActiveAdoptions(req, res) {
     try {
 
       const userPermissions = req.user.permissions[0].permissions.split(' - ');
-      const requiredPermissions=['READ_REPORTS_ACTIVE_ADOPTIONS',];
+      const requiredPermissions=['READ_REPORTS_ACTIVE_ADOPTIONS','READ_REPORTES'];
       const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
     
       if (!hasAllPermissions) {
@@ -122,7 +122,7 @@ export async function getActiveServices(req, res) {
     try {
 
       const userPermissions = req.user.permissions[0].permissions.split(' - ');
-      const requiredPermissions=['READ_REPORTS_ACTIVE_SERVICES',];
+      const requiredPermissions=['READ_REPORTS_ACTIVE_SERVICES','READ_REPORTES'];
       const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
     
       if (!hasAllPermissions) {

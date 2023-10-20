@@ -80,7 +80,7 @@ export async function getLocalities(req, res) {
 
 export async function getLocalitiesEvery(req, res) {
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['READ_LOCALITIES_LIST',];
+  const requiredPermissions=['READ_LOCALITIES_LIST','READ_PARAMETROS'];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {

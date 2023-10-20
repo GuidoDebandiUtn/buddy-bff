@@ -87,7 +87,7 @@ export async function getPets(req, res) {
       return res.status(404).json({ message: "No existen mascotas" });
     }
 
-    const requiredPermissions=['READ_PET',];
+    const requiredPermissions=['READ_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pets[0].idUser != idUser) {
@@ -108,7 +108,7 @@ export async function getPet(req, res) {
   try {
     const pet = await getPetById(idPet);
 
-    const requiredPermissions=['READ_PET',];
+    const requiredPermissions=['READ_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pet[0].idUser != idUser) {
@@ -147,7 +147,7 @@ export async function petUpdate(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    const requiredPermissions=['WRITE_PET',];
+    const requiredPermissions=['WRITE_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pet[0].idUser != idUser) {
@@ -199,7 +199,7 @@ export async function petDelete(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    const requiredPermissions=['WRITE_PET',];
+    const requiredPermissions=['WRITE_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pet[0].idUser != idUser) {
@@ -230,7 +230,7 @@ export async function petActive(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    const requiredPermissions=['WRITE_PET',];
+    const requiredPermissions=['WRITE_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pet[0].idUser != idUser) {

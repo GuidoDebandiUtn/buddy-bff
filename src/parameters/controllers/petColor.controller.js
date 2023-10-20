@@ -62,7 +62,7 @@ export async function getPetColors(req, res) {
 
 export async function getPetColorsEvery(req, res) {
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['READ_COLOR_LIST',];
+  const requiredPermissions=['READ_COLOR_LIST','READ_PARAMETROS'];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {

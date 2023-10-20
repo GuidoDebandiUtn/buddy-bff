@@ -41,7 +41,7 @@ export async function getComplaintsAll(req, res) {
   const { page, size, } = req.query;
 
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['READ_COMPLAINT',];
+  const requiredPermissions=['READ_DENUNCIAS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -73,7 +73,7 @@ export async function complaintDelete(req, res) {
   const { idComplaint } = req.params;
   
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['WRITE_COMPLAINT',];
+  const requiredPermissions=['WRITE_DENUNCIAS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -105,7 +105,7 @@ export async function complaintExecute(req, res) {
   let { idComplaint,validate } = req.params;
   validate = validate.toLowerCase() === "true" ? true : false;
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['WRITE_COMPLAINT',];
+  const requiredPermissions=['WRITE_DENUNCIAS','WRITE_PUBLICACION_ADOPCION','WRITE_PUBLICACION_BUSQUEDA','WRITE_SERVICIOS'];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {

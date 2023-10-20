@@ -66,7 +66,7 @@ export async function getCountries(req, res) {
 
 export async function getCountriesEvery(req, res) {
   const userPermissions = req.user.permissions[0].permissions.split(' - ');
-  const requiredPermissions=['READ_COUNTRIES_LIST',];
+  const requiredPermissions=['READ_COUNTRIES_LIST','READ_PARAMETROS'];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
