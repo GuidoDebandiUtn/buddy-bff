@@ -34,6 +34,8 @@ const router = Router();
  *            properties:
  *              localityName:
  *                type: string
+ *              postalCode:
+ *                type: string
  *              idRegion:
  *                type: UUID
  *    responses:

@@ -34,6 +34,16 @@ const router = Router();
  *             properties:
  *               petTypeName:
  *                 type: string
+ *               legsNumber:
+ *                 type: integer
+ *               diet:
+ *                 type: string
+ *               enviroment:
+ *                 type: string
+ *               coat:
+ *                 type: string
+ *               weather:
+ *                 type: string
  *     responses:
  *       201:
  *         description: Tipo de mascota creado exitosamente.

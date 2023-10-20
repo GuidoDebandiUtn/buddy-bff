@@ -36,14 +36,6 @@ PublicationAdoption.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    newOwnerName: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    newOwnerId: {
-      type: DataTypes.UUID,
-      allowNull: true,
-    },
     sterilized: {
       type: DataTypes.BOOLEAN,
     },

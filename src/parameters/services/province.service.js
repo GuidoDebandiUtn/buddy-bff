@@ -2,16 +2,17 @@ import { Province } from "../../models/Province.js";
 import { sequelize } from "../../database/database.js";
 
 export async function createProvince(data) {
-  const { provinceName, idCountry } = data;
+  const { provinceName, idCountry, weather,population,surface, populationDensity } = data;
+  
 
   try {
     const province = await Province.create(
       {
         provinceName: provinceName.toUpperCase(),
-        idCountry,
+        idCountry, weather,population,surface, populationDensity,
       },
       {
-        fields: ["provinceName", "idCountry"],
+        fields: ["provinceName", "idCountry", "weather","population","surface", "populationDensity"],
       }
     );
 
@@ -24,7 +25,7 @@ export async function createProvince(data) {
 export async function getAllProvinces() {
   try {
     const query = `
-    SELECT provinces.idProvince, provinces.provinceName, countries.countryName
+    SELECT provinces.idProvince, provinces.provinceName, countries.countryName, provinces.weather,provinces.population,provinces.surface, provinces.populationDensity
     FROM provinces
     INNER JOIN countries ON provinces.idCountry = countries.idCountry
     WHERE provinces.active = true
@@ -63,7 +64,7 @@ export async function getEveryProvinces() {
 export async function getProvinceById(idProvince) {
   try {
     const query = `
-    SELECT provinces.idProvince, provinces.provinceName, GROUP_CONCAT(regions.regionName), provinces.idCountry
+    SELECT provinces.idProvince, provinces.provinceName, provinces.weather,provinces.population,provinces.surface, provinces.populationDensity, GROUP_CONCAT(regions.regionName), provinces.idCountry
     FROM provinces
     LEFT JOIN regions ON provinces.idProvince = regions.idProvince
     WHERE provinces.idProvince = '${idProvince}'
@@ -84,7 +85,7 @@ export async function getProvinceById(idProvince) {
 export async function getProvinceByName(provinceName, idCountry) {
   try {
     const query = `
-    SELECT idProvince, provinceName
+    SELECT idProvince, provinceName, weather,population,surface, populationDensity
     FROM provinces
     WHERE provinceName = '${provinceName.toUpperCase()}' and idCountry = '${idCountry}'
     `;
@@ -101,11 +102,22 @@ export async function getProvinceByName(provinceName, idCountry) {
 }
 
 export async function updateProvince(data, idProvince) {
-  const { provinceName } = data;
+  const { provinceName, weather,population,surface, populationDensity } = data;
+
+  const updateOptions = { where: { idProvince }, returning: true };
+  
+  const updates = {
+    ...(data.provinceName && { provinceName: provinceName }),
+    ...(data.weather && { weather: weather }),
+    ...(data.population && { population: population }),
+    ...(data.surface && { surface: surface }),
+    ...(data.populationDensity && { populationDensity: populationDensity }),
+  };
+
   try {
     await Province.update(
-      { provinceName: provinceName.toUpperCase() },
-      { where: { idProvince }, returning: true }
+      updates,
+      updateOptions
     );
 
     return;

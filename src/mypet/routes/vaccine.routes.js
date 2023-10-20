@@ -34,6 +34,10 @@ const router = Router();
  *             properties:
  *               titleVaccine:
  *                 type: string
+ *               doseQuantity:
+ *                 type: integer
+ *               nextVaccineDate:
+ *                 type: date
  *               descriptionVaccine:
  *                 type: string
  *     responses:

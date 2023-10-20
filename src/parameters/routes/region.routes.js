@@ -36,6 +36,10 @@ const router = Router();
  *                type: string
  *              idProvince:
  *                type: UUID
+ *              surface:
+ *                type: UUID
+ *              population:
+ *                type: UUID
  *    responses:
  *      201:
  *         description: Provincia creada exitosamente.

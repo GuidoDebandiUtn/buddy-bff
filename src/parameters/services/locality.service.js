@@ -2,16 +2,16 @@ import { Locality } from "../../models/Locality.js";
 import { sequelize } from "../../database/database.js";
 
 export async function createLocality(data) {
-  const { localityName, idRegion } = data;
+  const { localityName, idRegion, postalCode } = data;
 
   try {
     const locality = await Locality.create(
       {
         localityName: localityName.toUpperCase(),
-        idRegion,
+        idRegion, postalCode 
       },
       {
-        fields: ["localityName", "idRegion"],
+        fields: ["localityName", "idRegion", "postalCode" ],
       }
     );
 
@@ -24,7 +24,7 @@ export async function createLocality(data) {
 export async function getAllLocalities() {
   try {
     const query = `
-    SELECT localities.idLocality, localities.localityName, regions.regionName
+    SELECT localities.idLocality, localities.localityName, regions.regionName, localities.postalCode 
     FROM localities
     INNER JOIN regions ON regions.idRegion = localities.idRegion
     WHERE localities.active = true
@@ -63,7 +63,7 @@ export async function getAllLocalitiesEvery() {
 export async function getLocalityById(idLocality) {
   try {
     const query = `
-    SELECT idLocality, localityName, idRegion
+    SELECT idLocality, localityName, idRegion, postalCode 
     FROM localities
     WHERE idLocality = '${idLocality}'
     `;
@@ -82,7 +82,7 @@ export async function getLocalityById(idLocality) {
 export async function getLocalityByName(localityName, idRegion) {
   try {
     const query = `
-    SELECT idLocality, localityName
+    SELECT idLocality, localityName, postalCode 
     FROM localities
     WHERE localityName = '${localityName.toUpperCase()}' and idRegion = '${idRegion}'
     `;
@@ -99,12 +99,20 @@ export async function getLocalityByName(localityName, idRegion) {
 }
 
 export async function updateLocality(data, idLocality) {
-  const { localityName } = data;
+  const { localityName, postalCode  } = data;
+
+  const updateOptions = { where: { idLocality }, returning: true };
+  
+  const updates = {
+    ...(data.localityName && { localityName: localityName.toUpperCase() }),
+    ...(data.postalCode && { postalCode: postalCode }),
+  };
+
 
   try {
     await Locality.update(
-      { localityName: localityName.toUpperCase() },
-      { where: { idLocality }, returning: true }
+      updates,
+      updateOptions
     );
 
     return;

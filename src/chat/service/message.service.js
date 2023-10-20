@@ -53,6 +53,7 @@ export async function createMessage(idUser, content, idChat) {
 
     chat.archivedEmitter = false;
     chat.archivedReceptor = false;
+    chat.lastMessageDate = new Date();
     await chat.save();
   try{
     if(chat.idUserEmitter !== idUser){

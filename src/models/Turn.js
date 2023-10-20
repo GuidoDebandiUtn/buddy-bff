@@ -32,6 +32,7 @@ Turn.init(
     },
     alertType: {
       type: DataTypes.STRING,
+      defaultValue: "Ninguno",
     },
   },
   {

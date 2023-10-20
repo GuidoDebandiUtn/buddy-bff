@@ -25,6 +25,13 @@ export async function vaccineCreate(req, res) {
     .json({ message: "Error en el formato de fecha" });
   }
 
+  if (req.body.nextVaccineDate && !dateRegex.test(req.body.nextVaccineDate)) {
+    console.log ("error en el formato de la fecha de la proxima vacuna: obtenido: %s, esperado AAAA-mm-dd HH:mm:ss",req.body.vaccineDate);
+    return res
+    .status(400)
+    .json({ message: "Error en el formato de fecha" });
+  }
+
   try {
     const pet = await getPetById(idPet);
 

@@ -35,13 +35,19 @@ const router = Router();
  *             properties:
  *               petBreedName:
  *                 type: string
+ *               lifespan:
+ *                 type: string
+ *               temperament:
+ *                 type: string
+ *               size:
+ *                 type: string
  *     responses:
  *       201:
  *         description: Raza creada exitosamente.
  *         content:
  *            application/json:
  *              schema:
- *                type: object|
+ *                type: object
  *                properties:
  *                  message:
  *                    type: string

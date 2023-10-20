@@ -2,16 +2,16 @@ import { Region } from "../../models/Region.js";
 import { sequelize } from "../../database/database.js";
 
 export async function createRegion(data) {
-  const { regionName, idProvince } = data;
+  const { regionName, idProvince, surface, population } = data;
 
   try {
     const region = await Region.create(
       {
         regionName: regionName.toUpperCase(),
-        idProvince,
+        idProvince, surface, population ,
       },
       {
-        fields: ["regionName", "idProvince"],
+        fields: ["regionName", "idProvince", "surface", "population" ],
       }
     );
 
@@ -24,7 +24,7 @@ export async function createRegion(data) {
 export async function getAllRegions() {
   try {
     const query = `
-    SELECT regions.idRegion, regions.regionName, provinces.provinceName
+    SELECT regions.idRegion, regions.regionName, provinces.provinceName, regions.surface, regions.population 
     FROM regions
     INNER JOIN provinces ON provinces.idProvince = regions.idProvince
     WHERE regions.active = true
@@ -63,7 +63,7 @@ export async function getEveryRegions() {
 export async function getRegionById(idRegion) {
   try {
     const query = `
-    SELECT regions.idRegion, regions.regionName, GROUP_CONCAT(localities.localityName), regions.idProvince
+    SELECT regions.idRegion, regions.regionName, GROUP_CONCAT(localities.localityName), regions.idProvince, regions.surface, regions.population
     FROM regions
     LEFT JOIN localities ON regions.idRegion = localities.idRegion
     WHERE regions.idRegion = '${idRegion}'
@@ -84,7 +84,7 @@ export async function getRegionById(idRegion) {
 export async function getRegionByName(regionName, idProvince) {
   try {
     const query = `
-    SELECT idRegion, regionName
+    SELECT idRegion, regionName, surface, population
     FROM regions
     WHERE regionName = '${regionName.toUpperCase()}' and idProvince = '${idProvince}'
     `;
@@ -101,15 +101,21 @@ export async function getRegionByName(regionName, idProvince) {
 }
 
 export async function updateRegion(data, idRegion) {
-  const { regionName } = data;
+  const { regionName, surface, population } = data;
+
+  const updateOptions = { where: { idRegion }, returning: true };
+  
+  const updates = {
+    ...(data.regionName && { regionName: regionName }),
+    ...(data.surface && { surface: surface }),
+    ...(data.population && { population: population }),
+  };
+
 
   try {
     await Region.update(
-      {
-        regionName: regionName.toUpperCase(),
-        updatedDate: new Date(),
-      },
-      { where: { idRegion }, returning: true }
+      updates,
+      updateOptions
     );
 
     return;
