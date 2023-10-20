@@ -49,7 +49,7 @@ const router = Router();
  *                message:
  *                  type: string
  *      401:
- *        description: Error en el token enviado, no se disponen de permisos para realizar el cambio
+ *        description: Error en el token enviado, no se disponen de permissions para realizar el cambio
  *        content:
  *          application/json:
  *            schema:

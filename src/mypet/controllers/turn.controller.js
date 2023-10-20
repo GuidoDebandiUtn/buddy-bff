@@ -15,13 +15,8 @@ const dateRegex = /^(\d{4})-(0?[1-9]|1[0-2])-(0?[1-9]|[12]\d|3[01]) ([01]\d|2[0-
 
 export async function turnCreate(req, res) {
   const { idPet } = req.params;
-
-  if (!dateRegex.test(req.body.turnDate)) {
-    console.log ("error en el formato del turno: obtenido: %s, esperado AAAA-mm-dd HH:mm:ss",req.body.turnDate);
-    return res
-    .status(400)
-    .json({ message: "Error en el formato de fecha" });
-  }
+  const idUser = req.user.idUser;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
 
   try {
     const pet = await getPetById(idPet);
@@ -31,6 +26,21 @@ export async function turnCreate(req, res) {
         .status(404)
         .json({ message: "No existe ninguna mascota con ese id" });
     }
+
+    const requiredPermissions=['WRITE_PET',];
+    const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  
+    if (!hasAllPermissions && pet[0].idUser != idUser) {
+      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    }
+
+    if (!dateRegex.test(req.body.turnDate)) {
+      console.log ("error en el formato del turno: obtenido: %s, esperado AAAA-mm-dd HH:mm:ss",req.body.turnDate);
+      return res
+      .status(400)
+      .json({ message: "Error en el formato de fecha" });
+    }
+
 
     const newTurn = await createTurn(req.body, idPet);
 
@@ -44,6 +54,8 @@ export async function turnCreate(req, res) {
 
 export async function getTurns(req, res) {
   const { idPet } = req.params;
+  const idUser = req.user.idUser;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
 
   try {
     const pet = await getPetById(idPet);
@@ -52,6 +64,13 @@ export async function getTurns(req, res) {
       return res
         .status(404)
         .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
+    const requiredPermissions=['READ_PET',];
+    const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  
+    if (!hasAllPermissions && pet[0].idUser != idUser) {
+      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
     }
 
     const turns = await getAllTurns(idPet);
@@ -68,6 +87,8 @@ export async function getTurns(req, res) {
 
 export async function getTurn(req, res) {
   const { idTurn, idPet } = req.params;
+  const idUser = req.user.idUser;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
 
   try {
     const pet = await getPetById(idPet);
@@ -76,6 +97,13 @@ export async function getTurn(req, res) {
       return res
         .status(404)
         .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
+    const requiredPermissions=['READ_PET',];
+    const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  
+    if (!hasAllPermissions && pet[0].idUser != idUser) {
+      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
     }
 
     const turn = await getTurnById(idTurn, idPet);
@@ -94,10 +122,11 @@ export async function getTurn(req, res) {
 
 export async function turnUpdate(req, res) {
   const { idTurn, idPet } = req.params;
-  console.log ("error en el formato del turno: obtenido: %s, esperado AAAA-mm-dd HH:mm:ss",req.body.turnDate);
+  const idUser = req.user.idUser;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
 
   if (!dateRegex.test(req.body.turnDate)) {
-    console.log ("error en el formato del turno: obtenido: %s, esperado AAAA-mm-dd HH:mm:ss",req.body.turnDate);
+    console.log("error en el formato del turno: obtenido: %s, esperado AAAA-mm-dd HH:mm:ss",req.body.turnDate);
     return res
     .status(400)
     .json({ message: "Error en el formato de fecha" });
@@ -110,6 +139,13 @@ export async function turnUpdate(req, res) {
       return res
         .status(404)
         .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
+    const requiredPermissions=['WRITE_PET',];
+    const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  
+    if (!hasAllPermissions && pet[0].idUser != idUser) {
+      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
     }
 
     const turn = await getTurnById(idTurn, idPet);
@@ -132,6 +168,8 @@ export async function turnUpdate(req, res) {
 
 export async function turnDelete(req, res) {
   const { idTurn, idPet } = req.params;
+  const idUser = req.user.idUser;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
 
   try {
     const pet = await getPetById(idPet);
@@ -140,6 +178,13 @@ export async function turnDelete(req, res) {
       return res
         .status(404)
         .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
+    const requiredPermissions=['WRITE_PET',];
+    const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  
+    if (!hasAllPermissions && pet[0].idUser != idUser) {
+      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
     }
 
     const turn = await getTurnById(idTurn, idPet);
@@ -162,6 +207,8 @@ export async function turnDelete(req, res) {
 
 export async function turnActive(req, res) {
   const { idTurn, idPet } = req.params;
+  const idUser = req.user.idUser;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
 
   try {
     const pet = await getPetById(idPet);
@@ -180,6 +227,13 @@ export async function turnActive(req, res) {
         .json({ message: "No existe ningun turno con ese id" });
     }
 
+    const requiredPermissions=['WRITE_PET',];
+    const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  
+    if (!hasAllPermissions && pet[0].idUser != idUser) {
+      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    }
+
     await activeTurn(idTurn);
 
     return res
@@ -192,6 +246,8 @@ export async function turnActive(req, res) {
 
 export async function turnArchive(req, res) {
   const { idTurn, idPet } = req.params;
+  const idUser = req.user.idUser;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
 
   try {
     const pet = await getPetById(idPet);
@@ -200,6 +256,13 @@ export async function turnArchive(req, res) {
       return res
         .status(404)
         .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
+    const requiredPermissions=['WRITE_PET',];
+    const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  
+    if (!hasAllPermissions && pet[0].idUser != idUser) {
+      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
     }
 
     const turn = await getTurnById(idTurn, idPet);

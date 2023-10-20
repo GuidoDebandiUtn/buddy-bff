@@ -55,7 +55,6 @@ const router = Router();
  */
 router.post("/",verifyToken, postNewRating);
 
-
 /**
  * @swagger
  * /services/rating/:idService:
@@ -85,8 +84,6 @@ router.post("/",verifyToken, postNewRating);
  */
 router.get("/:idService",verifyToken, getRatingsByService);
 
-
-
 /**
  * @swagger
  * /services/rating/:idRating:
@@ -113,8 +110,6 @@ router.get("/:idService",verifyToken, getRatingsByService);
  *          description: Hubo un error interno en el servicio
  */
 router.delete("/:idRating",verifyToken, deleteRating);
-
-
 
 /**
  * @swagger

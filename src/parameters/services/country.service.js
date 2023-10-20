@@ -116,3 +116,21 @@ export async function activeCountry(idCountry) {
     throw error;
   }
 }
+
+export async function getAllCountriesEvery() {
+  try {
+    const query = `
+    SELECT idCountry, countryName
+    FROM countries
+    `;
+
+    const countries = await sequelize.query(query, {
+      model: Country,
+      mapToModel: true,
+    });
+
+    return countries;
+  } catch (error) {
+    throw error;
+  }
+}

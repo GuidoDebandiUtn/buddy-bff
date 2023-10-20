@@ -39,6 +39,24 @@ export async function getAllPetTypes() {
   }
 }
 
+export async function getEveryPetTypes() {
+  try {
+    const query = `
+    SELECT idPetType, petTypeName
+    FROM pettypes
+    `;
+
+    const petTypes = await sequelize.query(query, {
+      model: PetType,
+      mapToModel: true,
+    });
+
+    return petTypes;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function getPetTypeById(idPetType) {
   try {
     const query = `

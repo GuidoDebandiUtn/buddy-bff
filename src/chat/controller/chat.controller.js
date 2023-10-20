@@ -7,13 +7,13 @@ import {
 export async function getChatsController(req, res) {
   const { archived } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permisos.split(' - ');
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
 
   const requiredPermissions = ['READ_CHAT',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
   }
 
 
@@ -44,13 +44,13 @@ export async function postCreateChat(req, res) {
   const { idUserReceptor } = req.params;
   const { referenceType,idReference } = req.query;
   const idUserEmitter = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permisos.split(' - ');
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
 
   const requiredPermissions = ['READ_CHAT', 'WRITE_CHAT'];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
   }
 
 
@@ -76,13 +76,13 @@ export async function postCreateChat(req, res) {
 export async function postArchiveChat(req, res) {
   const { idChat,archive } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permisos.split(' - ');
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
 
   const requiredPermissions = ['READ_CHAT', 'WRITE_CHAT'];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
   }
 
 

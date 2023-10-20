@@ -41,6 +41,25 @@ export async function getAllLocalities() {
   }
 }
 
+export async function getAllLocalitiesEvery() {
+  try {
+    const query = `
+    SELECT localities.idLocality, localities.localityName, regions.regionName
+    FROM localities
+    INNER JOIN regions ON regions.idRegion = localities.idRegion
+    `;
+
+    const localities = await sequelize.query(query, {
+      model: Locality,
+      mapToModel: true,
+    });
+
+    return localities;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function getLocalityById(idLocality) {
   try {
     const query = `

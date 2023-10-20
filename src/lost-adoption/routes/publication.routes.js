@@ -51,7 +51,7 @@ const router = Router();
  *       400:
  *         description: No existe el tipo de publicacion seleccionado.
  *       403:
- *         description: no se cuentan con los permisos necesarios para esta accion
+ *         description: no se cuentan con los permissions necesarios para esta accion
  *         content:
  *            application/json:
  *              schema:
@@ -63,7 +63,6 @@ const router = Router();
  *          description: Error interno del servicio
  */
 router.get('/',verifyToken,getPublications);
-
 
 /**
  * @swagger
@@ -106,7 +105,7 @@ router.get('/',verifyToken,getPublications);
  *       400:
  *         description: No existe el tipo de publicacion seleccionado.
  *       403:
- *         description: no se cuentan con los permisos necesarios para esta accion
+ *         description: no se cuentan con los permissions necesarios para esta accion
  *         content:
  *            application/json:
  *              schema:
@@ -117,7 +116,6 @@ router.get('/',verifyToken,getPublications);
  *       500:
  *          description: Error interno del servicio
  */
-
 router.get('/ByUser',verifyToken,obtainPublicationsByUser);
 
 /**
@@ -163,7 +161,7 @@ router.get('/ByUser',verifyToken,obtainPublicationsByUser);
  *       400:
  *         description: Error en los atributos de la publicacion.
  *       403:
- *         description: no se cuentan con los permisos necesarios para esta accion
+ *         description: no se cuentan con los permissions necesarios para esta accion
  *         content:
  *            application/json:
  *              schema:
@@ -243,7 +241,7 @@ router.post('/search', verifyToken,postSearch);
  *       400:
  *         description: Error en los atributos de la publicacion.
  *       403:
- *         description: no se cuentan con los permisos necesarios para esta accion
+ *         description: no se cuentan con los permissions necesarios para esta accion
  *         content:
  *            application/json:
  *              schema:
@@ -289,7 +287,6 @@ router.post('/adoption', verifyToken,postAdoption);
  *       500:
  *          description: Error interno del servicio
  */
-
 router.delete('/:idPublication',verifyToken,deletePublication);
 
 /**
@@ -379,7 +376,7 @@ router.delete('/:idPublication',verifyToken,deletePublication);
  *       400:
  *         description: Error en los atributos de la publicacion.
  *       403:
- *         description: no se cuentan con los permisos necesarios para esta accion
+ *         description: no se cuentan con los permissions necesarios para esta accion
  *         content:
  *            application/json:
  *              schema:

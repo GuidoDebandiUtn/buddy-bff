@@ -42,7 +42,7 @@ const router = Router();
  *       204:
  *         description: No se ha trazas para la publicacion solicitada.
  *       403:
- *         description: no se cuentan con los permisos necesarios para esta accion
+ *         description: no se cuentan con los permissions necesarios para esta accion
  *         content:
  *            application/json:
  *              schema:
@@ -103,7 +103,7 @@ router.get('/:idPublicationSearch', verifyToken,getTracesByPublication);
  *       400:
  *         description: Error en los atributos de la traza.
  *       403:
- *         description: no se cuentan con los permisos necesarios para esta accion
+ *         description: no se cuentan con los permissions necesarios para esta accion
  *         content:
  *            application/json:
  *              schema:
@@ -168,7 +168,7 @@ router.post('/', verifyToken,postTrace);
  *       400:
  *         description: Error en los atributos de la traza.
  *       403:
- *         description: no se cuentan con los permisos necesarios para esta accion
+ *         description: no se cuentan con los permissions necesarios para esta accion
  *         content:
  *            application/json:
  *              schema:
@@ -206,7 +206,7 @@ router.put('/:idTrace', verifyToken,putTrace);
  *       400:
  *         description: Error en el id de la traza.
  *       403:
- *         description: no se cuentan con los permisos necesarios para esta accion
+ *         description: no se cuentan con los permissions necesarios para esta accion
  *         content:
  *            application/json:
  *              schema:

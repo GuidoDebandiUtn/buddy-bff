@@ -255,7 +255,7 @@ router.post("/add/:idRole", verifyToken, addPermission);
  *         name: idRole
  *         schema:
  *           type: uuid
- *         description: uuid del rol a agregar los permisos.
+ *         description: uuid del rol a agregar los permissions.
  *     requestBody:
  *       required: true
  *       content:

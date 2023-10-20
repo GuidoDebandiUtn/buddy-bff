@@ -15,7 +15,7 @@ const router = Router();
  * @swagger
  * tags:
  *   name: PERMISSION
- *   description: Endpoints relacionados con los permisos
+ *   description: Endpoints relacionados con los permissions
  */
 
 /**

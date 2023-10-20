@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   getLocalities,
+  getLocalitiesEvery,
   getLocality,
   localityActive,
   localityCreate,
@@ -178,5 +179,29 @@ router.delete("/:idLocality",verifyToken, localityDelete);
  *          description: Hubo un error
  */
 router.post("/active/:idLocality",verifyToken, localityActive);
+
+/**
+ * @swagger
+ * /parameters/locality/all:
+ *   get:
+ *     summary: Obtiene una lista de todas las localidades del sistema 
+ *     tags: [LOCALITY]
+ *     responses:
+ *       200:
+ *         description: Lista de localidades activas.
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  properties:
+ *                    localityName:
+ *                      type: string
+ *       404:
+ *         description: No existe ningun país.
+ *       500:
+ *          description: Hubo un error
+ */
+router.get("/all",verifyToken, getLocalitiesEvery);
 
 export default router;

@@ -280,7 +280,6 @@ router.delete("/:idService", verifyToken, serviceDelete);
  */
 router.get("/types", verifyToken, getServiceTypes);
 
-
 /**
  * @swagger
  * /services/service/:idService:

@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   getRegion,
   getRegions,
+  getRegionsEvery,
   regionActive,
   regionCreate,
   regionDelete,
@@ -178,5 +179,29 @@ router.delete("/:idRegion",verifyToken, regionDelete);
  *          description: Hubo un error
  */
 router.post("/active/:idRegion",verifyToken, regionActive);
+
+/**
+ * @swagger
+ * /parameters/region/all:
+ *   get:
+ *     summary: Obtiene una lista de todas las regiones del sistema
+ *     tags: [REGION]
+ *     responses:
+ *       200:
+ *         description: Lista de regiónes activas.
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  properties:
+ *                    regionName:
+ *                      type: string
+ *       404:
+ *         description: No existe ningun país.
+ *       500:
+ *          description: Hubo un error
+ */
+router.get("/all",verifyToken, getRegionsEvery);
 
 export default router;

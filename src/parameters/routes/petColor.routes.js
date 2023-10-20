@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   getPetColor,
   getPetColors,
+  getPetColorsEvery,
   petColorActive,
   petColorCreate,
   petColorDelete,
@@ -178,5 +179,29 @@ router.delete("/:idPetColor",verifyToken, petColorDelete);
  *          description: Hubo un error
  */
 router.post("/active/:idPetColor",verifyToken, petColorActive);
+
+/**
+ * @swagger
+ * /parameters/petColor/all:
+ *   get:
+ *     summary: Obtiene una lista de todos los colores de mascotas del sistema
+ *     tags: [PETCOLOR]
+ *     responses:
+ *       200:
+ *         description: Lista de colores de mascotas activos.
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  properties:
+ *                    petColorName:
+ *                      type: string
+ *       404:
+ *         description: No existe ningun color de mascota.
+ *       500:
+ *          description: Hubo un error
+ */
+router.get("/all",verifyToken, getPetColorsEvery);
 
 export default router;

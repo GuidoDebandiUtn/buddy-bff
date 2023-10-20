@@ -5,13 +5,13 @@ import { createMessage, getMessagesByChat } from "../service/message.service.js"
 export async function getMessagesController(req, res) {
     const { idChat } = req.params;
     const idUser = req.user.idUser;
-    const userPermissions = req.user.permissions[0].permisos.split(' - ');
+    const userPermissions = req.user.permissions[0].permissions.split(' - ');
   
     const requiredPermissions = ['READ_MENSAJES'];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions) {
-      return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
     }
   
 
@@ -40,13 +40,13 @@ export async function postCreateMessage(req, res) {
     const { idChat } = req.params;
     const messageBody = req.body;
     const idUser = req.user.idUser;    
-    const userPermissions = req.user.permissions[0].permisos.split(' - ');
+    const userPermissions = req.user.permissions[0].permissions.split(' - ');
   
     const requiredPermissions = ['READ_MENSAJES','WRITE_MENSAJES'];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions) {
-      return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
     }
   
 

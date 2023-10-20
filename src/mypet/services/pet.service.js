@@ -28,7 +28,7 @@ export async function createPet(data, idUser) {
 export async function getAllPets(idUser) {
   try {
     const query = `
-        SELECT idPet, petName, birthDate, idPetType, idPetBreed, image 
+        SELECT idPet, petName, birthDate, idPetType, idPetBreed, image, idUser
         FROM pets
         WHERE idUser = "${idUser}" and active = true
         ORDER BY petName`;
@@ -47,7 +47,7 @@ export async function getAllPets(idUser) {
 export async function getPetById(idPet) {
   try {
     const query = `
-            SELECT idPet, petName, birthDate, idPetType, idPetBreed, image
+            SELECT idPet, petName, birthDate, idPetType, idPetBreed, image, idUser
             FROM pets
             WHERE idPet = "${idPet}"`;
 

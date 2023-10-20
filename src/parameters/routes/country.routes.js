@@ -5,6 +5,7 @@ import {
   countryDelete,
   countryUpdate,
   getCountries,
+  getCountriesEvery,
   getCountry,
 } from "../controllers/country.controller.js";
 import { verifyToken } from "../../security/controllers/auth.controller.js";
@@ -73,6 +74,30 @@ router.post("/",verifyToken, countryCreate);
  *          description: Hubo un error
  */
 router.get("/",verifyToken, getCountries);
+
+/**
+ * @swagger
+ * /parameters/country/:
+ *   get:
+ *     summary: Obtiene una lista de paises activos
+ *     tags: [COUNTRY]
+ *     responses:
+ *       200:
+ *         description: Lista de paises activos.
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  properties:
+ *                    countryName:
+ *                      type: string
+ *       404:
+ *         description: No existe ningun país.
+ *       500:
+ *          description: Hubo un error
+ */
+router.get("/all",verifyToken, getCountriesEvery);
 
 /**
  * @swagger

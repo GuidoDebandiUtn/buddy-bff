@@ -7,6 +7,7 @@ import {
   petBreedUpdate,
   getPetBreedsByType,
   petBreedActive,
+  getPetBreedsEvery,
 } from "../controllers/petBreed.controller.js";
 import { verifyToken } from "../../security/controllers/auth.controller.js";
 
@@ -203,5 +204,29 @@ router.post("/active/:idPetBreed",verifyToken, petBreedActive);
  *          description: Hubo un error
  */
 router.get("/byType/:petTypeName",verifyToken, getPetBreedsByType);
+
+/**
+ * @swagger
+ * /parameters/petBreed/all:
+ *   get:
+ *     summary: Obtiene una lista de todas las razas de mascotas del sistema
+ *     tags: [PETBREED]
+ *     responses:
+ *       200:
+ *         description: Lista de razas activas.
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  properties:
+ *                    petBreedName:
+ *                      type: string
+ *       404:
+ *         description: No existe ninguna raza.
+ *       500:
+ *          description: Hubo un error
+ */
+router.get("/all",verifyToken, getPetBreedsEvery);
 
 export default router;

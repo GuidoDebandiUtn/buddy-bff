@@ -4,13 +4,20 @@ import {
   createRegion,
   deleteRegion,
   getAllRegions,
+  getEveryRegions,
   getRegionById,
   getRegionByName,
   updateRegion,
 } from "../services/region.service.js";
 
 export async function regionCreate(req, res) {
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['WRITE_REGION',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
   const province = await getProvinceById(req.body.idProvince);
 
   if (!province[0]) {
@@ -47,6 +54,13 @@ export async function regionCreate(req, res) {
 }
 
 export async function getRegions(req, res) {
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['READ_REGION',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
   try {
     const regions = await getAllRegions();
 
@@ -62,8 +76,38 @@ export async function getRegions(req, res) {
   }
 }
 
+export async function getRegionsEvery(req, res) {
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['READ_REGION_LIST',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
+  try {
+    const regions = await getEveryRegions();
+
+    if (!regions[0]) {
+      return res.status(404).json({ message: "No existe ninguna region" });
+    }
+
+    return res.status(200).json({ regions });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
 export async function getRegion(req, res) {
   const { idRegion } = req.params;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['READ_REGION',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
   try {
     const region = await getRegionById(idRegion);
 
@@ -83,7 +127,13 @@ export async function getRegion(req, res) {
 
 export async function regionUpdate(req, res) {
   const { idRegion } = req.params;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['WRITE_REGION',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
   try {
     const region = await getRegionById(idRegion);
 
@@ -118,6 +168,13 @@ export async function regionUpdate(req, res) {
 
 export async function regionDelete(req, res) {
   const { idRegion } = req.params;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['WRITE_REGION',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
   try {
     const region = await getRegionById(idRegion);
 
@@ -139,6 +196,13 @@ export async function regionDelete(req, res) {
 
 export async function regionActive(req, res) {
   const { idRegion } = req.params;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['WRITE_REGION',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
   try {
     const region = await getRegionById(idRegion);
 

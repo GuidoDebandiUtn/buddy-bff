@@ -3,12 +3,21 @@ import {
   createCountry,
   deleteCountry,
   getAllCountries,
+  getAllCountriesEvery,
   getCountryById,
   getCountryByName,
   updateCountry,
 } from "../services/country.service.js";
 
 export async function countryCreate(req, res) {
+  
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['WRITE_COUNTRIES',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
   try {
     let country;
     const duplicate = await getCountryByName(req.body.countryName);
@@ -32,6 +41,14 @@ export async function countryCreate(req, res) {
 }
 
 export async function getCountries(req, res) {
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['READ_COUNTRIES',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
+
   try {
     const countries = await getAllCountries();
 
@@ -47,8 +64,40 @@ export async function getCountries(req, res) {
   }
 }
 
+export async function getCountriesEvery(req, res) {
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['READ_COUNTRIES_LIST',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
+
+  try {
+    const countries = await getAllCountriesEvery();
+
+    if (!countries[0]) {
+      return res.status(404).json({ message: "No existe ningun pais" });
+    }
+
+    return res.status(200).json({ countries });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
 export async function getCountry(req, res) {
   const { idCountry } = req.params;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['READ_COUNTRIES',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
+
 
   try {
     const country = await getCountryById(idCountry);
@@ -69,6 +118,14 @@ export async function getCountry(req, res) {
 
 export async function countryUpdate(req, res) {
   const { idCountry } = req.params;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['WRITE_COUNTRIES',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
+
 
   try {
     const country = await getCountryById(idCountry);
@@ -98,6 +155,14 @@ export async function countryUpdate(req, res) {
 
 export async function countryDelete(req, res) {
   const { idCountry } = req.params;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['WRITE_COUNTRIES',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
+
 
   try {
     const country = await getCountryById(idCountry);
@@ -120,6 +185,14 @@ export async function countryDelete(req, res) {
 
 export async function countryActive(req, res) {
   const { idCountry } = req.params;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['WRITE_COUNTRIES',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
+
   try {
     const country = await getCountryById(idCountry);
 

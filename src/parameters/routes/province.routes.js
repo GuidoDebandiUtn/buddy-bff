@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   getProvince,
   getProvinces,
+  getProvincesEvery,
   provinceActive,
   provinceCreate,
   provinceDelete,
@@ -178,5 +179,29 @@ router.delete("/:idProvince",verifyToken, provinceDelete);
  *          description: Hubo un error
  */
 router.post("/active/:idProvince",verifyToken, provinceActive);
+
+/**
+ * @swagger
+ * /parameters/province/all:
+ *   get:
+ *     summary: Obtiene una lista de todas las provincias del sistema
+ *     tags: [PROVINCE]
+ *     responses:
+ *       200:
+ *         description: Lista de provinciaes activas.
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  properties:
+ *                    provinceName:
+ *                      type: string
+ *       404:
+ *         description: No existe ningun país.
+ *       500:
+ *          description: Hubo un error
+ */
+router.get("/all",verifyToken, getProvincesEvery);
 
 export default router;

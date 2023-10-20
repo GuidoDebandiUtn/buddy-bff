@@ -41,6 +41,25 @@ export async function getAllProvinces() {
   }
 }
 
+export async function getEveryProvinces() {
+  try {
+    const query = `
+    SELECT provinces.idProvince, provinces.provinceName, countries.countryName
+    FROM provinces
+    INNER JOIN countries ON provinces.idCountry = countries.idCountry
+    `;
+
+    const provinces = await sequelize.query(query, {
+      model: Province,
+      mapToModel: true,
+    });
+
+    return provinces;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function getProvinceById(idProvince) {
   try {
     const query = `

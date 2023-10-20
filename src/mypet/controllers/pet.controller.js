@@ -15,7 +15,18 @@ import {getIdToken} from "../../helpers/authHelper.js"
 const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-([0-2]\d|3[0-1])$/;
 
 export async function petCreate(req, res) {
-  const idUser = await getIdToken(req.header("auth-token"));
+  const idUser = req.user.idUser;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+
+
+  const requiredPermissions=['CREATE_PET',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
+
+
 
 
   if (!dateRegex.test(req.body.birthDate)) {
@@ -66,13 +77,21 @@ export async function petCreate(req, res) {
 }
 
 export async function getPets(req, res) {
-  const idUser = await getIdToken(req.header("auth-token"));
+  const idUser = req.user.idUser;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
 
   try {
     const pets = await getAllPets(idUser);
 
     if (!pets[0]) {
       return res.status(404).json({ message: "No existen mascotas" });
+    }
+
+    const requiredPermissions=['READ_PET',];
+    const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  
+    if (!hasAllPermissions && pets[0].idUser != idUser) {
+      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
     }
 
     return res.status(200).json({ pets });
@@ -83,9 +102,18 @@ export async function getPets(req, res) {
 
 export async function getPet(req, res) {
   const { idPet } = req.params;
+  const idUser = req.user.idUser;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
 
   try {
     const pet = await getPetById(idPet);
+
+    const requiredPermissions=['READ_PET',];
+    const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  
+    if (!hasAllPermissions && pet[0].idUser != idUser) {
+      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    }
 
     if (!pet[0]) {
       return res
@@ -101,6 +129,8 @@ export async function getPet(req, res) {
 
 export async function petUpdate(req, res) {
   const { idPet } = req.params;
+  const idUser = req.user.idUser;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
 
   if (!dateRegex.test(req.body.birthDate)) {
     return res
@@ -116,6 +146,14 @@ export async function petUpdate(req, res) {
         .status(404)
         .json({ message: "No existe ninguna mascota con ese id" });
     }
+
+    const requiredPermissions=['WRITE_PET',];
+    const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  
+    if (!hasAllPermissions && pet[0].idUser != idUser) {
+      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    }
+
 
     if (req.body.idPetType) {
       const petType = await getPetTypeById(req.body.idPetType);
@@ -149,6 +187,8 @@ export async function petUpdate(req, res) {
 
 export async function petDelete(req, res) {
   const { idPet } = req.params;
+  const idUser = req.user.idUser;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
 
   try {
     const pet = await getPetById(idPet);
@@ -157,6 +197,13 @@ export async function petDelete(req, res) {
       return res
         .status(404)
         .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
+    const requiredPermissions=['WRITE_PET',];
+    const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  
+    if (!hasAllPermissions && pet[0].idUser != idUser) {
+      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
     }
 
     await deletePet(idPet);
@@ -171,6 +218,8 @@ export async function petDelete(req, res) {
 
 export async function petActive(req, res) {
   const { idPet } = req.params;
+  const idUser = req.user.idUser;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
 
   try {
     const pet = await getPetById(idPet);
@@ -179,6 +228,13 @@ export async function petActive(req, res) {
       return res
         .status(404)
         .json({ message: "No existe ninguna mascota con ese id" });
+    }
+
+    const requiredPermissions=['WRITE_PET',];
+    const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  
+    if (!hasAllPermissions && pet[0].idUser != idUser) {
+      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
     }
 
     await activePet(idPet);

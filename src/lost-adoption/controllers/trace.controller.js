@@ -6,13 +6,13 @@ export async function getTracesByPublication(req, res) {
     const { idPublicationSearch } = req.params;
     const idUser = req.user.idUser;
 
-    const userPermissions = req.user.permissions[0].permisos.split(' - ');
+    const userPermissions = req.user.permissions[0].permissions.split(' - ');
 
     const requiredPermissions=['READ_TRAZAS',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions) {
-      return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
     }
   
   
@@ -40,7 +40,7 @@ export async function getTracesByPublication(req, res) {
 
   export async function postTrace(req, res) {
     const idUser = req.user.idUser;
-    const userPermissions = req.user.permissions[0].permisos.split(' - ');
+    const userPermissions = req.user.permissions[0].permissions.split(' - ');
 
     let publication = await getPublicationById(req.body.idPublicationSearch);
     if (!publication[0]) {
@@ -50,7 +50,7 @@ export async function getTracesByPublication(req, res) {
     const requiredPermissions=['READ_TRAZAS',"WRITE_TRAZAS"];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
     if (!hasAllPermissions && publication[0].idUser != idUser) {
-      return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
     }
   
   
@@ -68,7 +68,7 @@ export async function getTracesByPublication(req, res) {
   export async function deleteTrace(req, res) {
     const { idTrace } = req.params;
     const idUser = req.user.idUser;
-    const userPermissions = req.user.permissions[0].permisos.split(' - ');
+    const userPermissions = req.user.permissions[0].permissions.split(' - ');
   
     if(!idTrace){
       return res.status(400).json({ message: `El parametro idTrace es obligatorio`, code: 400 });
@@ -87,7 +87,7 @@ export async function getTracesByPublication(req, res) {
     const requiredPermissions=["WRITE_TRAZAS",];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
     if (!hasAllPermissions && publication[0].idUser != idUser) {
-      return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
     }
   
   
@@ -103,7 +103,7 @@ export async function getTracesByPublication(req, res) {
   export async function putTrace(req, res) {
     const { idTrace } = req.params;
     const idUser = req.user.idUser;
-    const userPermissions = req.user.permissions[0].permisos.split(' - ');
+    const userPermissions = req.user.permissions[0].permissions.split(' - ');
   
     if(!idTrace){
       return res.status(400).json({ message: `El parametro idTrace es obligatorio`, code: 400 });
@@ -122,7 +122,7 @@ export async function getTracesByPublication(req, res) {
     const requiredPermissions=["WRITE_TRAZAS",];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
     if (!hasAllPermissions && publication[0].idUser != idUser) {
-      return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
     }
   
     try {

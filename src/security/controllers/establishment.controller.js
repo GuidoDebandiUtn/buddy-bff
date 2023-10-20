@@ -9,6 +9,14 @@ import {
 import { getUserById } from "../services/user.service.js";
 
 export async function getEstablishments(req, res) {
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['READ_USER',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
+
   try {
     const establishments = await getAllEstablishments();
 
@@ -26,6 +34,13 @@ export async function getEstablishments(req, res) {
 
 export async function getEstablishment(req, res) {
   const { idUser } = req.params;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['READ_USER',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
   try {
     const establishments = await getEstablishmentById(idUser);
 
@@ -51,7 +66,7 @@ export async function postValidateEstablishment(req, res) {
     if (userPermissions.includes(permisionRequired)) {
       return res.status(403).json({
         error:
-          "No se cuenta con los permisos necesarios para ejecutar el EndPoint",
+          "No se cuenta con los permissions necesarios para ejecutar el EndPoint",
       });
     }
 
@@ -90,6 +105,15 @@ export async function postValidateEstablishment(req, res) {
 export async function establishmentUpdate(req, res) {
   const { idUser } = req.params;
 
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['WRITE_USER',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
+
+
   try {
     const establishment = await getEstablishmentById(idUser);
 
@@ -110,6 +134,15 @@ export async function establishmentUpdate(req, res) {
 }
 
 export async function getRevisionEstablishments(req, res) {
+
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['READ_USER_LIST',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
+
   try {
     const establishments = await getEstablishmentsRevision();
 
@@ -127,6 +160,14 @@ export async function getRevisionEstablishments(req, res) {
 
 export async function getDocumentsEstablishment(req, res) {
   const { idUser } = req.params;
+
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['READ_DOCUMENTACION',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
 
   try {
     const documents = await getEstablishmentDocuments(idUser);

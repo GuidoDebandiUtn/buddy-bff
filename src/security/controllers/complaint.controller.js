@@ -8,6 +8,14 @@ export async function postComplaint(req, res) {
   const { category } = req.body;
   const validCategories = ['SEARCH', 'ADOPTION', 'SERVICE'];
 
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['CREATE_COMPLAINT',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
+
 
   if (!validCategories.includes(category)) {
     return res
@@ -32,6 +40,14 @@ export async function getComplaintsAll(req, res) {
   res.setHeader('Content-Type', 'application/json');
   const { page, size, } = req.query;
 
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['READ_COMPLAINT',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
+
   try {
     const complaints = await getAllComplaints(page, size);
 
@@ -55,6 +71,14 @@ export async function getComplaintsAll(req, res) {
 
 export async function complaintDelete(req, res) {
   const { idComplaint } = req.params;
+  
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['WRITE_COMPLAINT',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
 
   try {
     const complaint = await getComplaintById(idComplaint);
@@ -80,6 +104,14 @@ export async function complaintDelete(req, res) {
 export async function complaintExecute(req, res) {
   let { idComplaint,validate } = req.params;
   validate = validate.toLowerCase() === "true" ? true : false;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['WRITE_COMPLAINT',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
+
 
   let validateDto = {};
 

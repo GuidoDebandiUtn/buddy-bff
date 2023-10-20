@@ -258,10 +258,6 @@ export async function closePublication(idPublication, modelType, adoptionDto) {
       { where: whereClause, returning: true }
     )).get({ plain: true });
 
-    if(!publication){
-      throw {message: "Error en la obtencion de la publicacion a resolver, validar dato enviado", code: 400}
-    }
-    console.log(`publicacion obtenida correctamente. entidad obtenida: `,publication);
     if(publication.idPublicationState != activePublicationState.idPublicationState){
       throw {message: "la publicacion no se encuentra activa y por lo tanto no se puede resolver", code: 400}
     }

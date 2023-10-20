@@ -49,6 +49,14 @@ export async function userCreate(req, res) {
 }
 
 export async function getUsers(req, res) {
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['READ_USER',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
+  
   try {
     const users = await getAllUsers();
 
@@ -64,6 +72,13 @@ export async function getUsers(req, res) {
 
 export async function getUser(req, res) {
   const userReq = req.user;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['READ_USER',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
   try {
     const user = await getUserById(userReq.idUser);
 
@@ -80,6 +95,13 @@ export async function getUser(req, res) {
 }
 
 export async function getUserAll(req, res) {
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['READ_USER_LIST',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
   try {
     const user = await getEveryUsers();
 
@@ -99,6 +121,14 @@ export async function userUpdate(req, res) {
   const { idUser } = req.params;
   const { currentPassword } = req.body;
 
+  const idUserRequest = req.user.idUser;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['WRITE_USER',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  if (!hasAllPermissions && idUser != idUserRequest) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
+
   try {
     const user = await getUserById(idUser);
 
@@ -107,6 +137,7 @@ export async function userUpdate(req, res) {
         message: "No existe ningun usuario con ese id",
       });
     }
+
 
     const userPassword = await getUserPassword(idUser);
 
@@ -130,6 +161,14 @@ export async function userUpdate(req, res) {
 
 export async function userDelete(req, res) {
   const { idUser } = req.params;
+
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['WRITE_USER',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
 
   try {
     const user = await getUserById(idUser);
@@ -155,6 +194,13 @@ export async function userDelete(req, res) {
 export async function changeState(req, res) {
   const { idUser, userStateName } = req.params;
 
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['WRITE_USER',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
   try {
     const idUserAuthor = await getIdToken(req.header("auth-token"));
 
@@ -189,6 +235,14 @@ export async function changeState(req, res) {
 export async function changeRole(req, res) {
   const { idUser, roleName } = req.params;
 
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['WRITE_USER',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
+
   try {
     const idUserAuthor = await getIdToken(req.header("auth-token"));
 
@@ -222,6 +276,14 @@ export async function changeRole(req, res) {
 
 export async function userPermission(req, res) {
   try {
+    const userPermissions = req.user.permissions[0].permissions.split(' - ');
+    const requiredPermissions=['WRITE_USER',];
+    const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  
+    if (!hasAllPermissions) {
+      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    }
+
     const id = await getIdToken(req.header("auth-token"));
     const permissions = await getPermissionsForUser(id);
 

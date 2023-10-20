@@ -4,6 +4,7 @@ import {
   createLocality,
   deleteLocality,
   getAllLocalities,
+  getAllLocalitiesEvery,
   getLocalityById,
   getLocalityByName,
   updateLocality,
@@ -11,6 +12,13 @@ import {
 import { getRegionById } from "../services/region.service.js";
 
 export async function localityCreate(req, res) {
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['WRITE_LOCALITIES',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
   try {
     let locality;
     const region = await getRegionById(req.body.idRegion);
@@ -48,6 +56,13 @@ export async function localityCreate(req, res) {
 }
 
 export async function getLocalities(req, res) {
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['READ_LOCALITIES',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
   try {
     const localities = await getAllLocalities();
 
@@ -63,8 +78,38 @@ export async function getLocalities(req, res) {
   }
 }
 
+export async function getLocalitiesEvery(req, res) {
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['READ_LOCALITIES_LIST',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
+  try {
+    const localities = await getAllLocalitiesEvery();
+
+    if (!localities[0]) {
+      return res.status(404).json({ message: "No existe ninguna localidad" });
+    }
+
+    return res.status(200).json({ localities });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
 export async function getLocality(req, res) {
   const { idLocality } = req.params;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['READ_LOCALITIES',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
   try {
     const locality = await getLocalityById(idLocality);
 
@@ -84,6 +129,13 @@ export async function getLocality(req, res) {
 
 export async function localityUpdate(req, res) {
   const { idLocality } = req.params;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['WRITE_LOCALITIES',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
   try {
     const locality = await getLocalityById(idLocality);
 
@@ -117,6 +169,13 @@ export async function localityUpdate(req, res) {
 
 export async function localityDelete(req, res) {
   const { idLocality } = req.params;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['WRITE_LOCALITIES',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
   try {
     const locality = await getLocalityById(idLocality);
 
@@ -138,6 +197,13 @@ export async function localityDelete(req, res) {
 
 export async function localityActive(req, res) {
   const { idLocality } = req.params;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['WRITE_LOCALITIES',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
   try {
     const locality = await getLocalityById(idLocality);
 

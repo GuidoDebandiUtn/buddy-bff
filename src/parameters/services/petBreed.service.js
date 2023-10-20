@@ -41,6 +41,24 @@ export async function getAllPetBreeds() {
   }
 }
 
+export async function getEveryPetBreed() {
+  try {
+    const query = `
+    SELECT idPetBreed, petBreedName
+    FROM petbreeds
+    `;
+
+    const petBreeds = await sequelize.query(query, {
+      model: PetBreed,
+      mapToModel: true,
+    });
+
+    return petBreeds;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function getPetBreedById(idPetBreed) {
   try {
     const query = `

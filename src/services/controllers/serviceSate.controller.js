@@ -5,16 +5,10 @@ import { changeStateService } from "../services/stateService.service.js";
 export async function changeServiceState(req, res) {
   const { idService, serviceStateName } = req.params;
   const idUserAuthor = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permisos.split(' - ');
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
 
   const requiredPermissions = ["WRITE_SERVICIOS",];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
-
-
-  if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
-  }
-
 
   try {
     const service = await getServiceById(idService);
@@ -24,6 +18,11 @@ export async function changeServiceState(req, res) {
         message: "Error en el idServicio enviado",
       });
     }
+
+    if (!hasAllPermissions && idUserAuthor != service[0].idUser) {
+      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    }
+  
 
     const serviceState = await getServiceStateByName(serviceStateName);
 

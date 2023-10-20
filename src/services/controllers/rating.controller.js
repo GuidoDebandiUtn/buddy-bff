@@ -5,14 +5,14 @@ import { Service } from "../../models/Service.js";
 
 export async function postNewRating(req, res) {
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permisos.split(' - ');
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
 
   const requiredPermissions = ["WRITE_CALIFICACIONES",];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
   }
 
   try {
@@ -32,7 +32,7 @@ export async function postNewRating(req, res) {
 }
 export async function getRatingsByService(req, res) {
   const { idService } = req.params;
-  const userPermissions = req.user.permissions[0].permisos.split(' - ');
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
   const idUser = req.user.idUser;
 
   const requiredPermissions = ["READ_CALIFICACIONES",];
@@ -45,7 +45,7 @@ export async function getRatingsByService(req, res) {
   }
 
   if (!hasAllPermissions && service[0].idUser !== idUser) {
-    return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
   }
 
   try {
@@ -72,7 +72,7 @@ export async function getRatingsByService(req, res) {
 export async function deleteRating(req, res) {
   const { idRating } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permisos.split(' - ');
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
 
   const requiredPermissions = ["WRITE_CALIFICACIONES",];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
@@ -90,7 +90,7 @@ export async function deleteRating(req, res) {
   }
 
   if (!hasAllPermissions && service[0].idUser !== idUser) {
-    return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
   }
 
   try {
@@ -115,7 +115,7 @@ export async function putRating(req, res) {
   const { idRating } = req.params;
 
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permisos.split(' - ');
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
 
   const requiredPermissions = ["WRITE_CALIFICACIONES",];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
@@ -127,7 +127,7 @@ export async function putRating(req, res) {
     }
 
     if (!hasAllPermissions && rating.idUser !== idUser) {
-      return res.status(403).json({ message: "No se cuenta con todos los permisos necesarios" });
+      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
     }
   } catch (error) {
     if (error.code) {

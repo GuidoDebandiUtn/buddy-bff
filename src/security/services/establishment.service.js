@@ -26,7 +26,7 @@ export async function getAllEstablishments() {
         where active = true
       ) AS ultimosRoles ON users.idUser = ultimosRoles.idUser
       INNER JOIN roles ON ultimosRoles.idRole = roles.idRole
-      WHERE userStates.userStateName IN ('ACTIVO','EN REVISIÓN') and roles.roleName = "ESTABLECIMIENTO"
+      WHERE userStates.userStateName IN ('ACTIVO','EN REVISIÓN') and roles.roleName in ('ESTABLECIMIENTO','REFUGIO','PETSHOP','VETERINARIA')
     `;
 
     const users = await sequelize.query(query, {

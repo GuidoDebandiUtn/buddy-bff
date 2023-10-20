@@ -37,6 +37,24 @@ export async function getAllPetColors() {
   }
 }
 
+export async function getEveryPetColors() {
+  try {
+    const query = `
+    SELECT idPetColor, petColorName
+    FROM petcolors
+    `;
+
+    const petColors = await sequelize.query(query, {
+      model: PetColor,
+      mapToModel: true,
+    });
+
+    return petColors;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function getPetColorById(idPetColor) {
   try {
     const query = `

@@ -3,12 +3,20 @@ import {
   createPetColor,
   deletePetColor,
   getAllPetColors,
+  getEveryPetColors,
   getPetColorById,
   getPetColorByName,
   updatePetColor,
 } from "../services/petColor.service.js";
 
 export async function petColorCreate(req, res) {
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['WRITE_COLOR',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
   try {
     let petColor;
     const duplicate = await getPetColorByName(req.body.petColorName);
@@ -28,8 +36,40 @@ export async function petColorCreate(req, res) {
 }
 
 export async function getPetColors(req, res) {
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['READ_COLOR',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
   try {
     const petColors = await getAllPetColors();
+
+    if (!petColors[0]) {
+      return res.status(404).json({
+        message: "No existe ningún color de mascota",
+      });
+    }
+
+    return res.status(200).json({ petColors });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function getPetColorsEvery(req, res) {
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['READ_COLOR_LIST',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
+  try {
+    const petColors = await getEveryPetColors();
 
     if (!petColors[0]) {
       return res.status(404).json({
@@ -66,6 +106,13 @@ export async function getPetColor(req, res) {
 
 export async function petColorUpdate(req, res) {
   const { idPetColor } = req.params;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['WRITE_COLOR',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
   try {
     const petColor = await getPetColorById(idPetColor);
 
@@ -97,6 +144,13 @@ export async function petColorUpdate(req, res) {
 
 export async function petColorDelete(req, res) {
   const { idPetColor } = req.params;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['WRITE_COLOR',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
   try {
     const petColor = await getPetColorById(idPetColor);
 
@@ -120,6 +174,13 @@ export async function petColorDelete(req, res) {
 
 export async function petColorActive(req, res) {
   const { idPetColor } = req.params;
+  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const requiredPermissions=['WRITE_COLOR',];
+  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+  if (!hasAllPermissions) {
+    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
 
   try {
     const petColor = await getPetColorById(idPetColor);

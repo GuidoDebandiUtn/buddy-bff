@@ -44,7 +44,7 @@ const router = Router();
  *                  message:
  *                    type: string
  *       403:
- *         description: no se cuentan con los permisos necesarios para esta accion
+ *         description: no se cuentan con los permissions necesarios para esta accion
  *         content:
  *            application/json:
  *              schema:
@@ -111,7 +111,7 @@ router.get('/:archived', verifyToken,getChatsController);
  *                  message:
  *                    type: string
  *       403:
- *         description: no se cuentan con los permisos necesarios para esta accion
+ *         description: no se cuentan con los permissions necesarios para esta accion
  *         content:
  *            application/json:
  *              schema:
@@ -171,7 +171,7 @@ router.post('/:idUserReceptor', verifyToken, postCreateChat);
  *                  message:
  *                    type: string
  *       403:
- *         description: no se cuentan con los permisos necesarios para esta accion
+ *         description: no se cuentan con los permissions necesarios para esta accion
  *         content:
  *            application/json:
  *              schema:

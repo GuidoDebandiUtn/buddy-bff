@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   getPetType,
   getPetTypes,
+  getPetTypesEvery,
   petTypeActive,
   petTypeCreate,
   petTypeDelete,
@@ -178,5 +179,29 @@ router.delete("/:idPetType",verifyToken, petTypeDelete);
  *          description: Hubo un error
  */
 router.post("/active/:idPetType",verifyToken, petTypeActive);
+
+/**
+ * @swagger
+ * /parameters/petType/all:
+ *   get:
+ *     summary: Obtiene una lista de todos los tipos de mascotas del sistema
+ *     tags: [PETTYPE]
+ *     responses:
+ *       200:
+ *         description: Lista de tipos de mascotas activos.
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  properties:
+ *                    petTypeName:
+ *                      type: string
+ *       404:
+ *         description: No existe ningun tipo de mascota.
+ *       500:
+ *          description: Hubo un error
+ */
+router.get("/all",verifyToken, getPetTypesEvery);
 
 export default router;
