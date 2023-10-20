@@ -34,9 +34,6 @@ Service.init(
     open24hs: {
       type: DataTypes.BOOLEAN,
     },
-    numberQueries: {
-      type: DataTypes.INTEGER,
-    },
     emailService: {
       type: DataTypes.STRING,
     },

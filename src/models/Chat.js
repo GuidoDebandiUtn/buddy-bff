@@ -36,6 +36,9 @@ Chat.init(
     },    
     referenceType: {
       type: DataTypes.STRING,
+    },    
+    lastMessageDate: {
+      type: DataTypes.DATE,
     },
   },
   {

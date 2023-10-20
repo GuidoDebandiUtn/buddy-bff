@@ -18,20 +18,11 @@ PetBreed.init(
     size: {
       type: DataTypes.STRING,
     },
-    intelligence: {
-      type: DataTypes.STRING,
-    },
     temperament: {
       type: DataTypes.STRING,
     },
     lifespan: {
       type: DataTypes.SMALLINT,
-    },
-    specialProperty: {
-      type: DataTypes.STRING,
-    },
-    fur: {
-      type: DataTypes.STRING,
     },
     active: {
       type: DataTypes.BOOLEAN,

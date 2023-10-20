@@ -125,6 +125,9 @@ router.post('/search', verifyToken,postSearch);
  *               createdAt:
  *                 type: DATE
  *                 description: fecha de cracion de la entidad, es creada durante la persistencia de la entidad en BD
+ *               sterilized:
+ *                 type: BOOLEAN
+ *                 description: bandera que indica si el animal esta castrado o no.
  *               title:
  *                 type: STRING
  *                 description: título de la publicacion, es pasada por atributo en el cuerpo de la peticion.

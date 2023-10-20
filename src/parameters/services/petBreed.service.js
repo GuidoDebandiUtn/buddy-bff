@@ -3,16 +3,16 @@ import { PetType } from "../../models/PetType.js";
 import { sequelize } from "../../database/database.js";
 
 export async function createPetBreed(data) {
-  const { petBreedName, idPetType } = data;
+  const { petBreedName, idPetType,lifespan,temperament,size } = data;
 
   try {
     const petBreed = await PetBreed.create(
       {
         petBreedName: petBreedName.toUpperCase(),
-        idPetType,
+        idPetType,lifespan,temperament,size
       },
       {
-        fields: ["petBreedName", "idPetType"],
+        fields: ["petBreedName", "idPetType","lifespan","temperament","size"],
       }
     );
 
@@ -25,7 +25,7 @@ export async function createPetBreed(data) {
 export async function getAllPetBreeds() {
   try {
     const query = `
-    SELECT idPetBreed, petBreedName
+    SELECT idPetBreed, petBreedName,lifespan,temperament,size
     FROM petbreeds
     WHERE active = true
     `;
@@ -44,7 +44,7 @@ export async function getAllPetBreeds() {
 export async function getPetBreedById(idPetBreed) {
   try {
     const query = `
-    SELECT idPetBreed, petBreedName
+    SELECT idPetBreed, petBreedName,lifespan,temperament,size
     FROM petbreeds
     WHERE idPetBreed = '${idPetBreed}'
     `;
@@ -63,7 +63,7 @@ export async function getPetBreedById(idPetBreed) {
 export async function getPetBreedsByPetType(petTypeName) {
   try {
     const petBreed = await PetBreed.findAll({
-      attributes: ["petBreedName", "idPetBreed"],
+      attributes: ["petBreedName", "idPetBreed","lifespan","temperament","size"],
       include: [
         {
           model: PetType,
@@ -83,7 +83,7 @@ export async function getPetBreedsByPetType(petTypeName) {
 export async function getPetBreedByName(petBreedName) {
   try {
     const query = `
-    SELECT idPetBreed, petBreedName
+    SELECT idPetBreed, petBreedName,lifespan,temperament,size
     FROM petbreeds
     WHERE petBreedName = '${petBreedName.toUpperCase()}'
     `;
@@ -122,24 +122,12 @@ export async function updatePetBreed(data, idPetBreed) {
       updates.size = size;
     }
 
-    if (intelligence) {
-      updates.intelligence = intelligence;
-    }
-
     if (temperament) {
       updates.temperament = temperament;
     }
 
     if (lifespan) {
       updates.lifespan = lifespan;
-    }
-
-    if (specialProperty) {
-      updates.specialProperty = specialProperty;
-    }
-
-    if (fur) {
-      updates.fur = fur;
     }
 
     await PetBreed.update(updates, updateOptions);

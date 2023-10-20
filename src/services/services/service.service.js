@@ -32,6 +32,11 @@ export async function createService(idUser, data) {
     };
   }
 
+  if(true == open24hs){
+    openTime = "00:00";
+    closeTime = "23:59";
+  }
+
   try {
     const newService = await Service.create(
       {
