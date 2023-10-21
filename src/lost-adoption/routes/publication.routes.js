@@ -140,12 +140,6 @@ router.post('/search', verifyToken,postSearch);
  *               contactPhone:
  *                 type: INTEGER
  *                 description: numero de telefono de contacto de la publicacion, es pasada por atributo en el cuerpo de la petición.
- *               newOwnerName:
- *                 type: STRING
- *                 description: Nombre del nuevo dueño de la mascota, es nulo durante la creacion.
- *               newOwnerId:
- *                 type: UUID
- *                 description: UUID del nuevo dueño de la mascota, es nulo durante la creación.
  *               idPetColor:
  *                 type: UUID
  *                 description: UUID del color de la mascota, es pasada por atributo en el cuerpo de la petición.
@@ -256,12 +250,6 @@ router.delete('/:idPublication',deletePublication);
  *               contactPhone:
  *                 type: INTEGER
  *                 description: numero de telefono de contacto de la publicacion, es pasada por atributo en el cuerpo de la petición.
- *               newOwnerName:
- *                 type: STRING
- *                 description: Nombre del nuevo dueño de la mascota, es nulo durante la creacion.
- *               newOwnerId:
- *                 type: UUID
- *                 description: UUID del nuevo dueño de la mascota, es nulo durante la creación.
  *               idPetColor:
  *                 type: UUID
  *                 description: UUID del color de la mascota, es pasada por atributo en el cuerpo de la petición.
@@ -329,12 +317,6 @@ router.put('/:idPublication',putPublication);
  *           schema:
  *             type: object
  *             properties:
- *               newOwnerName:
- *                 type: String
- *                 description: Nombre del nuevo dueño de la mascota si es que el usuario llena el campo
- *               newOwnerId:
- *                 type: uuid
- *                 description: id del nuevo dueño de la mascota si es que se encuentra en el sistema
  *     responses:
  *       200:
  *         description: Publicacion resuelta correctamente.
