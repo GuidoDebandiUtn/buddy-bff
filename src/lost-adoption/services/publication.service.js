@@ -344,8 +344,6 @@ function getModel(modelType) {
     orderBy = "contactPhone";
     attributes.push(
       "contactPhone",
-      "newOwnerName",
-      "newOwnerId",
       "idPublicationAdoption"
     );
   } else if (modelType.toUpperCase() == "SEARCH") {
