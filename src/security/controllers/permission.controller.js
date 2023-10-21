@@ -38,7 +38,7 @@ export async function permissionCreate(req, res) {
 
 export async function getPermissions(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_ROLES',];
+  const requiredPermissions=['READ_USUARIOS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
