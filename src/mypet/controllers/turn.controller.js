@@ -16,7 +16,7 @@ const dateRegex = /^(\d{4})-(0?[1-9]|1[0-2])-(0?[1-9]|[12]\d|3[01]) ([01]\d|2[0-
 export async function turnCreate(req, res) {
   const { idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   try {
     const pet = await getPetById(idPet);
@@ -55,7 +55,7 @@ export async function turnCreate(req, res) {
 export async function getTurns(req, res) {
   const { idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   try {
     const pet = await getPetById(idPet);
@@ -88,7 +88,7 @@ export async function getTurns(req, res) {
 export async function getTurn(req, res) {
   const { idTurn, idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   try {
     const pet = await getPetById(idPet);
@@ -123,7 +123,7 @@ export async function getTurn(req, res) {
 export async function turnUpdate(req, res) {
   const { idTurn, idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   if (!dateRegex.test(req.body.turnDate)) {
     console.log("error en el formato del turno: obtenido: %s, esperado AAAA-mm-dd HH:mm:ss",req.body.turnDate);
@@ -169,7 +169,7 @@ export async function turnUpdate(req, res) {
 export async function turnDelete(req, res) {
   const { idTurn, idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   try {
     const pet = await getPetById(idPet);
@@ -208,7 +208,7 @@ export async function turnDelete(req, res) {
 export async function turnActive(req, res) {
   const { idTurn, idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   try {
     const pet = await getPetById(idPet);
@@ -247,7 +247,7 @@ export async function turnActive(req, res) {
 export async function turnArchive(req, res) {
   const { idTurn, idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   try {
     const pet = await getPetById(idPet);

@@ -23,7 +23,7 @@ export async function getPublications(req, res) {
   }
 
 
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   const requiredPermissions=[];
   if(modelType.toUpperCase() == 'ADOPTION'){
@@ -54,7 +54,7 @@ export async function getPublications(req, res) {
 
 export async function obtainPublicationsByUser(req,res){
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   const requiredPermissions=['READ_PUBLICACION_BUSQUEDA','READ_PUBLICACION_ADOPCION'];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
@@ -97,7 +97,7 @@ export async function obtainPublicationsByUser(req,res){
 
 export async function postSearch(req, res) {
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   const requiredPermissions=['CREATE_PUBLICACION_BUSQUEDA',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
@@ -122,7 +122,7 @@ export async function postSearch(req, res) {
 
 export async function postAdoption(req, res) {
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   const requiredPermissions=['CREATE_PUBLICACION_ADOPCION',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
@@ -149,7 +149,7 @@ export async function deletePublication(req, res) {
   const { modelType } = req.query;
   const idUser = req.user.idUser;
 
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   let requiredPermissions = [];
   if(modelType.toUpperCase() == 'ADOPTION'){
@@ -201,7 +201,7 @@ export async function deletePublication(req, res) {
 export async function putPublication(req, res) {
   const { modelType } = req.query;
   const { idPublication } = req.params;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const idUser = req.user.idUser;
 
   if(!modelType){
@@ -251,7 +251,7 @@ export async function putPublication(req, res) {
 export async function postSolvePublication(req, res) {
   const { idPublication } = req.params;
   const { modelType } = req.query;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const idUser = req.user.idUser;
 
 

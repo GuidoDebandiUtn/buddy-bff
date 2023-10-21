@@ -10,7 +10,7 @@ import {
 
 export async function userStateCreate(req, res) {
 
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const requiredPermissions=['WRITE_USUARIOS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
@@ -37,7 +37,7 @@ export async function userStateCreate(req, res) {
 }
 
 export async function getUserStates(req, res) {
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const requiredPermissions=['READ_USUARIOS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
@@ -62,7 +62,7 @@ export async function getUserStates(req, res) {
 export async function getUserState(req, res) {
   const { idUserState } = req.params;
   
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const requiredPermissions=['READ_USUARIOS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
@@ -89,7 +89,7 @@ export async function getUserState(req, res) {
 
 export async function userStateUpdate(req, res) {
   const { idUserState } = req.params;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const requiredPermissions=['WRITE_USUARIOS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
@@ -128,7 +128,7 @@ export async function userStateUpdate(req, res) {
 
 export async function userStateDelete(req, res) {
   const { idUserState } = req.params;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const requiredPermissions=['WRITE_USUARIOS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
@@ -156,7 +156,7 @@ export async function userStateDelete(req, res) {
 
 export async function userStateActive(req, res) {
   const { idUserState } = req.params;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const requiredPermissions=['WRITE_USUARIOS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 

@@ -5,7 +5,7 @@ import { changeStateService } from "../services/stateService.service.js";
 export async function changeServiceState(req, res) {
   const { idService, serviceStateName } = req.params;
   const idUserAuthor = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   const requiredPermissions = ["WRITE_SERVICIOS",];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));

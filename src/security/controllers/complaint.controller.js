@@ -8,7 +8,7 @@ export async function postComplaint(req, res) {
   const { category } = req.body;
   const validCategories = ['SEARCH', 'ADOPTION', 'SERVICE'];
 
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const requiredPermissions=['CREATE_COMPLAINT',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
@@ -40,7 +40,7 @@ export async function getComplaintsAll(req, res) {
   res.setHeader('Content-Type', 'application/json');
   const { page, size, } = req.query;
 
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const requiredPermissions=['READ_DENUNCIAS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
@@ -72,7 +72,7 @@ export async function getComplaintsAll(req, res) {
 export async function complaintDelete(req, res) {
   const { idComplaint } = req.params;
   
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const requiredPermissions=['WRITE_DENUNCIAS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
@@ -104,7 +104,7 @@ export async function complaintDelete(req, res) {
 export async function complaintExecute(req, res) {
   let { idComplaint,validate } = req.params;
   validate = validate.toLowerCase() === "true" ? true : false;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const requiredPermissions=['WRITE_DENUNCIAS','WRITE_PUBLICACION_ADOPCION','WRITE_PUBLICACION_BUSQUEDA','WRITE_SERVICIOS'];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
