@@ -12,6 +12,7 @@ import { getPetColorById } from "../../parameters/services/petColor.service.js";
 import { getPetTypeById } from "../../parameters/services/petType.service.js";
 import { User } from "../../models/User.js";
 import { createNotificationForZone } from "../../reports/service/notifications.services.js";
+import { Chat } from "../../models/Chat.js";
 
 export async function retrivePaginatedPublications(  page = 1,  recordsPerPage = 10,  modelType = "SEARCH") {
   
@@ -242,7 +243,7 @@ export async function updatePublication(  publicationDto,  idPublication,  model
   }
 }
 
-export async function closePublication(idPublication, modelType, adoptionDto) {
+export async function closePublication(idPublication, modelType) {
   const modelParams = getModel(modelType);
   const whereClause = {};
   whereClause[modelParams.attributes.pop()] = idPublication;
@@ -286,8 +287,6 @@ export async function closePublication(idPublication, modelType, adoptionDto) {
     await modelParams.model.update(
       {
         idPublicationState: solvedPublicationState.idPublicationState,
-        newOwnerName: adoptionDto.newOwnerName,
-        newOwnerId: adoptionDto.newOwnerId
       },
       { where: whereClause, returning: true }
     );
@@ -295,12 +294,29 @@ export async function closePublication(idPublication, modelType, adoptionDto) {
       { where: whereClause, returning: true }
     )).get({ plain: true });
       
-    return publication;
   } catch (error) {
     console.error("Error solving the publication with id:", idPublication);
     console.error(error);
     throw error;
   }
+
+  try{
+    const chats = await Chat.findAll({
+      where: {
+        idReference:idPublication
+    }});
+  
+    for (const chat of chats) {
+      chat.idReference = null;
+      chat.referenceType = null;
+      await chat.save();
+    }
+  }catch(error){
+    console.error("error actualizando los chats relacionados a la publicacion: ", error);
+    throw error;
+  }
+  
+  return publication;
 }
 
 function getModel(modelType) {
@@ -312,7 +328,7 @@ function getModel(modelType) {
     { model: Locality, attributes: ["localityName"] },
     { model: PetBreed,
       include: [{ model: PetType, attributes: ["petTypeName"] }],
-      attributes: ["petBreedName","size","intelligence","temperament","lifespan","idPetType","idPetBreed",],
+      attributes: ["petBreedName","weather","idPetType","idPetBreed",],
     },
     {model: PublicationState,attributes: ["name","idPublicationState"],where: { name: "ACTIVO" },},
 
