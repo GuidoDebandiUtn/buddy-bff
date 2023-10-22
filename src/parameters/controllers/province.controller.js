@@ -12,11 +12,15 @@ import { getCountryById } from "../services/country.service.js";
 
 export async function provinceCreate(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_PROVINCE',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["WRITE_PROVINCE"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
 
   const country = await getCountryById(req.body.idCountry);
@@ -27,7 +31,6 @@ export async function provinceCreate(req, res) {
       .json({ message: "No existe ningún país con ese id" });
   }
 
-
   try {
     let province;
     const duplicate = await getProvinceByName(
@@ -36,18 +39,12 @@ export async function provinceCreate(req, res) {
     );
 
     if (duplicate[0]) {
-       province = await activeProvince(duplicate[0].idCountry);
-       return res.status(201).json({ message: "Se ha reactivado la provincia" });
-    }else{
-       province = await createProvince(req.body);
-       return res.status(201).json({ province });
+      province = await activeProvince(duplicate[0].idCountry);
+      return res.status(201).json({ message: "Se ha reactivado la provincia" });
+    } else {
+      province = await createProvince(req.body);
+      return res.status(201).json({ province });
     }
-
-
-
-    
-
-    
   } catch (error) {
     return res.status(500).json({
       message: error.message,
@@ -57,11 +54,15 @@ export async function provinceCreate(req, res) {
 
 export async function getProvinces(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_PROVINCE',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["READ_PROVINCE"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
   try {
     const provinces = await getAllProvinces();
@@ -80,11 +81,15 @@ export async function getProvinces(req, res) {
 
 export async function getProvincesEvery(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_PROVINCE_LIST','READ_PARAMETROS'];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["READ_PROVINCE_LIST", "READ_PARAMETROS"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
   try {
     const provinces = await getEveryProvinces();
@@ -104,11 +109,15 @@ export async function getProvincesEvery(req, res) {
 export async function getProvince(req, res) {
   const { idProvince } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_PROVINCE',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["READ_PROVINCE"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
   try {
     const province = await getProvinceById(idProvince);
@@ -130,11 +139,15 @@ export async function getProvince(req, res) {
 export async function provinceUpdate(req, res) {
   const { idProvince } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_PROVINCE',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["WRITE_PROVINCE"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
   try {
     const province = await getProvinceById(idProvince);
@@ -171,11 +184,15 @@ export async function provinceUpdate(req, res) {
 export async function provinceDelete(req, res) {
   const { idProvince } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_PROVINCE',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["WRITE_PROVINCE"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
   try {
     const province = await getProvinceById(idProvince);
@@ -199,11 +216,15 @@ export async function provinceDelete(req, res) {
 export async function provinceActive(req, res) {
   const { idProvince } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_PROVINCE',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["WRITE_PROVINCE"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
   try {
     const province = await getProvinceById(idProvince);

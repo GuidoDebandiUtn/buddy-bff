@@ -16,11 +16,15 @@ import {
 
 export async function roleCreate(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_ROLES',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["WRITE_ROLES"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
   try {
     const role = await getRoleByName(req.body.roleName);
@@ -43,11 +47,15 @@ export async function roleCreate(req, res) {
 
 export async function getRoles(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_ROLES',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["READ_ROLES"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
   try {
     const roles = await getAllRoles();
@@ -67,11 +75,15 @@ export async function getRoles(req, res) {
 export async function getRole(req, res) {
   const { idRole } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_ROLES',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["READ_ROLES"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
   try {
     const role = await getRoleById(idRole);
@@ -92,11 +104,12 @@ export async function getRole(req, res) {
 
 export async function getRoleEvery(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_ROLES_LIST',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const hasAllPermissions = userPermissions.includes("READ_ROLES_LIST");
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
   try {
     const roles = await getEveryRol();
@@ -116,11 +129,15 @@ export async function getRoleEvery(req, res) {
 export async function roleUpdate(req, res) {
   const { idRole } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_ROLES',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["WRITE_ROLES"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
   try {
     const role = await getRoleById(idRole);
@@ -154,11 +171,15 @@ export async function roleUpdate(req, res) {
 export async function roleDelete(req, res) {
   const { idRole } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_ROLES',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["WRITE_ROLES"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
   try {
     const role = await getRoleById(idRole);
@@ -179,11 +200,15 @@ export async function roleDelete(req, res) {
 export async function roleActive(req, res) {
   const { idRole } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_ROLES',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["WRITE_ROLES"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
   try {
     const role = await getRoleById(idRole);
@@ -208,11 +233,15 @@ export async function addPermission(req, res) {
   const { idRole } = req.params;
   const { idPermission } = req.body;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_ROLES',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["WRITE_ROLES"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
 
   try {
@@ -248,11 +277,15 @@ export async function addSeveralPermissions(req, res) {
   const { idRole } = req.params;
   const { permissions } = req.body;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_ROLES',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["WRITE_ROLES"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
 
   try {
@@ -288,11 +321,15 @@ export async function addSeveralPermissions(req, res) {
 export async function takePermission(req, res) {
   const { idRole, idPermission } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_ROLES',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["WRITE_ROLES"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
 
   try {

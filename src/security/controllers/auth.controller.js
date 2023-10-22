@@ -44,7 +44,6 @@ export async function login(req, res) {
         message: "Contraseña incorrecta",
       });
     }
-    console.log("object");
     return res.status(200).header("auth-token", token).json({
       data: { token },
     });

@@ -13,11 +13,15 @@ import { getPetTypeById } from "../services/petType.service.js";
 
 export async function petBreedCreate(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_MI_MASCOTABREEDS',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["WRITE_MI_MASCOTABREEDS"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
 
   const petType = await getPetTypeById(req.body.idPetType);
@@ -33,16 +37,11 @@ export async function petBreedCreate(req, res) {
 
     if (duplicate[0]) {
       petBreed = await activePetBreed(duplicate[0].idPetBreed);
-      return res.status(201).json({ message:"se ha reactivado la raza" });
-    }else{
+      return res.status(201).json({ message: "se ha reactivado la raza" });
+    } else {
       petBreed = await createPetBreed(req.body);
       return res.status(201).json({ petBreed });
     }
-
-
-   
-
-    
   } catch (error) {
     return res.status(500).json({
       message: error.message,
@@ -52,11 +51,15 @@ export async function petBreedCreate(req, res) {
 
 export async function getPetBreeds(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_MI_MASCOTABREEDS',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["READ_PETBREEDS_LIST"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
   try {
     const petBreeds = await getAllPetBreeds();
@@ -77,11 +80,15 @@ export async function getPetBreeds(req, res) {
 
 export async function getPetBreedsEvery(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_MI_MASCOTABREEDS_LIST','READ_PARAMETROS'];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["READ_MI_MASCOTABREEDS_LIST", "READ_PARAMETROS"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
   try {
     const petBreeds = await getEveryPetBreed();
@@ -103,11 +110,15 @@ export async function getPetBreedsEvery(req, res) {
 export async function getPetBreed(req, res) {
   const { idPetBreed } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_MI_MASCOTABREEDS',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["READ_MI_MASCOTABREEDS"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
 
   try {
@@ -130,11 +141,15 @@ export async function getPetBreed(req, res) {
 export async function petBreedUpdate(req, res) {
   const { idPetBreed } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_MI_MASCOTABREEDS',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["WRITE_MI_MASCOTABREEDS"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
   try {
     const petBreed = await getPetBreedById(idPetBreed);
@@ -168,11 +183,15 @@ export async function petBreedUpdate(req, res) {
 export async function petBreedDelete(req, res) {
   const { idPetBreed } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_MI_MASCOTABREEDS',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["WRITE_MI_MASCOTABREEDS"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
   try {
     const petBreed = await getPetBreedById(idPetBreed);
@@ -198,11 +217,15 @@ export async function petBreedDelete(req, res) {
 export async function getPetBreedsByType(req, res) {
   const { petTypeName } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_MI_MASCOTABREEDS',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["READ_MI_MASCOTABREEDS"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
   try {
     const petBreeds = await getPetBreedsByPetType(petTypeName);
@@ -224,11 +247,15 @@ export async function getPetBreedsByType(req, res) {
 export async function petBreedActive(req, res) {
   const { idPetBreed } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_MI_MASCOTABREEDS',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["WRITE_MI_MASCOTABREEDS"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
   try {
     const petBreed = await getPetBreedById(idPetBreed);
