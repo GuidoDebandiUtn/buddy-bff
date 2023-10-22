@@ -1,40 +1,41 @@
 import { getIdToken } from "../../helpers/authHelper.js";
 import { getUserById } from "../../security/services/user.service.js";
 import {
-    retrivePaginatedPublications,
-    createSearch,
-    publicationDelete,
-    getPublicationById,
-    createAdoption,
-    updatePublication,
-    getPublicationsByUser,
-    closePublication,
+  retrivePaginatedPublications,
+  createSearch,
+  publicationDelete,
+  getPublicationById,
+  createAdoption,
+  updatePublication,
+  getPublicationsByUser,
+  closePublication,
 } from "../services/publication.service.js";
-
-
 
 export async function getPublications(req, res) {
   const { modelType, page, size } = req.query;
-  
-  if(!modelType){
-    return res
-    .status(400)
-    .json({ message: `El parametro modelType es obligatorio`, code: 400 });
-  }
 
+  if (!modelType) {
+    return res
+      .status(400)
+      .json({ message: `El parametro modelType es obligatorio`, code: 400 });
+  }
 
   const userPermissions = req.user.permissions;
 
-  const requiredPermissions=[];
-  if(modelType.toUpperCase() == 'ADOPTION'){
-    requiredPermissions=['READ_PUBLICACION_ADOPCION',];
-  }else{
-    requiredPermissions=['READ_PUBLICACION_BUSQUEDA',];
+  let requiredPermissions = [];
+  if (modelType.toUpperCase() == "ADOPTION") {
+    requiredPermissions = ["READ_PUBLICACION_ADOPCION"];
+  } else {
+    requiredPermissions = ["READ_PUBLICACION_BUSQUEDA"];
   }
 
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
 
   try {
@@ -46,27 +47,33 @@ export async function getPublications(req, res) {
 
     return res.status(200).json(data);
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       message: error.message,
     });
   }
 }
 
-export async function obtainPublicationsByUser(req,res){
+export async function obtainPublicationsByUser(req, res) {
   const idUser = req.user.idUser;
   const userPermissions = req.user.permissions;
 
-  const requiredPermissions=['READ_PUBLICACION_BUSQUEDA','READ_PUBLICACION_ADOPCION'];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = [
+    "READ_PUBLICACION_BUSQUEDA",
+    "READ_PUBLICACION_ADOPCION",
+  ];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
 
-
   try {
-    const user = await  getUserById(idUser);
-
+    const user = await getUserById(idUser);
 
     if (!user[0]) {
       return res
@@ -74,14 +81,14 @@ export async function obtainPublicationsByUser(req,res){
         .json({ message: "No se han encontrado el usuario indicado" });
     }
 
-    console.log ("user obtenido correctamente");
+    console.log("user obtenido correctamente");
     const data = await getPublicationsByUser(idUser);
 
-    console.log ("publicaciones obtenidas correctamente");
+    console.log("publicaciones obtenidas correctamente");
     if (!data) {
-      return res
-        .status(204)
-        .json({ message: "No se han encontrado ninguna publicacion para el usuario" });
+      return res.status(204).json({
+        message: "No se han encontrado ninguna publicacion para el usuario",
+      });
     }
 
     return res.status(200).json(data);
@@ -90,26 +97,27 @@ export async function obtainPublicationsByUser(req,res){
       message: error.message,
     });
   }
-
 }
-
-
 
 export async function postSearch(req, res) {
   const idUser = req.user.idUser;
   const userPermissions = req.user.permissions;
 
-  const requiredPermissions=['CREATE_PUBLICACION_BUSQUEDA',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["CREATE_PUBLICACION_BUSQUEDA"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
 
   try {
     let publication;
-    if (req.body.lostDate && checkParameters(req.body,'SEARCH')) {
-      publication = await createSearch(req.body,idUser);
+    if (req.body.lostDate && checkParameters(req.body, "SEARCH")) {
+      publication = await createSearch(req.body, idUser);
     }
 
     return res.status(201).json(publication);
@@ -124,17 +132,20 @@ export async function postAdoption(req, res) {
   const idUser = req.user.idUser;
   const userPermissions = req.user.permissions;
 
-  const requiredPermissions=['CREATE_PUBLICACION_ADOPCION',];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const requiredPermissions = ["CREATE_PUBLICACION_ADOPCION"];
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   if (!hasAllPermissions) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
 
-
   try {
-    checkParameters(req.body,'ADOPTION');
-    const publication = await createAdoption(req.body,idUser);
+    checkParameters(req.body, "ADOPTION");
+    const publication = await createAdoption(req.body, idUser);
 
     return res.status(201).json(publication);
   } catch (error) {
@@ -152,45 +163,48 @@ export async function deletePublication(req, res) {
   const userPermissions = req.user.permissions;
 
   let requiredPermissions = [];
-  if(modelType.toUpperCase() == 'ADOPTION'){
-    requiredPermissions.push('WRITE_PUBLICACION_ADOPCION');
-  }else{
-    requiredPermissions.push('WRITE_PUBLICACION_ADOPCION');
+  if (modelType.toUpperCase() == "ADOPTION") {
+    requiredPermissions.push("WRITE_PUBLICACION_ADOPCION");
+  } else {
+    requiredPermissions.push("WRITE_PUBLICACION_ADOPCION");
   }
 
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
-
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   const publication = await getPublicationById(idPublication, modelType);
-  console.debug(`publicacion obtenida correctamente. entidad obtenida: '${publication}'`);
+  console.debug(
+    `publicacion obtenida correctamente. entidad obtenida: '${publication}'`
+  );
   if (!publication[0]) {
-    return res.status(404).json({message: `No se ha podido encontrar la publicacion a eliminar`,});
+    return res
+      .status(404)
+      .json({ message: `No se ha podido encontrar la publicacion a eliminar` });
   }
 
   if (!hasAllPermissions && publication[0].idUser != idUser) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
-  }
-
-
-  if(!modelType){
     return res
-    .status(400)
-    .json({ message: `El parametro modelType es obligatorio`, code: 400 });
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
 
-  console.log(`Iniciado proceso de eliminacion de publicacion - Parametros modelType='${modelType}', idPublication= '${idPublication}'`);
+  if (!modelType) {
+    return res
+      .status(400)
+      .json({ message: `El parametro modelType es obligatorio`, code: 400 });
+  }
+
+  console.log(
+    `Iniciado proceso de eliminacion de publicacion - Parametros modelType='${modelType}', idPublication= '${idPublication}'`
+  );
 
   try {
-
-
     await publicationDelete(idPublication, modelType);
 
-    return res
-      .status(200)
-      .json({
-        message:
-          "Se ha dado de baja correctamente la publicacion de la mascota",
-      });
+    return res.status(200).json({
+      message: "Se ha dado de baja correctamente la publicacion de la mascota",
+    });
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -204,36 +218,44 @@ export async function putPublication(req, res) {
   const userPermissions = req.user.permissions;
   const idUser = req.user.idUser;
 
-  if(!modelType){
+  if (!modelType) {
     return res
-    .status(400)
-    .json({ message: `El parametro modelType es obligatorio`, code: 400 });
+      .status(400)
+      .json({ message: `El parametro modelType es obligatorio`, code: 400 });
   }
 
-  const requiredPermissions=[];
-  if(modelType.toUpperCase() == 'ADOPTION'){
-    requiredPermissions=['WRITE_PUBLICACION_ADOPCION','READ_PUBLICACION_ADOPCION'];
-  }else{
-    requiredPermissions=['WRITE_PUBLICACION_BUSQUEDA','READ_PUBLICACION_BUSQUEDA'];
+  const requiredPermissions = [];
+  if (modelType.toUpperCase() == "ADOPTION") {
+    requiredPermissions = [
+      "WRITE_PUBLICACION_ADOPCION",
+      "READ_PUBLICACION_ADOPCION",
+    ];
+  } else {
+    requiredPermissions = [
+      "WRITE_PUBLICACION_BUSQUEDA",
+      "READ_PUBLICACION_BUSQUEDA",
+    ];
   }
 
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   let publication = await getPublicationById(idPublication, modelType);
   if (!publication[0]) {
-    return res
-      .status(404).json({message: `No se ha podido encontrar la publicacion de Id: '${idPublication}'.`,});
+    return res.status(404).json({
+      message: `No se ha podido encontrar la publicacion de Id: '${idPublication}'.`,
+    });
   }
 
   if (!hasAllPermissions && publication[0].idUser != idUser) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
   }
 
- 
-  
   try {
-    checkParameters(req.body,modelType);
-    
+    checkParameters(req.body, modelType);
 
     publication = await updatePublication(req.body, idPublication, modelType);
 
@@ -247,71 +269,78 @@ export async function putPublication(req, res) {
   }
 }
 
-
 export async function postSolvePublication(req, res) {
   const { idPublication } = req.params;
   const { modelType } = req.query;
   const userPermissions = req.user.permissions;
   const idUser = req.user.idUser;
 
-
-  if(!modelType){
+  if (!modelType) {
     return res
-    .status(400)
-    .json({ message: `El parametro modelType es obligatorio`, code: 400 });
+      .status(400)
+      .json({ message: `El parametro modelType es obligatorio`, code: 400 });
   }
 
-  const requiredPermissions=[];
-  if(modelType.toUpperCase() == 'ADOPTION'){
-    requiredPermissions=['WRITE_PUBLICACION_ADOPCION','READ_PUBLICACION_ADOPCION'];
-  }else{
-    requiredPermissions=['WRITE_PUBLICACION_BUSQUEDA','READ_PUBLICACION_BUSQUEDA'];
+  const requiredPermissions = [];
+  if (modelType.toUpperCase() == "ADOPTION") {
+    requiredPermissions = [
+      "WRITE_PUBLICACION_ADOPCION",
+      "READ_PUBLICACION_ADOPCION",
+    ];
+  } else {
+    requiredPermissions = [
+      "WRITE_PUBLICACION_BUSQUEDA",
+      "READ_PUBLICACION_BUSQUEDA",
+    ];
   }
 
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
 
   let publication = await getPublicationById(idPublication, modelType);
   if (!publication[0]) {
-    return res
-      .status(404).json({message: `No se ha podido encontrar la publicacion de Id: '${idPublication}'.`,});
+    return res.status(404).json({
+      message: `No se ha podido encontrar la publicacion de Id: '${idPublication}'.`,
+    });
   }
 
   if (!hasAllPermissions && publication[0].idUser != idUser) {
-    return res.status(403).json({ message: "Solo es posible resolver las publicaciones propias!" });
+    return res
+      .status(403)
+      .json({ message: "Solo es posible resolver las publicaciones propias!" });
   }
 
-  console.debug(`Iniciado proceso de resolucion de publicacion - Parametros modelType='${modelType}', idPublication= '${idPublication}'`);
+  console.debug(
+    `Iniciado proceso de resolucion de publicacion - Parametros modelType='${modelType}', idPublication= '${idPublication}'`
+  );
 
   try {
-   let publication =  await closePublication( idPublication, modelType, req.body);
+    let publication = await closePublication(
+      idPublication,
+      modelType,
+      req.body
+    );
 
-    return res
-      .status(200)
-      .json({
-        message:
-          "Se ha resuelto correctamente la publicacion de la mascota",
-          publication: publication
-      });
+    return res.status(200).json({
+      message: "Se ha resuelto correctamente la publicacion de la mascota",
+      publication: publication,
+    });
   } catch (error) {
-    if(error.code){
+    if (error.code) {
       return res.status(error.code).json({
         message: error.message,
       });
-    }else{
+    } else {
       res.status(500).json({
         message: error.message,
       });
     }
-
   }
 }
 
-
-
-
-function checkParameters(publicationDto,modelType ){
+function checkParameters(publicationDto, modelType) {
   const dateRegex = /^\d{2}-\d{2}-\d{4}$/;
-  
 
   /* TODO: 
   const imagesRegex = "";
@@ -320,7 +349,11 @@ function checkParameters(publicationDto,modelType ){
   }
   */
 
-  if(!publicationDto.idPetType || !publicationDto.idLocality || !publicationDto.idPetColor ){
+  if (
+    !publicationDto.idPetType ||
+    !publicationDto.idLocality ||
+    !publicationDto.idPetColor
+  ) {
     throw new Error(
       `Error en el atributos de las relaciones de la publicacion, esperados: petTypee, petColor y Locality. Valores obtenidos: petType: ${publicationDto.idPetType}, petColor: ${publicationDto.idPetColor}, Locality:${publicationDto.idLocality}.`
     );
