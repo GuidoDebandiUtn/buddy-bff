@@ -18,6 +18,7 @@ Province.init(
     weather: {
       type: DataTypes.STRING,
     },
+    
     population: {
       type: DataTypes.DOUBLE,
     },

@@ -32,14 +32,6 @@ PublicationSearch.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    latitude: {
-      type: DataTypes.DOUBLE,
-      allowNull: true,
-    },
-    longitude: {
-      type: DataTypes.DOUBLE,
-      allowNull: true,
-    },
     isFound: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

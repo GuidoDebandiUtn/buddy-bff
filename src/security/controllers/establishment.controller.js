@@ -45,7 +45,7 @@ export async function postValidateEstablishment(req, res) {
   const { idUser } = req.params;
 
   try {
-    const userPermissions = req.user.permissions[0].permissions.split("-");
+    const userPermissions = req.user.permissions;
 
     const permisionRequired = "WRITE_DOCUMENTACION";
     if (userPermissions.includes(permisionRequired)) {

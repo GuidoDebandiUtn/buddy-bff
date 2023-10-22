@@ -22,22 +22,6 @@ Locality.init(
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
-    neighborhoods: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-      get() {
-        // This getter will parse the JSON data stored in the database into a JavaScript array
-        const value = this.getDataValue("neighborhoods");
-        return value ? JSON.parse(value) : [];
-      },
-      set(value) {
-        // This setter will convert the JavaScript array to a JSON string before storing it in the database
-        this.setDataValue(
-          "neighborhoods",
-          value ? JSON.stringify(value) : "[]"
-        );
-      },
-    },
   },
   {
     sequelize,

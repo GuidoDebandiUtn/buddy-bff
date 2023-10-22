@@ -20,13 +20,17 @@ export async function createUser(data) {
     userType,
     documents,
     serviceType,
+    address,
+    phoneNumber,
+    cuitCuil,
+    birthDate,
   } = data;
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await User.create(
-      { mail, password: hashedPassword, userName, name, image },
-      { fields: ["mail", "password", "userName", "image"] }
+      { mail, password: hashedPassword, userName, name, image,address,phoneNumber,cuitCuil,birthDate },
+      { fields: ["mail", "password", "userName", "image", "address",,"phoneNumber","cuitCuil","birthDate"] }
     );
 
     const idUser = newUser.idUser;
@@ -108,7 +112,7 @@ export async function getAllUsers() {
 export async function getUserById(idUser) {
   try {
     const query = `
-    SELECT idUser, mail, userName, name, lastName, image
+    SELECT idUser, mail, userName, name, image,address,phoneNumber,cuitCuil,birthDate
     FROM users
     WHERE idUser = '${idUser}'
     `;
@@ -119,6 +123,7 @@ export async function getUserById(idUser) {
 
     return user;
   } catch (error) {
+    console.error("error obteniendo al usuario: ", idUser, error )
     throw error;
   }
 }
@@ -145,7 +150,7 @@ export async function getUserPassword(idUser) {
 export async function getUserByMail(mail) {
   try {
     const query = `
-      SELECT idUser, mail, validated, password, image
+      SELECT idUser, mail, validated, password, image,address,phoneNumber,cuitCuil,birthDate
       FROM users
       WHERE mail = '${mail}'
       `;
@@ -164,7 +169,7 @@ export async function getUserByMail(mail) {
 export async function getPermissionsForUser(idUser) {
   try {
     const query = `
-      SELECT GROUP_CONCAT(p.tokenClaim SEPARATOR ' - ') AS permissions
+      SELECT p.tokenclaim AS permissions
       FROM users AS u
       JOIN userroles AS ur ON u.idUser = ur.idUser
       JOIN roles AS r ON r.idRole = ur.idRole
@@ -173,12 +178,13 @@ export async function getPermissionsForUser(idUser) {
       WHERE u.idUser = '${idUser}' and ur.active = true
       `;
 
-    const user = await sequelize.query(query, {
-      model: User,
-      mapToModel: true,
-    });
+      const user = await sequelize.query(query, {
+        type: sequelize.QueryTypes.SELECT,
+      });
+  
+      const permissionsArray = user.map((result) => result.tokenclaim);
 
-    return user;
+    return permissionsArray;
   } catch (error) {
     console.log(error);
     throw error;
@@ -242,10 +248,8 @@ export async function updateUser(idUser, data) {
   const {
     userName,
     name,
-    lastName,
     password,
     phoneNumber,
-    dni,
     birthDate,
     address,
     image,
@@ -286,17 +290,10 @@ export async function updateUser(idUser, data) {
       updates.birthDate = birthDate;
     }
 
-    if (dni) {
-      updates.dni = dni;
-    }
-
     if (address) {
       updates.address = address;
     }
 
-    if (lastName) {
-      updates.lastName = lastName;
-    }
 
     if (image) {
       updates.image = image;
@@ -359,7 +356,7 @@ export async function getUsersByPermission(tokenClaim) {
     }
 
     const users = await User.findAll({
-      attributes: ["idUser", "username", "image", "name", "mail"],
+      attributes: ["idUser", "username", "image", "name", "mail","address","phoneNumber","cuitCuil","birthDate"],
       group: ["idUser"],
       include: [
         {
@@ -388,7 +385,7 @@ export async function getUsersByPermission(tokenClaim) {
 export async function getUsersBylocality(idLocality) {
   try {
     const users = await User.findAll({
-      attributes: ["idUser", "username", "image", "name", "mail"],
+      attributes: ["idUser", "username", "image", "name", "mail","address","phoneNumber","cuitCuil","birthDate"],
       where: { idLocality: idLocality, idLocality },
     });
     const formattedUsers = users.map((user) => user.get({ plain: true }));
@@ -408,7 +405,7 @@ export async function getUsersByRole(roleName) {
   roleName = roleName.toUpperCase();
   try {
     const users = await User.findAll({
-      attributes: ["idUser", "username", "image", "name", "mail"],
+      attributes: ["idUser", "username", "image", "name", "mail","address","phoneNumber","cuitCuil","birthDate"],
       group: ["idUser"],
       include: [
         {

@@ -33,9 +33,9 @@ Vaccine.init(
     nextVaccineDate: {
       type: DataTypes.DATE,
     },
-    notification: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
+    doseQuantity: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
   },
   {

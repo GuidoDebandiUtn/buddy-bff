@@ -53,6 +53,7 @@ export async function createMessage(idUser, content, idChat) {
 
     chat.archivedEmitter = false;
     chat.archivedReceptor = false;
+    chat.lastMessageDate = new Date();
     await chat.save();
   try{
     if(chat.idUserEmitter !== idUser){
@@ -63,7 +64,7 @@ export async function createMessage(idUser, content, idChat) {
       await createNotificationForUser(chat.idUserEmitter,`${sender.username} te ha enviado un nuevo mensaje: ${content}`);
     }
   }catch(error){
-    console.log("error creando notificacion para un nuevo mensaje de un chat",error);
+    console.error("error creando notificacion para un nuevo mensaje de un chat",error);
   }
 
 

@@ -27,13 +27,7 @@ User.init(
     name: {
       type: DataTypes.STRING,
     },
-    lastName: {
-      type: DataTypes.STRING,
-    },
     phoneNumber: {
-      type: DataTypes.STRING,
-    },
-    dni: {
       type: DataTypes.STRING,
     },
     address: {
@@ -42,11 +36,9 @@ User.init(
     birthDate: {
       type: DataTypes.DATE,
     },
-    job: {
-      type: DataTypes.STRING,
-    },
     language: {
       type: DataTypes.STRING,
+      defaultValue: "español",
     },
     validated: {
       type: DataTypes.BOOLEAN,

@@ -2,15 +2,15 @@ import { sequelize } from "../../database/database.js";
 import { PetType } from "../../models/PetType.js";
 
 export async function createPetType(data) {
-  const { petTypeName, legsNumber } = data;
+  const { petTypeName, legsNumber , diet, enviroment, coat, weather } = data;
   try {
     const petType = await PetType.create(
       {
         petTypeName: petTypeName.toUpperCase(),
-        legsNumber,
+        legsNumber, diet, enviroment, coat, weather
       },
       {
-        fields: ["petTypeName", "legsNumber"],
+        fields: ["petTypeName", "legsNumber", "diet", "enviroment", "coat", "weather"],
       }
     );
 
@@ -23,7 +23,7 @@ export async function createPetType(data) {
 export async function getAllPetTypes() {
   try {
     const query = `
-    SELECT idPetType, petTypeName
+    SELECT idPetType, petTypeName, diet, enviroment, coat, weather
     FROM pettypes
     WHERE active = true
     `;
@@ -42,7 +42,7 @@ export async function getAllPetTypes() {
 export async function getPetTypeById(idPetType) {
   try {
     const query = `
-    SELECT pettypes.idPetType, pettypes.petTypeName, GROUP_CONCAT(petbreeds.petBreedName) AS razas
+    SELECT pettypes.idPetType, pettypes.petTypeName, pettypes.diet, pettypes.enviroment, pettypes.coat, pettypes.weather, GROUP_CONCAT(petbreeds.petBreedName) AS razas
     FROM pettypes
     LEFT JOIN petbreeds ON pettypes.idPetType = petbreeds.idPetType
     WHERE petTypes.idPetType = '${idPetType}'
@@ -65,7 +65,7 @@ export async function getPetTypeByIdIn(petTypes) {
     const petTypeIds = petTypes.map(petType => `'${petType.idPetType}'`).join(',');
 
     const query = `
-    SELECT pettypes.idPetType, pettypes.petTypeName, GROUP_CONCAT(petbreeds.petBreedName) AS razas
+    SELECT pettypes.idPetType, pettypes.petTypeName, pettypes.diet, pettypes.enviroment, pettypes.coat, pettypes.weather, GROUP_CONCAT(petbreeds.petBreedName) AS razas
     FROM pettypes
     LEFT JOIN petbreeds ON pettypes.idPetType = petbreeds.idPetType
     WHERE pettypes.idPetType IN (${petTypeIds})
@@ -86,7 +86,7 @@ export async function getPetTypeByIdIn(petTypes) {
 export async function getPetTypeByName(petTypeName) {
   try {
     const query = `
-    SELECT idPetType, petTypeName
+    SELECT idPetType, petTypeName, diet, enviroment, coat, weather
     FROM pettypes
     WHERE petTypeName = '${petTypeName.toUpperCase()}'
     `;

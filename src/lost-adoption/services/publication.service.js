@@ -12,6 +12,7 @@ import { getPetColorById } from "../../parameters/services/petColor.service.js";
 import { getPetTypeById } from "../../parameters/services/petType.service.js";
 import { User } from "../../models/User.js";
 import { createNotificationForZone } from "../../reports/service/notifications.services.js";
+import { Chat } from "../../models/Chat.js";
 
 export async function retrivePaginatedPublications(  page = 1,  recordsPerPage = 10,  modelType = "SEARCH") {
   
@@ -39,20 +40,20 @@ export async function getPublicationsByUser(idUser) {
     {model: User,attributes:["userName","idUser"],},
     {model:PetColor, attributes: ['petColorName']},
     {model:Locality, attributes: ['localityName']},
-    {model:PetBreed,include: [{model:PetType, attributes: ['petTypeName']}], attributes: ['petBreedName','size','intelligence','temperament','lifespan','idPetType','idPetBreed']},
+    {model:PetBreed,include: [{model:PetType, attributes: ['petTypeName']}], attributes: ['petBreedName','idPetBreed']},
     {model:PublicationState, attributes: ['name'],where: {name:'ACTIVO'}},
   ];
   try {
     const adoptions =await PublicationAdoption.findAll({where: {idUser: idUser}, include: include});
     console.log ("adopciones obtenidas correctamente");
-    include.push({model:Trace, attributes:['latitude','longitude','traceDate','traceTime','images']});
+    include.push({model:Trace, attributes:['images','latitude','longitude','createdAt']});
     const searchs =await PublicationSearch.findAll({where: {idUser: idUser}, include: include});
     console.log ("busquedas obtenidas correctamente");
 
     
     return  {adoptions,searchs};
   } catch (err) {
-    console.error('Error al obtener las publicaciones del usuario:', error);
+    console.error('Error al obtener las publicaciones del usuario:', err);
     throw err;
   }
 };
@@ -132,7 +133,7 @@ export async function createAdoption(adoptionDto,idUser) {
     try{
       await createNotificationForZone(searchDto.idLocality,`Se ha creado una adopcion en tu zona, ${adoptionDto.title}`);
     }catch(error){
-      console.log("error creando notificacion para una nueva publicacion de adopcion: ",error)
+      console.error("error creando notificacion para una nueva publicacion de adopcion: ",error)
     }
     
     return newPublication;
@@ -161,7 +162,6 @@ export async function publicationDelete(idPublication, modelType) {
     publication = await modelParams.model.update(
       {
         idPublicationState: inactivePublicationState.idPublicationState,
-        updatedDate: new Date(),
       },
       { where: whereClause, returning: true }
     );
@@ -243,6 +243,86 @@ export async function updatePublication(  publicationDto,  idPublication,  model
   }
 }
 
+export async function closePublication(idPublication, modelType) {
+  const modelParams = getModel(modelType);
+  const whereClause = {};
+  whereClause[modelParams.attributes.pop()] = idPublication;
+  let publication;
+  let solvedPublicationState;
+  try{
+    const activePublicationState = await PublicationState.findOne({
+      attributes: ["idPublicationState"],
+      where: { name: "ACTIVO" },
+    });
+
+    publication = (await modelParams.model.findOne(
+      { where: whereClause, returning: true }
+    )).get({ plain: true });
+
+    if(!publication){
+      throw {message: "Error en la obtencion de la publicacion a resolver, validar dato enviado", code: 400}
+    }
+    console.log(`publicacion obtenida correctamente. entidad obtenida: `,publication);
+    if(publication.idPublicationState != activePublicationState.idPublicationState){
+      throw {message: "la publicacion no se encuentra activa y por lo tanto no se puede resolver", code: 400}
+    }
+  }catch(error){
+    console.error("error en la validacion de estado de la publicacion, ", error);
+    throw error;
+  }
+  
+  
+  try{
+    solvedPublicationState = await PublicationState.findOne({
+      attributes: ["idPublicationState"],
+      where: { name: "RESUELTO" },
+    });
+    console.log(
+      `estado Resuelto obtenido correctamente. entidad obtenida: '${solvedPublicationState}'`
+    );
+  
+  }catch (error){
+    console.error("error en la obtencion del estado resuelto, ", error);
+    throw error;
+  }
+
+
+  try {
+    await modelParams.model.update(
+      {
+        idPublicationState: solvedPublicationState.idPublicationState,
+      },
+      { where: whereClause, returning: true }
+    );
+    publication = (await modelParams.model.findOne(
+      { where: whereClause, returning: true }
+    )).get({ plain: true });
+      
+  } catch (error) {
+    console.error("Error solving the publication with id:", idPublication);
+    console.error(error);
+    throw error;
+  }
+
+  try{
+    const chats = await Chat.findAll({
+      where: {
+        idReference:idPublication
+    }});
+  
+    for (const chat of chats) {
+      chat.idReference = null;
+      chat.referenceType = null;
+      await chat.save();
+    }
+  }catch(error){
+    console.error("error actualizando los chats relacionados a la publicacion: ", error);
+    throw error;
+  }
+  
+  return publication;
+}
+
 function getModel(modelType) {
   let orderBy;
   let model;
@@ -252,9 +332,9 @@ function getModel(modelType) {
     { model: Locality, attributes: ["localityName"] },
     { model: PetBreed,
       include: [{ model: PetType, attributes: ["petTypeName"] }],
-      attributes: ["petBreedName","size","intelligence","temperament","lifespan","idPetType","idPetBreed",],
+      attributes: ["petBreedName","idPetType","idPetBreed",],
     },
-    {model: PublicationState,attributes: ["name"],where: { name: "ACTIVO" },},
+    {model: PublicationState,attributes: ["name","idPublicationState"],where: { name: "ACTIVO" },},
 
   ];
   let attributes = ["title", "images", "description"];
@@ -264,15 +344,11 @@ function getModel(modelType) {
     orderBy = "contactPhone";
     attributes.push(
       "contactPhone",
-      "newOwnerName",
-      "newOwnerId",
       "idPublicationAdoption"
     );
   } else if (modelType.toUpperCase() == "SEARCH") {
     model = PublicationSearch;
     attributes.push(
-      "latitude",
-      "longitude",
       "isFound",
       "lostDate",
       "idPublicationSearch"
@@ -280,7 +356,7 @@ function getModel(modelType) {
     orderBy = "lostDate";
     include.push({
       model: Trace,
-      attributes: ["latitude", "longitude", "traceDate", "traceTime", "images"],
+      attributes: [ "images","idTrace","createdAt","latitude","longitude"],
     });
   }
 

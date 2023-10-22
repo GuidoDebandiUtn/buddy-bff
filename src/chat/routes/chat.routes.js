@@ -55,6 +55,18 @@ router.get('/:archived', verifyToken,getChatsController);
  *   post:
  *     summary: Crea un nuevo chat para los usuarios especificados.
  *     parameters:
+ *       - in: path
+ *         name: idReference
+ *         required: false
+ *         schema:
+ *           type: uuid
+ *         description: Id de referencia a una publicacion, por la que es originado un chat.
+ *       - in: path
+ *         name: referenceType
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Tipo de publicacion de la referencia, puede ser Search o Adoption.
  *       - in: query
  *         name: idUserReceptor
  *         schema:
@@ -92,7 +104,7 @@ router.get('/:archived', verifyToken,getChatsController);
  *       500:
  *          description: Error interno del servicio
  */
-router.post('/:idUserReceptor', verifyToken,postCreateChat);
+router.post('/:idUserReceptor', verifyToken, postCreateChat);
 
 
 /**

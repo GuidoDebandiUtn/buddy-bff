@@ -2,7 +2,7 @@ import { Vaccine } from "../../models/Vaccine.js";
 import { sequelize } from "../../database/database.js";
 
 export async function createVaccine(data, idPet) {
-  const { titleVaccine, descriptionVaccine, vaccineDate } = data;
+  const { titleVaccine, descriptionVaccine, vaccineDate,doseQuantity, nextVaccineDate } = data;
 
   try {
     const newVaccine = await Vaccine.create(
@@ -11,9 +11,11 @@ export async function createVaccine(data, idPet) {
         descriptionVaccine,
         vaccineDate,
         idPet,
+        doseQuantity,
+        nextVaccineDate
       },
       {
-        fields: ["titleVaccine", "descriptionVaccine", "vaccineDate", "idPet"],
+        fields: ["titleVaccine", "descriptionVaccine", "vaccineDate", "idPet", "doseQuantity", "nextVaccineDate"],
       }
     );
 
@@ -26,7 +28,7 @@ export async function createVaccine(data, idPet) {
 export async function getAllVaccines(idPet) {
   try {
     const query = `
-        SELECT idVaccine, titleVaccine, descriptionVaccine, archive, DATE_FORMAT(vaccineDate, '%H:%i') AS vaccineHour, DATE_FORMAT(vaccineDate, '%d-%m-%Y') AS vaccineDate
+        SELECT idVaccine, doseQuantity, nextVaccineDate, titleVaccine, descriptionVaccine, archive, DATE_FORMAT(vaccineDate, '%H:%i') AS vaccineHour, DATE_FORMAT(vaccineDate, '%d-%m-%Y') AS vaccineDate
         FROM vaccines
         WHERE idPet = "${idPet}" and active = true`;
 
@@ -44,7 +46,7 @@ export async function getAllVaccines(idPet) {
 export async function getVaccineById(idVaccine) {
   try {
     const query = `
-        SELECT idVaccine, titleVaccine, descriptionVaccine, archive, DATE_FORMAT(vaccineDate, '%H:%i') AS vaccineHour, DATE_FORMAT(vaccineDate, '%d-%m-%Y') AS vaccineDate
+        SELECT idVaccine,doseQuantity, nextVaccineDate, titleVaccine, descriptionVaccine, archive, DATE_FORMAT(vaccineDate, '%H:%i') AS vaccineHour, DATE_FORMAT(vaccineDate, '%d-%m-%Y') AS vaccineDate
         FROM vaccines
         WHERE idVaccine = "${idVaccine}"`;
 
@@ -60,8 +62,7 @@ export async function getVaccineById(idVaccine) {
 }
 
 export async function updateVaccine(idVaccine, data) {
-  const { titleVaccine, descriptionVaccine, vaccineDate, nextVaccineDate } =
-    data;
+  const { titleVaccine, descriptionVaccine, vaccineDate,doseQuantity, nextVaccineDate } = data;
 
   try {
     const updates = {};
@@ -69,6 +70,9 @@ export async function updateVaccine(idVaccine, data) {
 
     if (titleVaccine) {
       updates.titleVaccine = titleVaccine;
+    }
+    if (doseQuantity) {
+      updates.doseQuantity = doseQuantity;
     }
 
     if (descriptionVaccine) {

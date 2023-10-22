@@ -38,6 +38,8 @@ const router = Router();
  *                 type: string
  *               idPetType:
  *                 type: string
+ *               idPetColor:
+ *                 type: string
  *               birthDate:
  *                 type: Date
  *               image:

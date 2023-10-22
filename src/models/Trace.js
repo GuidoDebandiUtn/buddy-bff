@@ -19,16 +19,6 @@ Trace.init(
       type: DataTypes.DOUBLE,
       allowNull: false,
     },
-    localityName: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    traceDate: {
-      type: DataTypes.DATE,
-    },
-    traceTime: {
-      type: DataTypes.TIME,
-    },
     images: {
       type: DataTypes.STRING,
     },

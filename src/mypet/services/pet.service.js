@@ -2,7 +2,7 @@ import { Pet } from "../../models/Pet.js";
 import { sequelize } from "../../database/database.js";
 
 export async function createPet(data, idUser) {
-  const { petName, birthDate, idPetType, idPetBreed, image    } = data;
+  const { petName, birthDate, idPetType, idPetBreed, image, idPetColor  } = data;
 
   try {
     const newPet = await Pet.create(
@@ -12,10 +12,12 @@ export async function createPet(data, idUser) {
         idUser,
         idPetType,
         idPetBreed,
-        image
+        idPetColor,
+        image,
+
       },
       {
-        fields: ["petName", "birthDate", "idUser", "idPetType", "idPetBreed","image"],
+        fields: ["petName", "birthDate", "idUser", "idPetType", "idPetBreed","image", "idPetColor" ],
       }
     );
 
@@ -28,7 +30,7 @@ export async function createPet(data, idUser) {
 export async function getAllPets(idUser) {
   try {
     const query = `
-        SELECT idPet, petName, birthDate, idPetType, idPetBreed, image 
+        SELECT idPet, petName, birthDate, idPetType, idPetBreed, image, idPetColor  
         FROM pets
         WHERE idUser = "${idUser}" and active = true
         ORDER BY petName`;
@@ -47,7 +49,7 @@ export async function getAllPets(idUser) {
 export async function getPetById(idPet) {
   try {
     const query = `
-            SELECT idPet, petName, birthDate, idPetType, idPetBreed, image
+            SELECT idPet, petName, birthDate, idPetType, idPetBreed, image, idPetColor  
             FROM pets
             WHERE idPet = "${idPet}"`;
 

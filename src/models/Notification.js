@@ -17,6 +17,7 @@ Notification.init(
     },
     severity: {
       type: DataTypes.STRING,
+      defaultValue: "medio",
     },
     language: {
       type: DataTypes.STRING,
