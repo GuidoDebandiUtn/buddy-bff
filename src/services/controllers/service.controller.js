@@ -27,7 +27,7 @@ export async function serviceCreate(req, res) {
       .json({ message:errorMessage, code: 400 });
   }
 
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   
   const requiredPermissions = ['CREATE_SERVICIO_REFUGIO', 'CREATE_SERVICIO_PETSHOP','CREATE_SERVICIO_VETERINARIA'];
   const hasPermissions = requiredPermissions.some(permission => userPermissions.includes(permission));

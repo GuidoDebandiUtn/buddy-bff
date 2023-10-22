@@ -168,7 +168,7 @@ export async function getUserByMail(mail) {
 export async function getPermissionsForUser(idUser) {
   try {
     const query = `
-      SELECT GROUP_CONCAT(p.tokenClaim SEPARATOR ' - ') AS permissions
+      SELECT p.tokenclaim AS permissions
       FROM users AS u
       JOIN userroles AS ur ON u.idUser = ur.idUser
       JOIN roles AS r ON r.idRole = ur.idRole
@@ -177,12 +177,13 @@ export async function getPermissionsForUser(idUser) {
       WHERE u.idUser = '${idUser}' and ur.active = true
       `;
 
-    const user = await sequelize.query(query, {
-      model: User,
-      mapToModel: true,
-    });
+      const user = await sequelize.query(query, {
+        type: sequelize.QueryTypes.SELECT,
+      });
+  
+      const permissionsArray = user.map((result) => result.tokenclaim);
 
-    return user;
+    return permissionsArray;
   } catch (error) {
     console.log(error);
     throw error;
