@@ -79,8 +79,6 @@ router.post("/register", userCreate);
  *                    type: string
  *                  name:
  *                    type: string
- *                  lastName:
- *                    type: string
  *      404:
  *        description: No se ha encotrado ningun usuario
  *        content:
@@ -179,8 +177,6 @@ router.get("/every", verifyToken, getUserAll);
  *               username:
  *                 type: string
  *               name:
- *                 type: string
- *               lastName:
  *                 type: string
  *               password:
  *                  type: string

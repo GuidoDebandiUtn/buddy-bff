@@ -167,7 +167,7 @@ export async function serviceDelete(req, res) {
 }
 
 export async function getServiceTypes(req, res) {
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   console.log(`permisos del usuario '${req.user.idUser}': ${userPermissions}`);
   

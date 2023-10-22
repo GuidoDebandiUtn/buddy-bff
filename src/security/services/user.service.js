@@ -112,7 +112,7 @@ export async function getAllUsers() {
 export async function getUserById(idUser) {
   try {
     const query = `
-    SELECT idUser, mail, userName, name, lastName, image,address,phoneNumber,cuitCuil,birthDate
+    SELECT idUser, mail, userName, name, image,address,phoneNumber,cuitCuil,birthDate
     FROM users
     WHERE idUser = '${idUser}'
     `;
@@ -123,6 +123,7 @@ export async function getUserById(idUser) {
 
     return user;
   } catch (error) {
+    console.error("error obteniendo al usuario: ", idUser, error )
     throw error;
   }
 }

@@ -205,7 +205,7 @@ export async function getEstablishmentDocuments(idUser) {
 export async function getEstablishmentById(idUser) {
   try {
     const query = `
-    SELECT idUser, mail, userName, name, lastName, image
+    SELECT idUser, mail, userName, name, image
     FROM users
     WHERE idUser = '${idUser}'
     `;
