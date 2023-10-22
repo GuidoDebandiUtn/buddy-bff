@@ -5,7 +5,7 @@ import { countActiveAdoptions, countActiveServices, countActiveUsers, countAdopt
 
 
 export async function getSucessLosts(req, res) {
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   try {
 
@@ -30,7 +30,7 @@ export async function getSucessLosts(req, res) {
 
 export async function getSucessAdoptions(req, res) {
   try {
-      const userPermissions = req.user.permissions[0].permissions.split(' - ');
+      const userPermissions = req.user.permissions;
       const requiredPermissions=['READ_REPORTS_SUCCESS_ADOPTIONS','READ_REPORTES'];
       const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
     
@@ -52,7 +52,7 @@ export async function getSucessAdoptions(req, res) {
 export async function getActiveUsers(req, res) {
 
     try {
-      const userPermissions = req.user.permissions[0].permissions.split(' - ');
+      const userPermissions = req.user.permissions;
       const requiredPermissions=['READ_REPORTS_ACTIVE_USERS','READ_REPORTES'];
       const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
     
@@ -74,7 +74,7 @@ export async function getActiveUsers(req, res) {
 export async function getActiveLosts(req, res) {
 
     try {
-      const userPermissions = req.user.permissions[0].permissions.split(' - ');
+      const userPermissions = req.user.permissions;
       const requiredPermissions=['READ_REPORTS_ACTIVE_LOSTS','READ_REPORTES'];
       const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
     
@@ -97,7 +97,7 @@ export async function getActiveAdoptions(req, res) {
 
     try {
 
-      const userPermissions = req.user.permissions[0].permissions.split(' - ');
+      const userPermissions = req.user.permissions;
       const requiredPermissions=['READ_REPORTS_ACTIVE_ADOPTIONS','READ_REPORTES'];
       const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
     
@@ -121,7 +121,7 @@ export async function getActiveServices(req, res) {
 
     try {
 
-      const userPermissions = req.user.permissions[0].permissions.split(' - ');
+      const userPermissions = req.user.permissions;
       const requiredPermissions=['READ_REPORTS_ACTIVE_SERVICES','READ_REPORTES'];
       const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
     

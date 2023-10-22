@@ -9,7 +9,7 @@ import {
 import { getUserById } from "../services/user.service.js";
 
 export async function getEstablishments(req, res) {
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const requiredPermissions=['READ_USUARIOS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
@@ -34,7 +34,7 @@ export async function getEstablishments(req, res) {
 
 export async function getEstablishment(req, res) {
   const { idUser } = req.params;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const requiredPermissions=['READ_USUARIOS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
@@ -105,7 +105,7 @@ export async function postValidateEstablishment(req, res) {
 export async function establishmentUpdate(req, res) {
   const { idUser } = req.params;
 
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const requiredPermissions=['WRITE_USUARIOS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
@@ -135,7 +135,7 @@ export async function establishmentUpdate(req, res) {
 
 export async function getRevisionEstablishments(req, res) {
 
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const requiredPermissions=['READ_LISTA_USUARIOS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
@@ -161,7 +161,7 @@ export async function getRevisionEstablishments(req, res) {
 export async function getDocumentsEstablishment(req, res) {
   const { idUser } = req.params;
 
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const requiredPermissions=['READ_DOCUMENTACION',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 

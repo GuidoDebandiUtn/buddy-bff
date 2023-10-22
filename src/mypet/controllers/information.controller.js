@@ -12,7 +12,7 @@ import { getPetById } from "../services/pet.service.js";
 export async function informationCreate(req, res) {
   const { idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   try {
     const pet = await getPetById(idPet);
@@ -43,7 +43,7 @@ export async function informationCreate(req, res) {
 export async function getInformations(req, res) {
   const { idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   try {
     const pet = await getPetById(idPet);
@@ -75,7 +75,7 @@ export async function getInformations(req, res) {
 export async function getInformation(req, res) {
   const { idInformation, idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   try {
     const pet = await getPetById(idPet);
@@ -109,7 +109,7 @@ export async function getInformation(req, res) {
 export async function informationUpdate(req, res) {
   const { idInformation, idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   try {
     const pet = await getPetById(idPet);
@@ -148,7 +148,7 @@ export async function informationUpdate(req, res) {
 export async function informationDelete(req, res) {
   const { idInformation, idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   try {
     const pet = await getPetById(idPet);
@@ -187,7 +187,7 @@ export async function informationDelete(req, res) {
 export async function informationActive(req, res) {
   const { idInformation, idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   
 
   try {
@@ -228,7 +228,7 @@ export async function informationActive(req, res) {
 export async function informationArchive(req, res) {
   const { idInformation, idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   try {
     const pet = await getPetById(idPet);

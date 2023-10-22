@@ -5,7 +5,7 @@ import { Service } from "../../models/Service.js";
 
 export async function postNewRating(req, res) {
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   const requiredPermissions = ["WRITE_CALIFICACIONES",];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
@@ -32,7 +32,7 @@ export async function postNewRating(req, res) {
 }
 export async function getRatingsByService(req, res) {
   const { idService } = req.params;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const idUser = req.user.idUser;
 
   const requiredPermissions = ["READ_CALIFICACIONES",];
@@ -72,7 +72,7 @@ export async function getRatingsByService(req, res) {
 export async function deleteRating(req, res) {
   const { idRating } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   const requiredPermissions = ["WRITE_CALIFICACIONES",];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
@@ -115,7 +115,7 @@ export async function putRating(req, res) {
   const { idRating } = req.params;
 
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   const requiredPermissions = ["WRITE_CALIFICACIONES",];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));

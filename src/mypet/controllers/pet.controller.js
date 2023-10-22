@@ -16,7 +16,7 @@ const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-([0-2]\d|3[0-1])$/;
 
 export async function petCreate(req, res) {
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
 
   const requiredPermissions=['CREATE_PET',];
@@ -78,7 +78,7 @@ export async function petCreate(req, res) {
 
 export async function getPets(req, res) {
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   try {
     const pets = await getAllPets(idUser);
@@ -103,7 +103,7 @@ export async function getPets(req, res) {
 export async function getPet(req, res) {
   const { idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   try {
     const pet = await getPetById(idPet);
@@ -130,7 +130,7 @@ export async function getPet(req, res) {
 export async function petUpdate(req, res) {
   const { idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   if (!dateRegex.test(req.body.birthDate)) {
     return res
@@ -188,7 +188,7 @@ export async function petUpdate(req, res) {
 export async function petDelete(req, res) {
   const { idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   try {
     const pet = await getPetById(idPet);
@@ -219,7 +219,7 @@ export async function petDelete(req, res) {
 export async function petActive(req, res) {
   const { idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   try {
     const pet = await getPetById(idPet);

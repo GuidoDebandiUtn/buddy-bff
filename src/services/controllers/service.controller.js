@@ -26,7 +26,7 @@ export async function serviceCreate(req, res) {
       .json({ message:errorMessage, code: 400 });
   }
 
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   
   const requiredPermissions = ['CREATE_SERVICIO_REFUGIO', 'CREATE_SERVICIO_PETSHOP','CREATE_SERVICIO_VETERINARIA'];
   const hasPermissions = requiredPermissions.some(permission => userPermissions.includes(permission));
@@ -55,7 +55,7 @@ export async function serviceCreate(req, res) {
 
 export async function getServicesByUser(req, res) {
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   const requiredPermissions = ["READ_SERVICIOS",];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
@@ -90,7 +90,7 @@ export async function getServicesByUser(req, res) {
 
 export async function getServices(req, res) {
   try {
-    const userPermissions = req.user.permissions[0].permissions.split(' - ');
+    const userPermissions = req.user.permissions;
 
     const requiredPermissions = ["READ_SERVICIOS",];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
@@ -115,7 +115,7 @@ export async function getServices(req, res) {
 
 export async function getEveryServices(req, res) {
   try {
-    const userPermissions = req.user.permissions[0].permissions.split(' - ');
+    const userPermissions = req.user.permissions;
 
     const requiredPermissions = ["READ_SERVICIOS","READ_LISTA_SERVICIOS",];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
@@ -141,7 +141,7 @@ export async function getEveryServices(req, res) {
 export async function serviceUpdate(req, res) {
   const { idService } = req.params;
   const idAuthor = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   const requiredPermissions = ["WRITE_SERVICIOS",];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
@@ -181,7 +181,7 @@ export async function serviceDelete(req, res) {
   const idAuthor = req.user.idUser;
   const { idService } = req.params;
   
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   const requiredPermissions = ["WRITE_SERVICIOS",];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
@@ -214,7 +214,7 @@ export async function serviceDelete(req, res) {
 
 export async function getServiceTypes(req, res) {
 
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   console.log(`permissions del usuario '${req.user.idUser}': ${userPermissions}`);
   
@@ -248,7 +248,7 @@ export async function getServiceTypes(req, res) {
 export async function getService(req, res) {
   const { idService } = req.params;
     
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   const requiredPermissions = ["READ_SERVICIOS",];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));

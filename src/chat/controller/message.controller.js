@@ -5,7 +5,7 @@ import { createMessage, getMessagesByChat } from "../service/message.service.js"
 export async function getMessagesController(req, res) {
     const { idChat } = req.params;
     const idUser = req.user.idUser;
-    const userPermissions = req.user.permissions[0].permissions.split(' - ');
+    const userPermissions = req.user.permissions;
   
     const requiredPermissions = ['READ_MENSAJES'];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
@@ -40,7 +40,7 @@ export async function postCreateMessage(req, res) {
     const { idChat } = req.params;
     const messageBody = req.body;
     const idUser = req.user.idUser;    
-    const userPermissions = req.user.permissions[0].permissions.split(' - ');
+    const userPermissions = req.user.permissions;
   
     const requiredPermissions = ['READ_MENSAJES','WRITE_MENSAJES'];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));

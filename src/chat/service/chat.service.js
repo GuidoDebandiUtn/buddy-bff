@@ -43,7 +43,7 @@ export async function getChatsByUser(idUser, archived) {
         [Op.in]: userIds,
       },
     },
-    attributes: ["idUser", "userName", "name", "lastName", "image"],
+    attributes: ["idUser", "userName", "name", "image"],
   });
 
   const result = chats.map((chat) => {

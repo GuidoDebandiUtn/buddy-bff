@@ -11,7 +11,7 @@ import {
 } from "../services/region.service.js";
 
 export async function regionCreate(req, res) {
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const requiredPermissions=['WRITE_REGION',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
@@ -54,7 +54,7 @@ export async function regionCreate(req, res) {
 }
 
 export async function getRegions(req, res) {
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const requiredPermissions=['READ_REGION',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
@@ -77,7 +77,7 @@ export async function getRegions(req, res) {
 }
 
 export async function getRegionsEvery(req, res) {
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const requiredPermissions=['READ_REGION_LIST','READ_PARAMETROS'];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
@@ -101,7 +101,7 @@ export async function getRegionsEvery(req, res) {
 
 export async function getRegion(req, res) {
   const { idRegion } = req.params;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const requiredPermissions=['READ_REGION',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
@@ -127,7 +127,7 @@ export async function getRegion(req, res) {
 
 export async function regionUpdate(req, res) {
   const { idRegion } = req.params;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const requiredPermissions=['WRITE_REGION',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
@@ -168,7 +168,7 @@ export async function regionUpdate(req, res) {
 
 export async function regionDelete(req, res) {
   const { idRegion } = req.params;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const requiredPermissions=['WRITE_REGION',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
@@ -196,7 +196,7 @@ export async function regionDelete(req, res) {
 
 export async function regionActive(req, res) {
   const { idRegion } = req.params;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
   const requiredPermissions=['WRITE_REGION',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 

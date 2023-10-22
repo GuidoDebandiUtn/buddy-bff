@@ -16,7 +16,7 @@ const dateRegex = /^(\d{4})-(0?[1-9]|1[0-2])-(0?[1-9]|[12]\d|3[01]) ([01]\d|2[0-
 export async function vaccineCreate(req, res) {
   const { idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   if (!dateRegex.test(req.body.vaccineDate)) {
     console.log ("error en el formato de la fecha de la vacuna: obtenido: %s, esperado AAAA-mm-dd HH:mm:ss",req.body.vaccineDate);
@@ -60,7 +60,7 @@ export async function vaccineCreate(req, res) {
 export async function getVaccines(req, res) {
   const { idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   try {
     const pet = await getPetById(idPet);
@@ -94,7 +94,7 @@ export async function getVaccines(req, res) {
 export async function getVaccine(req, res) {
   const { idVaccine, idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   try {
     const pet = await getPetById(idPet);
@@ -129,7 +129,7 @@ export async function getVaccine(req, res) {
 export async function vaccineUpdate(req, res) {
   const { idVaccine, idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   try {
     const pet = await getPetById(idPet);
@@ -175,7 +175,7 @@ export async function vaccineUpdate(req, res) {
 export async function vaccineDelete(req, res) {
   const { idVaccine, idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   try {
     const pet = await getPetById(idPet);
@@ -214,7 +214,7 @@ export async function vaccineDelete(req, res) {
 export async function vaccineActive(req, res) {
   const { idVaccine, idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   try {
     const pet = await getPetById(idPet);
@@ -253,7 +253,7 @@ export async function vaccineActive(req, res) {
 export async function vaccineArchive(req, res) {
   const { idVaccine, idPet } = req.params;
   const idUser = req.user.idUser;
-  const userPermissions = req.user.permissions[0].permissions.split(' - ');
+  const userPermissions = req.user.permissions;
 
   try {
     const pet = await getPetById(idPet);
