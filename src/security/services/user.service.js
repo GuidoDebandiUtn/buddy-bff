@@ -29,8 +29,30 @@ export async function createUser(data) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await User.create(
-      { mail, password: hashedPassword, userName, name, image,address,phoneNumber,cuitCuil,birthDate },
-      { fields: ["mail", "password", "userName", "image", "address",,"phoneNumber","cuitCuil","birthDate"] }
+      {
+        mail,
+        password: hashedPassword,
+        userName,
+        name,
+        image,
+        address,
+        phoneNumber,
+        cuitCuil,
+        birthDate,
+      },
+      {
+        fields: [
+          "mail",
+          "password",
+          "userName",
+          "image",
+          "address",
+          ,
+          "phoneNumber",
+          "cuitCuil",
+          "birthDate",
+        ],
+      }
     );
 
     const idUser = newUser.idUser;
@@ -123,7 +145,7 @@ export async function getUserById(idUser) {
 
     return user;
   } catch (error) {
-    console.error("error obteniendo al usuario: ", idUser, error )
+    console.error("error obteniendo al usuario: ", idUser, error);
     throw error;
   }
 }
@@ -178,11 +200,12 @@ export async function getPermissionsForUser(idUser) {
       WHERE u.idUser = '${idUser}' and ur.active = true
       `;
 
-      const user = await sequelize.query(query, {
-        type: sequelize.QueryTypes.SELECT,
-      });
-  
-      const permissionsArray = user.map((result) => result.tokenclaim);
+    const user = await sequelize.query(query, {
+      type: sequelize.QueryTypes.SELECT,
+    });
+
+    const permissionsArray = [];
+    user.map((user) => permissionsArray.push(user.permissions));
 
     return permissionsArray;
   } catch (error) {
@@ -294,7 +317,6 @@ export async function updateUser(idUser, data) {
       updates.address = address;
     }
 
-
     if (image) {
       updates.image = image;
     }
@@ -356,7 +378,17 @@ export async function getUsersByPermission(tokenClaim) {
     }
 
     const users = await User.findAll({
-      attributes: ["idUser", "username", "image", "name", "mail","address","phoneNumber","cuitCuil","birthDate"],
+      attributes: [
+        "idUser",
+        "username",
+        "image",
+        "name",
+        "mail",
+        "address",
+        "phoneNumber",
+        "cuitCuil",
+        "birthDate",
+      ],
       group: ["idUser"],
       include: [
         {
@@ -385,7 +417,17 @@ export async function getUsersByPermission(tokenClaim) {
 export async function getUsersBylocality(idLocality) {
   try {
     const users = await User.findAll({
-      attributes: ["idUser", "username", "image", "name", "mail","address","phoneNumber","cuitCuil","birthDate"],
+      attributes: [
+        "idUser",
+        "username",
+        "image",
+        "name",
+        "mail",
+        "address",
+        "phoneNumber",
+        "cuitCuil",
+        "birthDate",
+      ],
       where: { idLocality: idLocality, idLocality },
     });
     const formattedUsers = users.map((user) => user.get({ plain: true }));
@@ -405,7 +447,17 @@ export async function getUsersByRole(roleName) {
   roleName = roleName.toUpperCase();
   try {
     const users = await User.findAll({
-      attributes: ["idUser", "username", "image", "name", "mail","address","phoneNumber","cuitCuil","birthDate"],
+      attributes: [
+        "idUser",
+        "username",
+        "image",
+        "name",
+        "mail",
+        "address",
+        "phoneNumber",
+        "cuitCuil",
+        "birthDate",
+      ],
       group: ["idUser"],
       include: [
         {

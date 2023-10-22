@@ -27,7 +27,7 @@ export async function userCreate(req, res) {
     if (user[0]) {
       return res
         .status(400)
-        .json({ message: "Este mail ya se necuentra en uso" });
+        .json({ message: "Este mail ya se encuentra en uso" });
     }
 
     const newUser = await createUser(data);
@@ -231,7 +231,7 @@ export async function userPermission(req, res) {
       });
     }
 
-    return res.status(200).json(permissions[0]);
+    return res.status(200).json(permissions);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: error.message });
