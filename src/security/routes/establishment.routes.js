@@ -40,8 +40,6 @@ const router = Router();
  *                    type: string
  *                  name:
  *                    type: string
- *                  lastName:
- *                    type: string
  *      404:
  *        description: No se ha encotrado ningun establecimiento
  *        content:
@@ -72,8 +70,6 @@ router.get("/", verifyToken, getEstablishments);
  *               establishmentname:
  *                 type: string
  *               name:
- *                 type: string
- *               lastName:
  *                 type: string
  *               password:
  *                  type: string
@@ -151,8 +147,6 @@ router.post("/validateEstablishment/:idUser", verifyToken, postValidateEstablish
  *                  establishmentName:
  *                    type: string
  *                  name:
- *                    type: string
- *                  lastName:
  *                    type: string
  *      404:
  *        description: No se ha encotrado ningun establecimiento

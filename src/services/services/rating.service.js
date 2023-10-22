@@ -41,6 +41,13 @@ export async function createRating(idUser, data) {
 
 
 export async function obtainRatingByService(idService) {
+    const service = await getServiceById(idService);
+
+    console.debug("se obtuvo el siguiente servicio: %s, para el id: %s", service,idService);
+    if(!service[0]){
+        throw {message: "Error obteniendo el servicio asociado a las valoraciones", code: 400};
+    }
+
   
     try {
       const ratings = await Rating.findAll(

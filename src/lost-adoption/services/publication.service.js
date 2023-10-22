@@ -40,20 +40,20 @@ export async function getPublicationsByUser(idUser) {
     {model: User,attributes:["userName","idUser"],},
     {model:PetColor, attributes: ['petColorName']},
     {model:Locality, attributes: ['localityName']},
-    {model:PetBreed,include: [{model:PetType, attributes: ['petTypeName']}], attributes: ['petBreedName','size','intelligence','temperament','lifespan','idPetType','idPetBreed']},
+    {model:PetBreed,include: [{model:PetType, attributes: ['petTypeName']}], attributes: ['petBreedName','idPetBreed']},
     {model:PublicationState, attributes: ['name'],where: {name:'ACTIVO'}},
   ];
   try {
     const adoptions =await PublicationAdoption.findAll({where: {idUser: idUser}, include: include});
     console.log ("adopciones obtenidas correctamente");
-    include.push({model:Trace, attributes:['latitude','longitude','traceDate','traceTime','images']});
+    include.push({model:Trace, attributes:['images','latitude','longitude','createdAt']});
     const searchs =await PublicationSearch.findAll({where: {idUser: idUser}, include: include});
     console.log ("busquedas obtenidas correctamente");
 
     
     return  {adoptions,searchs};
   } catch (err) {
-    console.error('Error al obtener las publicaciones del usuario:', error);
+    console.error('Error al obtener las publicaciones del usuario:', err);
     throw err;
   }
 };
@@ -328,7 +328,7 @@ function getModel(modelType) {
     { model: Locality, attributes: ["localityName"] },
     { model: PetBreed,
       include: [{ model: PetType, attributes: ["petTypeName"] }],
-      attributes: ["petBreedName","weather","idPetType","idPetBreed",],
+      attributes: ["petBreedName","idPetType","idPetBreed",],
     },
     {model: PublicationState,attributes: ["name","idPublicationState"],where: { name: "ACTIVO" },},
 
@@ -347,8 +347,6 @@ function getModel(modelType) {
   } else if (modelType.toUpperCase() == "SEARCH") {
     model = PublicationSearch;
     attributes.push(
-      "latitude",
-      "longitude",
       "isFound",
       "lostDate",
       "idPublicationSearch"
@@ -356,7 +354,7 @@ function getModel(modelType) {
     orderBy = "lostDate";
     include.push({
       model: Trace,
-      attributes: ["latitude", "longitude", "traceDate", "traceTime", "images"],
+      attributes: [ "images","idTrace","createdAt","latitude","longitude"],
     });
   }
 

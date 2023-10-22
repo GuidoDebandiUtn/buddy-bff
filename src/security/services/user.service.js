@@ -145,6 +145,7 @@ export async function getUserById(idUser) {
 
     return user;
   } catch (error) {
+    console.error("error obteniendo al usuario: ", idUser, error )
     throw error;
   }
 }
