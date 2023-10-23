@@ -9,7 +9,7 @@ export async function getChatsController(req, res) {
   const idUser = req.user.idUser;
   const userPermissions = req.user.permissions;
 
-  const requiredPermissions = ['READ_CHAT',];
+  let requiredPermissions = ['READ_CHAT',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -46,7 +46,7 @@ export async function postCreateChat(req, res) {
   const idUserEmitter = req.user.idUser;
   const userPermissions = req.user.permissions;
 
-  const requiredPermissions = ['READ_CHAT', 'WRITE_CHAT'];
+  let requiredPermissions = ['READ_CHAT', 'WRITE_CHAT'];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -78,7 +78,7 @@ export async function postArchiveChat(req, res) {
   const idUser = req.user.idUser;
   const userPermissions = req.user.permissions;
 
-  const requiredPermissions = ['READ_CHAT', 'WRITE_CHAT'];
+  let requiredPermissions = ['READ_CHAT', 'WRITE_CHAT'];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {

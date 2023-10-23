@@ -16,7 +16,7 @@ import {
 
 export async function roleCreate(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions = ["WRITE_ROLES"];
+  let requiredPermissions = ["WRITE_ROLES"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );
@@ -47,7 +47,7 @@ export async function roleCreate(req, res) {
 
 export async function getRoles(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions = ["READ_ROLES"];
+  let requiredPermissions = ["READ_ROLES"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );
@@ -75,7 +75,7 @@ export async function getRoles(req, res) {
 export async function getRole(req, res) {
   const { idRole } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions = ["READ_ROLES"];
+  let requiredPermissions = ["READ_ROLES"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );
@@ -129,7 +129,7 @@ export async function getRoleEvery(req, res) {
 export async function roleUpdate(req, res) {
   const { idRole } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions = ["WRITE_ROLES"];
+  let requiredPermissions = ["WRITE_ROLES"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );
@@ -171,7 +171,7 @@ export async function roleUpdate(req, res) {
 export async function roleDelete(req, res) {
   const { idRole } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions = ["WRITE_ROLES"];
+  let requiredPermissions = ["WRITE_ROLES"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );
@@ -200,7 +200,7 @@ export async function roleDelete(req, res) {
 export async function roleActive(req, res) {
   const { idRole } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions = ["WRITE_ROLES"];
+  let requiredPermissions = ["WRITE_ROLES"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );
@@ -233,7 +233,7 @@ export async function addPermission(req, res) {
   const { idRole } = req.params;
   const { idPermission } = req.body;
   const userPermissions = req.user.permissions;
-  const requiredPermissions = ["WRITE_ROLES"];
+  let requiredPermissions = ["WRITE_ROLES"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );
@@ -277,7 +277,7 @@ export async function addSeveralPermissions(req, res) {
   const { idRole } = req.params;
   const { permissions } = req.body;
   const userPermissions = req.user.permissions;
-  const requiredPermissions = ["WRITE_ROLES"];
+  let requiredPermissions = ["WRITE_ROLES"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );
@@ -321,7 +321,7 @@ export async function addSeveralPermissions(req, res) {
 export async function takePermission(req, res) {
   const { idRole, idPermission } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions = ["WRITE_ROLES"];
+  let requiredPermissions = ["WRITE_ROLES"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );

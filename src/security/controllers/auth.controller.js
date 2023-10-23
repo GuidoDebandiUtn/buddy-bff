@@ -75,7 +75,7 @@ export async function verifyToken(req, res, next) {
 
     if (!permissions) {
       return res.status(400).json({
-        error: "Error en la obtencion de los permissions del usuario",
+        error: "Error en la obtencion de los permisos del usuario",
       });
     }
 

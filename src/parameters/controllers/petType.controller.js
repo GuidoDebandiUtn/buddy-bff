@@ -11,7 +11,7 @@ import {
 
 export async function petTypeCreate(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions = ["WRITE_MI_MASCOTA_TYPE"];
+  let requiredPermissions = ["READ_PET_TYPE"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );
@@ -43,7 +43,7 @@ export async function petTypeCreate(req, res) {
 
 export async function getPetTypes(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions = ["READ_PET_TYPE_LIST"];
+  let requiredPermissions = ["READ_PET_TYPE_LIST"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );
@@ -72,7 +72,7 @@ export async function getPetTypes(req, res) {
 
 export async function getPetTypesEvery(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions = ["READ_MI_MASCOTA_TYPE_LIST", "READ_PARAMETROS"];
+  let requiredPermissions = ["READ_PET_TYPE_LIST", "READ_PARAMETROS"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );
@@ -102,7 +102,7 @@ export async function getPetTypesEvery(req, res) {
 export async function getPetType(req, res) {
   const { idPetType } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions = ["READ_MI_MASCOTA_TYPE"];
+  let requiredPermissions = ["READ_PET_TYPE"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );
@@ -133,7 +133,7 @@ export async function getPetType(req, res) {
 export async function petTypeUpdate(req, res) {
   const { idPetType } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions = ["WRITE_MI_MASCOTA_TYPE"];
+  let requiredPermissions = ["WRITE_PET_TYPE"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );
@@ -152,14 +152,6 @@ export async function petTypeUpdate(req, res) {
         .json({ message: "No existe el tipo de mascota con ese id" });
     }
 
-    const duplicate = await getPetTypeByName(req.body.petTypeName);
-
-    if (duplicate[0]) {
-      return res
-        .status(400)
-        .json({ message: "Ya existe un Tipo de mascota con este nombre" });
-    }
-
     await updatePetType(req.body, idPetType);
 
     return res
@@ -175,7 +167,7 @@ export async function petTypeUpdate(req, res) {
 export async function petTypeDelete(req, res) {
   const { idPetType } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions = ["WRITE_MI_MASCOTA_TYPE"];
+  let requiredPermissions = ["WRITE_PET_TYPE"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );
@@ -209,7 +201,7 @@ export async function petTypeDelete(req, res) {
 export async function petTypeActive(req, res) {
   const { idPetType } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions = ["WRITE_MI_MASCOTA_TYPE"];
+  let requiredPermissions = ["WRITE_PET_TYPE"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );

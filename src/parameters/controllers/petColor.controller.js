@@ -11,7 +11,7 @@ import {
 
 export async function petColorCreate(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_COLOR',];
+  let requiredPermissions=['WRITE_COLOR',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -37,7 +37,7 @@ export async function petColorCreate(req, res) {
 
 export async function getPetColors(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_COLOR',];
+  let requiredPermissions=['READ_COLOR',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -62,7 +62,7 @@ export async function getPetColors(req, res) {
 
 export async function getPetColorsEvery(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_COLOR_LIST','READ_PARAMETROS'];
+  let requiredPermissions=['READ_COLOR_LIST','READ_PARAMETROS'];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -107,7 +107,7 @@ export async function getPetColor(req, res) {
 export async function petColorUpdate(req, res) {
   const { idPetColor } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_COLOR',];
+  let requiredPermissions=['WRITE_COLOR',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -145,7 +145,7 @@ export async function petColorUpdate(req, res) {
 export async function petColorDelete(req, res) {
   const { idPetColor } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_COLOR',];
+  let requiredPermissions=['WRITE_COLOR',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -175,7 +175,7 @@ export async function petColorDelete(req, res) {
 export async function petColorActive(req, res) {
   const { idPetColor } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_COLOR',];
+  let requiredPermissions=['WRITE_COLOR',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {

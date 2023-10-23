@@ -10,7 +10,7 @@ import { getPetTypeByIdIn } from "../../parameters/services/petType.service.js";
 import { Rating } from "../../models/Rating.js";
 
 export async function createService(idUser, data) {
-  const {
+  let {
     serviceTitle,
     serviceDescription,
     openTime,
@@ -242,6 +242,11 @@ export async function getAllServices() {
 }
 
 export async function updateService(service, data) {
+
+  if(true == data.open24hs){
+    data.openTime = "00:00";
+    data.closeTime = "23:59";
+  }
   try {
     const updateOptions = { where: { idService: service.idService } };
 
@@ -255,7 +260,7 @@ export async function updateService(service, data) {
       ...(data.openTime && { openTime: data.openTime }),
       ...(data.closeTime && { closeTime: data.closeTime }),
       ...(data.address && { address: data.address }),
-      ...(data.open24hs && { open24hs: data.open24hs }),
+      ...(data.open24hs!==undefined && { open24hs: data.open24hs }),
       ...(data.idLocality && { idLocality: data.idLocality }),
     };
 
@@ -305,7 +310,7 @@ export async function getServiceById(idService) {
       INNER JOIN servicepets   ON services.idService = ServicePets.idService
       INNER JOIN PetTypes ON ServicePets.idPetType = PetTypes.idPetType
       INNER JOIN servicetypes ON servicetypes.idServiceType = services.idServiceType
-      WHERE  ultimosEstados.active = 1 AND services.idService = '${idService}'
+      WHERE  services.idService = '${idService}'
       GROUP BY services.serviceTitle,services.serviceDescription,services.address,services.openTime,services.closeTime, services.open24hs
     `;
 
@@ -336,17 +341,16 @@ export async function getServiceById(idService) {
         console.debug("imagen desíes del parse: ", service.images);
       }
     }
-
     return servicesWithPetTypes;
   } catch (error) {
-    console.log(error);
+    console.log("error recuperando el servicio: ", error);
     throw error;
   }
 }
 
 export async function deleteService(service, idAuthor) {
   try {
-    console.log("servicio enviado a eliminar: ",service);
+    console.log("servicio enviado a eliminar: ", service);
     const serviceState = (await getStateForService(service.idService))[0];
     const serviceStateInactive = (await getServiceStateByName("INACTIVO"))[0];
 

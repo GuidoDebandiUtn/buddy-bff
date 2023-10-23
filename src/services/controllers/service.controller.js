@@ -28,7 +28,7 @@ export async function serviceCreate(req, res) {
 
   const userPermissions = req.user.permissions;
   
-  const requiredPermissions = ['CREATE_SERVICIO_REFUGIO', 'CREATE_SERVICIO_PETSHOP','CREATE_SERVICIO_VETERINARIA'];
+  let requiredPermissions = ['CREATE_SERVICIO_REFUGIO', 'CREATE_SERVICIO_PETSHOP','CREATE_SERVICIO_VETERINARIA'];
   const hasPermissions = requiredPermissions.some(permission => userPermissions.includes(permission));
 
   if (!hasPermissions) {
@@ -57,7 +57,7 @@ export async function getServicesByUser(req, res) {
   const idUser = req.user.idUser;
   const userPermissions = req.user.permissions;
 
-  const requiredPermissions = ["READ_SERVICIOS",];
+  let requiredPermissions = ["READ_SERVICIOS",];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
 
@@ -92,7 +92,7 @@ export async function getServices(req, res) {
   try {
     const userPermissions = req.user.permissions;
 
-    const requiredPermissions = ["READ_SERVICIOS",];
+    let requiredPermissions = ["READ_SERVICIOS",];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
   
@@ -117,7 +117,7 @@ export async function getEveryServices(req, res) {
   try {
     const userPermissions = req.user.permissions;
 
-    const requiredPermissions = ["READ_SERVICIOS","READ_LISTA_SERVICIOS",];
+    let requiredPermissions = ["READ_SERVICIOS","READ_LISTA_SERVICIOS",];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
   
@@ -143,7 +143,7 @@ export async function serviceUpdate(req, res) {
   const idAuthor = req.user.idUser;
   const userPermissions = req.user.permissions;
 
-  const requiredPermissions = ["WRITE_SERVICIOS",];
+  let requiredPermissions = ["WRITE_SERVICIOS",];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   try {
@@ -183,7 +183,7 @@ export async function serviceDelete(req, res) {
   
   const userPermissions = req.user.permissions;
 
-  const requiredPermissions = ["WRITE_SERVICIOS",];
+  let requiredPermissions = ["WRITE_SERVICIOS",];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
 
@@ -215,9 +215,8 @@ export async function serviceDelete(req, res) {
 export async function getServiceTypes(req, res) {
   const userPermissions = req.user.permissions;
 
-  console.log(`permissions del usuario '${req.user.idUser}': ${userPermissions}`);
   
-  const requiredPermissions = ['CREATE_SERVICIO_REFUGIO', 'CREATE_SERVICIO_PETSHOP','CREATE_SERVICIO_VETERINARIA'];
+  let requiredPermissions = ['CREATE_SERVICIO_REFUGIO', 'CREATE_SERVICIO_PETSHOP','CREATE_SERVICIO_VETERINARIA'];
   const hasPermissions = requiredPermissions.some(permission => userPermissions.includes(permission));
 
   if (!hasPermissions) {
@@ -249,7 +248,7 @@ export async function getService(req, res) {
     
   const userPermissions = req.user.permissions;
 
-  const requiredPermissions = ["READ_SERVICIOS",];
+  let requiredPermissions = ["READ_SERVICIOS",];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
 

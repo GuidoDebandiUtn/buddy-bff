@@ -12,7 +12,7 @@ import { getCountryById } from "../services/country.service.js";
 
 export async function provinceCreate(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions = ["WRITE_PROVINCE"];
+  let requiredPermissions = ["WRITE_PROVINCE"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );
@@ -38,8 +38,10 @@ export async function provinceCreate(req, res) {
       req.body.idCountry
     );
 
+    console.log(duplicate[0]);
+
     if (duplicate[0]) {
-      province = await activeProvince(duplicate[0].idCountry);
+      province = await activeProvince(duplicate[0].idProvince);
       return res.status(201).json({ message: "Se ha reactivado la provincia" });
     } else {
       province = await createProvince(req.body);
@@ -54,7 +56,7 @@ export async function provinceCreate(req, res) {
 
 export async function getProvinces(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions = ["READ_PROVINCE"];
+  let requiredPermissions = ["READ_PROVINCE"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );
@@ -81,7 +83,7 @@ export async function getProvinces(req, res) {
 
 export async function getProvincesEvery(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions = ["READ_PROVINCE_LIST", "READ_PARAMETROS"];
+  let requiredPermissions = ["READ_PROVINCE_LIST", "READ_PARAMETROS"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );
@@ -109,7 +111,7 @@ export async function getProvincesEvery(req, res) {
 export async function getProvince(req, res) {
   const { idProvince } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions = ["READ_PROVINCE"];
+  let requiredPermissions = ["READ_PROVINCE"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );
@@ -139,7 +141,7 @@ export async function getProvince(req, res) {
 export async function provinceUpdate(req, res) {
   const { idProvince } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions = ["WRITE_PROVINCE"];
+  let requiredPermissions = ["WRITE_PROVINCE"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );
@@ -157,17 +159,7 @@ export async function provinceUpdate(req, res) {
         .status(400)
         .json({ message: "No existe ninguna provincia con este id" });
     }
-    console.log(province[0].idCountry);
-    const duplicate = await getProvinceByName(
-      req.body.provinceName,
-      province[0].idCountry
-    );
-
-    if (duplicate[0]) {
-      return res
-        .status(400)
-        .json({ message: "Ya existe una provincia con este nombre" });
-    }
+    console.debug(province[0].idCountry);
 
     await updateProvince(req.body, idProvince);
 
@@ -184,7 +176,7 @@ export async function provinceUpdate(req, res) {
 export async function provinceDelete(req, res) {
   const { idProvince } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions = ["WRITE_PROVINCE"];
+  let requiredPermissions = ["WRITE_PROVINCE"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );
@@ -216,7 +208,7 @@ export async function provinceDelete(req, res) {
 export async function provinceActive(req, res) {
   const { idProvince } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions = ["WRITE_PROVINCE"];
+  let requiredPermissions = ["WRITE_PROVINCE"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );

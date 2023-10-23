@@ -7,7 +7,7 @@ export async function changeServiceState(req, res) {
   const idUserAuthor = req.user.idUser;
   const userPermissions = req.user.permissions;
 
-  const requiredPermissions = ["WRITE_SERVICIOS",];
+  let requiredPermissions = ["WRITE_SERVICIOS",];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   try {

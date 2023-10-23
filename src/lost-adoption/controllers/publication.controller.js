@@ -58,7 +58,7 @@ export async function obtainPublicationsByUser(req, res) {
   const idUser = req.user.idUser;
   const userPermissions = req.user.permissions;
 
-  const requiredPermissions = [
+  let requiredPermissions = [
     "READ_PUBLICACION_BUSQUEDA",
     "READ_PUBLICACION_ADOPCION",
   ];
@@ -103,7 +103,7 @@ export async function postSearch(req, res) {
   const idUser = req.user.idUser;
   const userPermissions = req.user.permissions;
 
-  const requiredPermissions = ["CREATE_PUBLICACION_BUSQUEDA"];
+  let requiredPermissions = ["CREATE_PUBLICACION_BUSQUEDA"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );
@@ -132,7 +132,7 @@ export async function postAdoption(req, res) {
   const idUser = req.user.idUser;
   const userPermissions = req.user.permissions;
 
-  const requiredPermissions = ["CREATE_PUBLICACION_ADOPCION"];
+  let requiredPermissions = ["CREATE_PUBLICACION_ADOPCION"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );
@@ -177,7 +177,7 @@ export async function deletePublication(req, res) {
   console.debug(
     `publicacion obtenida correctamente. entidad obtenida: '${publication}'`
   );
-  if (!publication[0]) {
+  if (!publication) {
     return res
       .status(404)
       .json({ message: `No se ha podido encontrar la publicacion a eliminar` });
@@ -224,7 +224,7 @@ export async function putPublication(req, res) {
       .json({ message: `El parametro modelType es obligatorio`, code: 400 });
   }
 
-  const requiredPermissions = [];
+  let requiredPermissions = [];
   if (modelType.toUpperCase() == "ADOPTION") {
     requiredPermissions = [
       "WRITE_PUBLICACION_ADOPCION",
@@ -242,13 +242,14 @@ export async function putPublication(req, res) {
   );
 
   let publication = await getPublicationById(idPublication, modelType);
-  if (!publication[0]) {
+  console.debug("resultado busqueda publicacion: ", publication,", id: ",idPublication);
+  if (!publication) {
     return res.status(404).json({
       message: `No se ha podido encontrar la publicacion de Id: '${idPublication}'.`,
     });
   }
-
-  if (!hasAllPermissions && publication[0].idUser != idUser) {
+  console.debug("idUser de la publicacion: ", publication.user.idUser,", id: ",idPublication);
+  if (!hasAllPermissions && publication.user.idUser != idUser) {
     return res
       .status(403)
       .json({ message: "No se cuenta con todos los permissions necesarios" });
@@ -281,7 +282,7 @@ export async function postSolvePublication(req, res) {
       .json({ message: `El parametro modelType es obligatorio`, code: 400 });
   }
 
-  const requiredPermissions = [];
+  let requiredPermissions = [];
   if (modelType.toUpperCase() == "ADOPTION") {
     requiredPermissions = [
       "WRITE_PUBLICACION_ADOPCION",
@@ -299,7 +300,7 @@ export async function postSolvePublication(req, res) {
   );
 
   let publication = await getPublicationById(idPublication, modelType);
-  if (!publication[0]) {
+  if (!publication) {
     return res.status(404).json({
       message: `No se ha podido encontrar la publicacion de Id: '${idPublication}'.`,
     });
@@ -355,7 +356,7 @@ function checkParameters(publicationDto, modelType) {
     !publicationDto.idPetColor
   ) {
     throw new Error(
-      `Error en el atributos de las relaciones de la publicacion, esperados: petTypee, petColor y Locality. Valores obtenidos: petType: ${publicationDto.idPetType}, petColor: ${publicationDto.idPetColor}, Locality:${publicationDto.idLocality}.`
+      `Error en el atributos de las relaciones de la publicacion, esperados: petType, petColor y locality. Valores obtenidos: petType: ${publicationDto.idPetType}, petColor: ${publicationDto.idPetColor}, Locality:${publicationDto.idLocality}.`
     );
   }
 

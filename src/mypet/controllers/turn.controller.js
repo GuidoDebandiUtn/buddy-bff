@@ -11,7 +11,7 @@ import { getPetById } from "../services/pet.service.js";
 
 
 
-const dateRegex = /^(\d{4})-(0?[1-9]|1[0-2])-(0?[1-9]|[12]\d|3[01]) ([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
+const dateRegex = /^(\d{4}[-\/\\]\d{2}[-\/\\]\d{2}|\d{2}[-\/\\]\d{2}[-\/\\]\d{4})(?: \d{2}:\d{2}:\d{2})?$/;
 
 export async function turnCreate(req, res) {
   const { idPet } = req.params;
@@ -27,7 +27,7 @@ export async function turnCreate(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    const requiredPermissions=['WRITE_MI_MASCOTA',];
+    let requiredPermissions=['WRITE_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pet[0].idUser != idUser) {
@@ -66,7 +66,7 @@ export async function getTurns(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    const requiredPermissions=['READ_MI_MASCOTA',];
+    let requiredPermissions=['READ_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pet[0].idUser != idUser) {
@@ -99,7 +99,7 @@ export async function getTurn(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    const requiredPermissions=['READ_MI_MASCOTA',];
+    let requiredPermissions=['READ_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pet[0].idUser != idUser) {
@@ -141,7 +141,7 @@ export async function turnUpdate(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    const requiredPermissions=['WRITE_MI_MASCOTA',];
+    let requiredPermissions=['WRITE_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pet[0].idUser != idUser) {
@@ -180,7 +180,7 @@ export async function turnDelete(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    const requiredPermissions=['WRITE_MI_MASCOTA',];
+    let requiredPermissions=['WRITE_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pet[0].idUser != idUser) {
@@ -227,7 +227,7 @@ export async function turnActive(req, res) {
         .json({ message: "No existe ningun turno con ese id" });
     }
 
-    const requiredPermissions=['WRITE_MI_MASCOTA',];
+    let requiredPermissions=['WRITE_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pet[0].idUser != idUser) {
@@ -258,7 +258,7 @@ export async function turnArchive(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    const requiredPermissions=['WRITE_MI_MASCOTA',];
+    let requiredPermissions=['WRITE_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pet[0].idUser != idUser) {

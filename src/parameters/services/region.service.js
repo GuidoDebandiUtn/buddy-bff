@@ -84,7 +84,7 @@ export async function getRegionById(idRegion) {
 export async function getRegionByName(regionName, idProvince) {
   try {
     const query = `
-    SELECT idRegion, regionName, surface, population
+    SELECT idRegion, regionName, surface, population, idProvince
     FROM regions
     WHERE regionName = '${regionName.toUpperCase()}' and idProvince = '${idProvince}'
     `;

@@ -7,7 +7,7 @@ export async function postNewRating(req, res) {
   const idUser = req.user.idUser;
   const userPermissions = req.user.permissions;
 
-  const requiredPermissions = ["WRITE_CALIFICACIONES",];
+  let requiredPermissions = ["WRITE_CALIFICACIONES",];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
 
@@ -35,20 +35,19 @@ export async function getRatingsByService(req, res) {
   const userPermissions = req.user.permissions;
   const idUser = req.user.idUser;
 
-  const requiredPermissions = ["READ_CALIFICACIONES",];
-  const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
-
-
-  const service = await getServiceById(idService);
-  if (!service[0]) {
-    throw { message: "Error obteniendo el servicio asociado a las valoraciones", code: 400 };
-  }
-
-  if (!hasAllPermissions && service[0].idUser !== idUser) {
-    return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
-  }
-
   try {
+    let requiredPermissions = ["READ_CALIFICACIONES",];
+    const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
+
+    const service = await getServiceById(idService);
+    if (!service[0]) {
+      throw { message: "Error obteniendo el servicio asociado a las valoraciones", code: 400 };
+    }
+
+    if (!hasAllPermissions && service[0].idUser !== idUser) {
+      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+    }
+
     const ratings = await obtainRatingByService(idService);
 
     if (!ratings[0]) {
@@ -74,7 +73,7 @@ export async function deleteRating(req, res) {
   const idUser = req.user.idUser;
   const userPermissions = req.user.permissions;
 
-  const requiredPermissions = ["WRITE_CALIFICACIONES",];
+  let requiredPermissions = ["WRITE_CALIFICACIONES",];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
 
@@ -117,7 +116,7 @@ export async function putRating(req, res) {
   const idUser = req.user.idUser;
   const userPermissions = req.user.permissions;
 
-  const requiredPermissions = ["WRITE_CALIFICACIONES",];
+  let requiredPermissions = ["WRITE_CALIFICACIONES",];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   try {
     const rating = await Rating.findOne({ where: { idRating } });

@@ -8,7 +8,7 @@ export async function getTracesByPublication(req, res) {
 
     const userPermissions = req.user.permissions;
 
-    const requiredPermissions=['READ_TRAZAS',];
+    let requiredPermissions=['READ_TRAZAS',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions) {
@@ -47,7 +47,7 @@ export async function getTracesByPublication(req, res) {
       return res.status(404).json({ message: "No se ha podido obtener la pulicacion asociada a la traza" });
     }
 
-    const requiredPermissions=['READ_TRAZAS',"WRITE_TRAZAS"];
+    let requiredPermissions=['READ_TRAZAS',"WRITE_TRAZAS"];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
     if (!hasAllPermissions && publication[0].idUser != idUser) {
       return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
@@ -84,7 +84,7 @@ export async function getTracesByPublication(req, res) {
       return res.status(404).json({ message: "Erropr en la publicacion asociada a la traza" });
     }
 
-    const requiredPermissions=["WRITE_TRAZAS",];
+    let requiredPermissions=["WRITE_TRAZAS",];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
     if (!hasAllPermissions && publication[0].idUser != idUser) {
       return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
@@ -119,7 +119,7 @@ export async function getTracesByPublication(req, res) {
       return res.status(404).json({ message: "Error en la publicacion asociada a la traza" });
     }
 
-    const requiredPermissions=["WRITE_TRAZAS",];
+    let requiredPermissions=["WRITE_TRAZAS",];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
     if (!hasAllPermissions && publication[0].idUser != idUser) {
       return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });

@@ -7,7 +7,7 @@ export async function getMessagesController(req, res) {
     const idUser = req.user.idUser;
     const userPermissions = req.user.permissions;
   
-    const requiredPermissions = ['READ_MENSAJES'];
+    let requiredPermissions = ['READ_MENSAJES'];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions) {
@@ -42,7 +42,7 @@ export async function postCreateMessage(req, res) {
     const idUser = req.user.idUser;    
     const userPermissions = req.user.permissions;
   
-    const requiredPermissions = ['READ_MENSAJES','WRITE_MENSAJES'];
+    let requiredPermissions = ['READ_MENSAJES','WRITE_MENSAJES'];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions) {

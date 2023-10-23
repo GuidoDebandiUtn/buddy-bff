@@ -13,7 +13,7 @@ import { getRegionById } from "../services/region.service.js";
 
 export async function localityCreate(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_LOCALITIES',];
+  let requiredPermissions=['WRITE_LOCALITIES',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -57,7 +57,7 @@ export async function localityCreate(req, res) {
 
 export async function getLocalities(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_LOCALITIES',];
+  let requiredPermissions=['READ_LOCALITIES',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -80,7 +80,7 @@ export async function getLocalities(req, res) {
 
 export async function getLocalitiesEvery(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_LOCALITIES_LIST','READ_PARAMETROS'];
+  let requiredPermissions=['READ_LOCALITIES_LIST','READ_PARAMETROS'];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -104,7 +104,7 @@ export async function getLocalitiesEvery(req, res) {
 export async function getLocality(req, res) {
   const { idLocality } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_LOCALITIES',];
+  let requiredPermissions=['READ_LOCALITIES',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -130,7 +130,7 @@ export async function getLocality(req, res) {
 export async function localityUpdate(req, res) {
   const { idLocality } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_LOCALITIES',];
+  let requiredPermissions=['WRITE_LOCALITIES',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -170,7 +170,7 @@ export async function localityUpdate(req, res) {
 export async function localityDelete(req, res) {
   const { idLocality } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_LOCALITIES',];
+  let requiredPermissions=['WRITE_LOCALITIES',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -198,7 +198,7 @@ export async function localityDelete(req, res) {
 export async function localityActive(req, res) {
   const { idLocality } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_LOCALITIES',];
+  let requiredPermissions=['WRITE_LOCALITIES',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {

@@ -4,6 +4,7 @@ import { getUserStateByName } from "./userState.service.js";
 import { createStateUser } from "./stateUser.service.js";
 import { sequelize } from "../../database/database.js";
 import { getRoleByName, getRolesByPermission } from "./role.service.js";
+import { getLocalityById } from "../../parameters/services/locality.service.js";
 import { createUserRole } from "./userRole.service.js";
 import bcrypt from "bcryptjs";
 import { UserState } from "../../models/UserState.js";
@@ -24,9 +25,14 @@ export async function createUser(data) {
     phoneNumber,
     cuitCuil,
     birthDate,
+    idLocality
   } = data;
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    if(!idLocality && !await getLocalityById(idLocality)){
+      throw {message: "error en la localidad enviada", code: 400}
+    }
 
     const newUser = await User.create(
       {
@@ -39,18 +45,20 @@ export async function createUser(data) {
         phoneNumber,
         cuitCuil,
         birthDate,
+        idLocality
       },
       {
         fields: [
           "mail",
           "password",
           "userName",
+          "name",
           "image",
           "address",
-          ,
           "phoneNumber",
           "cuitCuil",
           "birthDate",
+          "idLocality"
         ],
       }
     );
@@ -58,8 +66,8 @@ export async function createUser(data) {
     const idUser = newUser.idUser;
 
     let role;
-    if (userType == "ESTABLECIMIENTO") {
-      switch (serviceType) {
+    if (userType.toUpperCase() == "ESTABLECIMIENTO") {
+      switch (serviceType.toUpperCase()) {
         case "VETERINARIA":
           role = await getRoleByName("VETERINARIA");
           break;
@@ -73,24 +81,27 @@ export async function createUser(data) {
           role = await getRoleByName("ESTABLECIMIENTO");
           break;
       }
-
+      newUser.documents= [];
       for (const document of documents) {
         const title = document.title;
         const file = document.file;
-        await Document.create(
+        const newDocument = await Document.create(
           { idUser, title, file },
           { fields: ["idUser", "title", "file"] }
         );
+        newUser.documents.push(newDocument);
       }
 
       const userState = await getUserStateByName("EN REVISION");
-      await createStateUser(idUser, userState[0].idUserState);
+      newUser.state = await createStateUser(idUser, userState[0].idUserState);
     } else {
       role = await getRoleByName("BÁSICO");
       const userState = await getUserStateByName("ACTIVO");
-      await createStateUser(idUser, userState[0].idUserState);
-    }
+      newUser.state = await createStateUser(idUser, userState[0].idUserState);
 
+      
+    }
+    newUser.role= role;
     await createUserRole(idUser, role[0].idRole);
 
     return newUser;
@@ -146,7 +157,6 @@ export async function getUserById(idUser) {
     return user;
   } catch (error) {
     console.error("error obteniendo al usuario: ", idUser, error )
-    throw error;
   }
 }
 
@@ -191,7 +201,7 @@ export async function getUserByMail(mail) {
 export async function getPermissionsForUser(idUser) {
   try {
     const query = `
-      SELECT p.tokenclaim
+      SELECT p.tokenclaim AS permissions
       FROM users AS u
       JOIN userroles AS ur ON u.idUser = ur.idUser
       JOIN roles AS r ON r.idRole = ur.idRole
@@ -205,7 +215,7 @@ export async function getPermissionsForUser(idUser) {
     });
 
     const permissionsArray = [];
-    user.map((user) => permissionsArray.push(user.tokenclaim));
+    user.map((user) => permissionsArray.push(user.permissions));
 
     return permissionsArray;
   } catch (error) {
@@ -278,50 +288,64 @@ export async function updateUser(idUser, data) {
     image,
     blockedReason,
     blocked,
+    language,
+    idLocality,
+    cuitCuil
   } = data;
 
   try {
     const updates = {};
     const updateOptions = { where: { idUser } };
 
-    if (blocked) {
+    if (blocked !== undefined) {
       updates.blocked = blocked;
     }
+    if (cuitCuil !== undefined) {
+      updates.cuitCuil = cuitCuil;
+    }
 
-    if (blockedReason) {
+    if (blockedReason !== undefined) {
       updates.blockedReason = blockedReason;
     }
 
-    if (userName) {
+    if (userName !== undefined) {
       updates.userName = userName;
     }
 
-    if (name) {
+    if (name !== undefined) {
       updates.name = name;
     }
 
-    if (password) {
+    if (password !== undefined) {
       const hashedPassword = await bcrypt.hash(password, 10);
       updates.password = hashedPassword;
     }
 
-    if (phoneNumber) {
+    if (phoneNumber !== undefined) {
       updates.phoneNumber = phoneNumber;
     }
 
-    if (birthDate) {
+    if (birthDate !== undefined) {
       updates.birthDate = birthDate;
     }
 
-    if (address) {
+    if (address !== undefined) {
       updates.address = address;
     }
 
-    if (image) {
+    if (image !== undefined) {
       updates.image = image;
     }
 
-    updates.updatedDate = new Date();
+    
+    if (language !== undefined) {
+      updates.language = language;
+    }
+
+    
+    if (idLocality !== undefined) {
+      updates.idLocality = idLocality;
+    }
 
     await User.update(updates, updateOptions);
     console.debug(

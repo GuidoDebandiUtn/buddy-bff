@@ -9,17 +9,18 @@ import {
 } from "../services/pet.service.js";
 import { getPetTypeById } from "../../parameters/services/petType.service.js";
 import { getPetBreedById } from "../../parameters/services/petBreed.service.js";
+import { getPetColorById } from "../../parameters/services/petColor.service.js";
 import {getIdToken} from "../../helpers/authHelper.js"
 
 
-const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-([0-2]\d|3[0-1])$/;
+const dateRegex = /^(\d{4}[-\/\\]\d{2}[-\/\\]\d{2}|\d{2}[-\/\\]\d{2}[-\/\\]\d{4})(?: \d{2}:\d{2}:\d{2})?$/;
 
 export async function petCreate(req, res) {
   const idUser = req.user.idUser;
   const userPermissions = req.user.permissions;
 
 
-  const requiredPermissions=['CREATE_PET',];
+  let requiredPermissions=['CREATE_PET',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -50,6 +51,16 @@ export async function petCreate(req, res) {
       const petBreed = await getPetBreedById(req.body.idPetBreed);
 
       if (!petBreed[0]) {
+        return res
+          .status(404)
+          .json({ message: "No existe ninguna raza con ese id" });
+      }
+    }
+
+    if (req.body.idPetColor !== undefined) {
+      const petcolor = await getPetColorById(req.body.idPetBreed);
+
+      if (!petcolor[0]) {
         return res
           .status(404)
           .json({ message: "No existe ninguna raza con ese id" });
@@ -87,7 +98,7 @@ export async function getPets(req, res) {
       return res.status(404).json({ message: "No existen mascotas" });
     }
 
-    const requiredPermissions=['READ_MI_MASCOTA',];
+    let requiredPermissions=['READ_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pets[0].idUser != idUser) {
@@ -108,7 +119,7 @@ export async function getPet(req, res) {
   try {
     const pet = await getPetById(idPet);
 
-    const requiredPermissions=['READ_MI_MASCOTA',];
+    let requiredPermissions=['READ_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pet[0].idUser != idUser) {
@@ -147,7 +158,7 @@ export async function petUpdate(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    const requiredPermissions=['WRITE_MI_MASCOTA',];
+    let requiredPermissions=['WRITE_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pet[0].idUser != idUser) {
@@ -175,6 +186,17 @@ export async function petUpdate(req, res) {
       }
     }
 
+    if (req.body.idPetColor !== undefined) {
+      const petcolor = await getPetColorById(req.body.idPetColor);
+
+      if (!petcolor[0]) {
+        return res
+          .status(404)
+          .json({ message: "No existe ningun color con ese id" });
+      }
+    }
+
+
     await updatePet(idPet, req.body);
 
     return res
@@ -199,7 +221,7 @@ export async function petDelete(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    const requiredPermissions=['WRITE_MI_MASCOTA',];
+    let requiredPermissions=['WRITE_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pet[0].idUser != idUser) {
@@ -230,7 +252,7 @@ export async function petActive(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    const requiredPermissions=['WRITE_MI_MASCOTA',];
+    let requiredPermissions=['WRITE_MI_MASCOTA',];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
   
     if (!hasAllPermissions && pet[0].idUser != idUser) {

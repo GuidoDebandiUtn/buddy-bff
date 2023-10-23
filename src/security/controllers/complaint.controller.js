@@ -9,7 +9,7 @@ export async function postComplaint(req, res) {
   const validCategories = ['SEARCH', 'ADOPTION', 'SERVICE'];
 
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['CREATE_COMPLAINT',];
+  let requiredPermissions=['CREATE_COMPLAINT',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -41,7 +41,7 @@ export async function getComplaintsAll(req, res) {
   const { page, size, } = req.query;
 
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_DENUNCIAS',];
+  let requiredPermissions=['READ_DENUNCIAS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -73,7 +73,7 @@ export async function complaintDelete(req, res) {
   const { idComplaint } = req.params;
   
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_DENUNCIAS',];
+  let requiredPermissions=['WRITE_DENUNCIAS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -105,7 +105,7 @@ export async function complaintExecute(req, res) {
   let { idComplaint,validate } = req.params;
   validate = validate.toLowerCase() === "true" ? true : false;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_DENUNCIAS','WRITE_PUBLICACION_ADOPCION','WRITE_PUBLICACION_BUSQUEDA','WRITE_SERVICIOS'];
+  let requiredPermissions=['WRITE_DENUNCIAS','WRITE_PUBLICACION_ADOPCION','WRITE_PUBLICACION_BUSQUEDA','WRITE_SERVICIOS'];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {

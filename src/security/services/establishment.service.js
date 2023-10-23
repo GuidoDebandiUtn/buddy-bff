@@ -8,7 +8,6 @@ import { changeStateUser } from "./stateUser.service.js";
 import { sendValidationUserEmail } from "../../helpers/mailHelper.js";
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-
 export async function getAllEstablishments() {
   try {
     const query = `

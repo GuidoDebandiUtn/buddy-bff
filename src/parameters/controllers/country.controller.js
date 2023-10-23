@@ -12,7 +12,7 @@ import {
 export async function countryCreate(req, res) {
   
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_COUNTRIES',];
+  let requiredPermissions=['WRITE_COUNTRIES',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -23,7 +23,7 @@ export async function countryCreate(req, res) {
     const duplicate = await getCountryByName(req.body.countryName);
 
     if (duplicate[0]) {
-      country = await activeCountry(duplicate.idCountry);
+      country = await activeCountry(duplicate[0].idCountry);
       return res.status(201).json({ message: "Se ha reactivado el pais" });
     }else{
       country = await createCountry(req.body);
@@ -42,7 +42,7 @@ export async function countryCreate(req, res) {
 
 export async function getCountries(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_COUNTRIES',];
+  let requiredPermissions=['READ_COUNTRIES',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -66,7 +66,7 @@ export async function getCountries(req, res) {
 
 export async function getCountriesEvery(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_COUNTRIES_LIST','READ_PARAMETROS'];
+  let requiredPermissions=['READ_COUNTRIES_LIST','READ_PARAMETROS'];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -91,7 +91,7 @@ export async function getCountriesEvery(req, res) {
 export async function getCountry(req, res) {
   const { idCountry } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_COUNTRIES',];
+  let requiredPermissions=['READ_COUNTRIES',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -119,7 +119,7 @@ export async function getCountry(req, res) {
 export async function countryUpdate(req, res) {
   const { idCountry } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_COUNTRIES',];
+  let requiredPermissions=['WRITE_COUNTRIES',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -156,7 +156,7 @@ export async function countryUpdate(req, res) {
 export async function countryDelete(req, res) {
   const { idCountry } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_COUNTRIES',];
+  let requiredPermissions=['WRITE_COUNTRIES',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -186,7 +186,7 @@ export async function countryDelete(req, res) {
 export async function countryActive(req, res) {
   const { idCountry } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_COUNTRIES',];
+  let requiredPermissions=['WRITE_COUNTRIES',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {

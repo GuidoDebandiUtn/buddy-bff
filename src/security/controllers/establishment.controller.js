@@ -10,7 +10,7 @@ import { getUserById } from "../services/user.service.js";
 
 export async function getEstablishments(req, res) {
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_USUARIOS',];
+  let requiredPermissions=['READ_USUARIOS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -35,7 +35,7 @@ export async function getEstablishments(req, res) {
 export async function getEstablishment(req, res) {
   const { idUser } = req.params;
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_USUARIOS',];
+  let requiredPermissions=['READ_USUARIOS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -60,10 +60,9 @@ export async function postValidateEstablishment(req, res) {
   const { idUser } = req.params;
 
   try {
-    const userPermissions = req.user.permissions[0].permissions.split("-");
-
-    const permisionRequired = "WRITE_DOCUMENTACION";
-    if (userPermissions.includes(permisionRequired)) {
+    const userPermissions = req.user.permissions;
+    const permisionRequired = 'WRITE_DOCUMENTACION';
+    if (!userPermissions.includes(permisionRequired)) {
       return res.status(403).json({
         error:
           "No se cuenta con los permissions necesarios para ejecutar el EndPoint",
@@ -106,7 +105,7 @@ export async function establishmentUpdate(req, res) {
   const { idUser } = req.params;
 
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['WRITE_USUARIOS',];
+  let requiredPermissions=['WRITE_USUARIOS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -136,7 +135,7 @@ export async function establishmentUpdate(req, res) {
 export async function getRevisionEstablishments(req, res) {
 
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_LISTA_USUARIOS',];
+  let requiredPermissions=['READ_LISTA_USUARIOS',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
@@ -162,7 +161,7 @@ export async function getDocumentsEstablishment(req, res) {
   const { idUser } = req.params;
 
   const userPermissions = req.user.permissions;
-  const requiredPermissions=['READ_DOCUMENTACION',];
+  let requiredPermissions=['READ_DOCUMENTACION',];
   const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
