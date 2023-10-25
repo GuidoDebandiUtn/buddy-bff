@@ -49,8 +49,6 @@ export async function petCreate(req, res) {
     if (req.body.idPetBreed) {
       const petBreed = await getPetBreedById(req.body.idPetBreed);
 
-      console.log(petBreed);
-
       if (!petBreed[0]) {
         return res
           .status(404)
@@ -61,7 +59,6 @@ export async function petCreate(req, res) {
     if (req.body.idPetColor !== undefined) {
       const petcolor = await getPetColorById(req.body.idPetColor);
 
-      console.log(petcolor);
       if (!petcolor[0]) {
         return res
           .status(404)
