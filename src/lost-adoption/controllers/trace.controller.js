@@ -43,19 +43,19 @@ export async function getTracesByPublication(req, res) {
     const userPermissions = req.user.permissions;
 
     let publication = await getPublicationById(req.body.idPublicationSearch);
-    if (!publication[0]) {
+    if (!publication) {
       return res.status(404).json({ message: "No se ha podido obtener la pulicacion asociada a la traza" });
     }
 
     let requiredPermissions=['READ_TRAZAS',"WRITE_TRAZAS"];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
-    if (!hasAllPermissions && publication[0].idUser != idUser) {
+    if (!hasAllPermissions && publication.idUser != idUser) {
       return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
     }
   
   
     try {
-      const trace = await createTrace(req.body,idUser);
+      const trace = await createTrace(req.body,idUser,publication);
       return res.status(201).json(trace);
     } catch (error) {
       res.status(500).json({

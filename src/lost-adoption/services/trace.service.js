@@ -3,7 +3,7 @@ import { createNotificationForUser } from "../../reports/service/notifications.s
 import { getPublicationById } from "./publication.service.js";
 
 
-export async function createTrace(traceDto,idUser) {
+export async function createTrace(traceDto,idUser,publication) {
     try {
   
       //console.log(`Calling Trace.create with: ${JSON.stringify(traceDto)}`);
