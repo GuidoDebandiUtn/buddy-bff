@@ -38,21 +38,20 @@ export async function userCreate(req, res) {
 
     return res
       .status(201)
-      .json({ message: "Se creó correctamente el usuario",user: newUser });
+      .json({ message: "Se creó correctamente el usuario", user: newUser });
   } catch (error) {
     console.log(`error en el registro del nuevo usuario, error: ${error}`);
     await destroyUser(data.mail);
 
-    if(error.code){
+    if (error.code) {
       return res.status(error.code).json({
         message: error.message,
-      })
-    }else{
+      });
+    } else {
       return res.status(500).json({
         message: error.message,
       });
     }
-  
   }
 }
 
@@ -311,7 +310,7 @@ export async function changeRole(req, res) {
 export async function userPermission(req, res) {
   try {
     const userPermissions = req.user.permissions;
-    let requiredPermissions = ["WRITE_USUARIOS"];
+    let requiredPermissions = ["READ_USUARIOS"];
     const hasAllPermissions = requiredPermissions.every((permission) =>
       userPermissions.includes(permission)
     );

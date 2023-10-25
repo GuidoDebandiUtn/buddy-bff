@@ -242,13 +242,23 @@ export async function putPublication(req, res) {
   );
 
   let publication = await getPublicationById(idPublication, modelType);
-  console.debug("resultado busqueda publicacion: ", publication,", id: ",idPublication);
+  console.debug(
+    "resultado busqueda publicacion: ",
+    publication,
+    ", id: ",
+    idPublication
+  );
   if (!publication) {
     return res.status(404).json({
       message: `No se ha podido encontrar la publicacion de Id: '${idPublication}'.`,
     });
   }
-  console.debug("idUser de la publicacion: ", publication.user.idUser,", id: ",idPublication);
+  console.debug(
+    "idUser de la publicacion: ",
+    publication.user.idUser,
+    ", id: ",
+    idPublication
+  );
   if (!hasAllPermissions && publication.user.idUser != idUser) {
     return res
       .status(403)
@@ -341,7 +351,8 @@ export async function postSolvePublication(req, res) {
 }
 
 function checkParameters(publicationDto, modelType) {
-  const dateRegex = /^\d{2}-\d{2}-\d{4}$/;
+  const dateRegex =
+    /^(\d{4}[-\/\\]\d{2}[-\/\\]\d{2}|\d{2}[-\/\\]\d{2}[-\/\\]\d{4})(?: \d{2}:\d{2}:\d{2})?$/;
 
   /* TODO: 
   const imagesRegex = "";
