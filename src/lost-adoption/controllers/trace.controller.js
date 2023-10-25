@@ -75,18 +75,18 @@ export async function getTracesByPublication(req, res) {
     }
 
     const trace = await getTraceById(idTrace);
-    if (!trace[0]) {
+    if (!trace) {
       return res.status(404).json({message: `Error obteniendo la traza a eliminar`,});
     }
 
-    const publication = await getPublicationById(trace[0].idPublicationSearch);
-    if (!publication[0]) {
+    const publication = await getPublicationById(trace.idPublicationSearch);
+    if (!publication) {
       return res.status(404).json({ message: "Erropr en la publicacion asociada a la traza" });
     }
 
     let requiredPermissions=["WRITE_TRAZAS",];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
-    if (!hasAllPermissions && publication[0].idUser != idUser) {
+    if (!hasAllPermissions && publication.idUser != idUser) {
       return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
     }
   
@@ -110,18 +110,18 @@ export async function getTracesByPublication(req, res) {
     }
 
     const trace = await getTraceById(idTrace);
-    if (!trace[0]) {
+    if (!trace) {
       return res.status(404).json({message: `Error obteniendo la traza a eliminar`,});
     }
 
-    const publication = await getPublicationById(trace[0].idPublicationSearch);
-    if (!publication[0]) {
+    const publication = await getPublicationById(trace.idPublicationSearch);
+    if (!publication) {
       return res.status(404).json({ message: "Error en la publicacion asociada a la traza" });
     }
 
     let requiredPermissions=["WRITE_TRAZAS",];
     const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
-    if (!hasAllPermissions && publication[0].idUser != idUser) {
+    if (!hasAllPermissions && publication.idUser != idUser) {
       return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
     }
   
