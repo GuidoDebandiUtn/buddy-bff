@@ -1,30 +1,30 @@
 import { Trace } from "../../models/Trace.js";
 import { createNotificationForUser } from "../../reports/service/notifications.services.js";
 import { getPublicationById } from "./publication.service.js";
-
+import log  from "../../helpers/loggerHelper.js";
 
 export async function createTrace(traceDto,idUser,publication) {
     try {
   
-      //console.log(`Calling Trace.create with: ${JSON.stringify(traceDto)}`);
+      log('debug',`Calling Trace.create with: ${JSON.stringify(traceDto)}`);
       const newTrace = await Trace.create({
         idAuthorUser: idUser,
         ...traceDto,
       });
 
-      //console.log(`publicacion referida a la traza : ${JSON.stringify(publication)}`);
-      //console.log(`IdAuthor: ${idUser}, publication.user: ${publication.user.idUser}`);
+      log('debug',`publicacion referida a la traza : ${JSON.stringify(publication)}`);
+      log('debug',`IdAuthor: ${idUser}, publication.user: ${publication.user.idUser}`);
       if(idUser !== publication.user.idUser){
         try{
           await createNotificationForUser(publication.user.idUser,`Se ha agregado una nueva traza a tu publicacion!`);
         }catch(error){
-          console.log("error creando notificacion para una nueva traza de una publicacion",error)
+          log('error',`error creando notificacion para una nueva traza de una publicacion, error: ${error}`);
         }
       }
 
       return newTrace;
     } catch (error) {
-      console.error("Error creating a trace:", error);
+      log('error',`Error creating a trace, error:${error}`);
       throw error;
     }
   }
@@ -33,11 +33,11 @@ export async function createTrace(traceDto,idUser,publication) {
   export async function retrieveTracesByPublication(idPublicationSearch) {
     try {
       const traces =await Trace.findAll({where: {idPublicationSearch: idPublicationSearch, active:true},});
-      console.log ("trazas obtenidas correctamente pra traza: %s",idPublicationSearch);
+      log('debug',`trazas obtenidas correctamente para publicacion: '${idPublicationSearch}'`);
       return  {traces};
 
     } catch (err) {
-      console.error('Error al obtener las traza de la publicacion: %s',idPublicationSearch, error);
+      log('error',`Error al obtener las traza de la publicacion: '${idPublicationSearch}',error: ${err}`);
       throw err;
     }
   };
@@ -56,14 +56,11 @@ export async function createTrace(traceDto,idUser,publication) {
         { where: {idTrace: idTrace}, returning: true }
       );
   
-      console.log(
-        `Se ha eliminado correctamente la traza. Nueva entidad: '${trace}'`
-      );
+      log('log',`Se ha eliminado correctamente la traza. Nueva entidad: '${trace}'`);
   
       return trace;
     } catch (error) {
-      console.error("Error deleting the trace with id:", idTrace);
-      console.error(error);
+      log('error',`Error deleting the trace with id: '${idTrace}', error: ${error}`);
       throw error;
     }
   }
@@ -71,7 +68,7 @@ export async function createTrace(traceDto,idUser,publication) {
 
   export async function updateTrace(  traceDto,  idTrace) {
   
-    console.log(`Llamando a update de '${JSON.stringify(idTrace)}', con el dto: ${JSON.stringify(traceDto)}`);
+    log('debug',`Llamando a update de '${JSON.stringify(idTrace)}', con el dto: ${JSON.stringify(traceDto)}`);
     try {
       let traceNew = await Trace.update(
         { ...traceDto },
@@ -80,7 +77,7 @@ export async function createTrace(traceDto,idUser,publication) {
   
       return traceNew;
     } catch (error) {
-      console.error(error);
+      log('error',`error actualizando la traza, error: ${error}`);
       throw new Error(
         `Error durante la actualizacion de los datos de la publicacion. error: '${error}'.`
       );
@@ -97,11 +94,7 @@ export async function createTrace(traceDto,idUser,publication) {
   
       return trace;
     } catch (error) {
-      console.log(
-        "Ocurrio un error durante la consulta a BD de la traza con ID:",
-        idTrace
-      );
-      console.log(error);
+      log('error',`Ocurrio un error durante la consulta a BD de la traza con ID: ${idTrace}, error: ${error}`);
       throw error;
     }
   }

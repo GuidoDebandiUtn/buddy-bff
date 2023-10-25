@@ -1,4 +1,5 @@
 import { StateUser } from "../../models/StateUser.js";
+import log  from "../../helpers/loggerHelper.js";
 
 export async function createStateUser(idUser, idUserState, idUserAuthor) {
   let idAuthor;
@@ -33,7 +34,7 @@ export async function createStateUser(idUser, idUserState, idUserAuthor) {
 
 export async function changeStateUser(idUser, idUserState, idUserAuthor) {
   try {
-    console.log(idUser, idUserState);
+    log('debug',`ejecucion de changeStateUser() con idUser: ${idUser},  idUserState:${idUserState}`);
     const state = await StateUser.findOne({
       where: {
         idUser,

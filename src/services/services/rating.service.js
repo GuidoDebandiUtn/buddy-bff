@@ -1,6 +1,8 @@
 import { Rating } from "../../models/Rating.js";
 import { Service } from "../../models/Service.js";
 import { calculateAverageRating, getServiceById } from "./service.service.js";
+import { createNotificationForUser } from "../../reports/service/notifications.services.js";
+import log  from "../../helpers/loggerHelper.js";
 
 
 export async function createRating(idUser, data) {
@@ -28,12 +30,12 @@ export async function createRating(idUser, data) {
     try{
       await createNotificationForUser(service.idUser,`Alguien ha calificado tu servicio!`);
     }catch(error){
-      console.error("error creando notificacion para una nueva traza de una publicacion: ",error);
+      log('warn',`error creando notificacion para una nueva traza de una publicacion, error: ${error}`);
     }
 
       return newRating;
     } catch (error) {
-      console.log(error);
+      log('error',`error creando el nuevo servicio, error: ${error}`);
       throw error;
     }
   
@@ -42,8 +44,7 @@ export async function createRating(idUser, data) {
 
 export async function obtainRatingByService(idService) {
     const service = await getServiceById(idService);
-
-    console.debug("se obtuvo el siguiente servicio: %s, para el id: %s", service,idService);
+    log('debug',`"se obtuvo el siguiente servicio: ${service}, para el id: '${idService}'`);
     if(!service[0]){
         throw {message: "Error obteniendo el servicio asociado a las valoraciones", code: 400};
     }
@@ -56,7 +57,7 @@ export async function obtainRatingByService(idService) {
   
       return ratings;
     } catch (error) {
-      console.log(error);
+      log('error',`error obteniendo las calificaciones del servicio: '${idService}', error: ${error}`);
       throw error;
     }
 }
@@ -76,7 +77,7 @@ export async function deleteRatingService(idRating) {
   
       return;
     } catch (error) {
-      console.log(error);
+      log('error',`error eliminando la calificacion: '${idRating}', error: ${error}`);
       throw error;
     }
 }
@@ -109,7 +110,7 @@ export async function updateRatingService(idRating, data) {
   
       return;
     } catch (error) {
-      console.log(error);
+      log('error',`error actualizando la calificacion: '${idRating}', error: ${error}`);
       throw error;
     }
 }

@@ -9,6 +9,7 @@ import {
   updateProvince,
 } from "../services/province.service.js";
 import { getCountryById } from "../services/country.service.js";
+import log  from "../../helpers/loggerHelper.js";
 
 export async function provinceCreate(req, res) {
   const userPermissions = req.user.permissions;
@@ -38,9 +39,9 @@ export async function provinceCreate(req, res) {
       req.body.idCountry
     );
 
-    console.log(duplicate[0]);
 
     if (duplicate[0]) {
+      log('warn',`Obtenida un duplicado de la provincia a crear: ${duplicate[0]}`);
       province = await activeProvince(duplicate[0].idProvince);
       return res.status(201).json({ message: "Se ha reactivado la provincia" });
     } else {
@@ -159,7 +160,7 @@ export async function provinceUpdate(req, res) {
         .status(400)
         .json({ message: "No existe ninguna provincia con este id" });
     }
-    console.debug(province[0].idCountry);
+    log('debug',`'${province[0].idCountry}'`);
 
     await updateProvince(req.body, idProvince);
 

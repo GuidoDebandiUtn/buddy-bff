@@ -1,6 +1,7 @@
 import { User } from "../../models/User.js";
 import { Notification } from "../../models/Notification.js";
 import { getUsersByPermission, getUsersByRole, getUsersBylocality } from "../../security/services/user.service.js";
+import log  from "../../helpers/loggerHelper.js";
 
 export async function retrieveNotificationsByUserDB(idUser) {
   try {
@@ -11,7 +12,7 @@ export async function retrieveNotificationsByUserDB(idUser) {
 
     return notifications;
   } catch (error) {
-    console.log("error en la obtención de las notficaciones del usuario: ", idUser, error);
+    log('error',`error en la obtención de las notficaciones del usuario: ${idUser}, error: ${error}`);
     throw error;
   }
 }
@@ -56,7 +57,7 @@ export async function createNotificationForPermission(tokenClaim, content) {
 
     return notifications;
   } catch (error) {
-    console.log("Error creando notificaciones para los usuarios del permiso: ", tokenClaim, error);
+    log('error',`Error creando notificaciones para los usuarios del permiso: ${tokenClaim}, error: ${error}`);
     throw error;
   }
 }
@@ -81,7 +82,8 @@ export async function createNotificationForZone(idLocality, content) {
 
     return notifications;
   } catch (error) {
-    console.log("Error creando notificaciones para los usuarios de la localidad: ", idLocality, error);
+    log('error',`Error creando notificaciones para los usuarios de la localidad: ${tokenClaim}, error: ${error}`);
+
     throw error;
   }
 }
@@ -99,7 +101,7 @@ export async function readNotificationsForUser(idUser) {
       await notification.save();
     }
   } catch (error) {
-    console.log("error en la modificacion de las notificaciones del usuario: ", idUser, error);
+    log('error',`error en la modificacion de las notificaciones del usuario: ${idUser}, error: ${error}`);
     throw error;
   }
 }

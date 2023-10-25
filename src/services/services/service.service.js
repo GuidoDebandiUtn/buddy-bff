@@ -8,6 +8,7 @@ import { ServiceState } from "../../models/ServiceState.js";
 import { changeStateService } from "../services/stateService.service.js";
 import { getPetTypeByIdIn } from "../../parameters/services/petType.service.js";
 import { Rating } from "../../models/Rating.js";
+import log  from "../../helpers/loggerHelper.js";
 
 export async function createService(idUser, data) {
   let {
@@ -71,10 +72,8 @@ export async function createService(idUser, data) {
 
     const serviceState = await getServiceStateByName("ACTIVO");
 
-    console.log(
-      'Se a obtenido el siguiente resultado de la busqueda getServiceStateByName("ACTIVO"): ',
-      serviceState[0].idServiceState
-    );
+
+    log('debug',`Se a obtenido el siguiente resultado de la busqueda getServiceStateByName("ACTIVO"): '${serviceState[0].idServiceState}'`);
 
     await createStateService(
       newService.idService,
@@ -83,16 +82,13 @@ export async function createService(idUser, data) {
 
     const petTypes = await getPetTypeByIdIn(data.petTypes);
 
-    console.log(
-      "Se a obtenido el siguiente resultado de la busqueda getPetTypeByIdIn(data.petTypes): ",
-      petTypes
-    );
+    log('debug',`Se a obtenido el siguiente resultado de la busqueda getPetTypeByIdIn(data.petTypes): '${petTypes}'`);
 
     await createServicePetTypes(newService.idService, petTypes);
 
     return newService;
   } catch (error) {
-    console.log(error);
+    log('error',`error aobteniendo los tipos de servicios disponibles para el usuario: '${idUser}', error: ${error}`);
     throw error;
   }
 }
@@ -116,11 +112,9 @@ export async function getServiceByUserIdAndServiceType(idUser, idServiceType) {
     });
 
     for (let service of services) {
-      console.debug("entidad service a validar:", service);
+      log('debug',`entidad service a validar: '${service}'`);
       if (service.images[0]) {
-        console.debug("imagen antes del parse: ", service.images);
         service.images = JSON.parse(service.images);
-        console.debug("imagen desíes del parse: ", service.image);
       }
     }
 
@@ -170,17 +164,14 @@ export async function getServicesByIdUser(idUser) {
       };
     });
     for (let service of servicesWithPetTypes) {
-      console.debug("entidad service a validar:", service);
       if (service.images[0]) {
-        console.debug("imagen antes del parse: ", service.images);
         service.images = JSON.parse(service.images);
-        console.debug("imagen desíes del parse: ", service.images);
       }
     }
 
     return servicesWithPetTypes;
   } catch (error) {
-    console.log(error);
+    log('error',`error aobteniendo los servicios  para el usuario: '${idUser}', error: ${error}`);
     throw error;
   }
 }
@@ -226,17 +217,14 @@ export async function getAllServices() {
       };
     });
     for (let service of servicesWithPetTypes) {
-      console.debug("entidad del for: ", service);
       if (service.images[0]) {
-        console.debug("imagen antes del parse: ", service.images);
         service.images = JSON.parse(service.images);
-        console.debug("imagen desíes del parse: ", service.images);
       }
     }
 
     return servicesWithPetTypes;
   } catch (error) {
-    console.log(error);
+    log('error',`error aobteniendo los servicios, error: ${error}`);
     throw error;
   }
 }
@@ -288,7 +276,7 @@ export async function updateService(service, data) {
 
     return;
   } catch (error) {
-    console.log(error);
+    log('error',`error actualizando el servicio: ${service}, error: ${error}`);
     throw error;
   }
 }
@@ -334,28 +322,24 @@ export async function getServiceById(idService) {
     });
 
     for (let service of servicesWithPetTypes) {
-      console.debug("entidad service a validar:", service);
       if (service.images[0]) {
-        console.debug("imagen antes del parse: ", service.images);
         service.images = JSON.parse(service.images);
-        console.debug("imagen desíes del parse: ", service.images);
       }
     }
     return servicesWithPetTypes;
   } catch (error) {
-    console.log("error recuperando el servicio: ", error);
-    throw error;
+    log('error',`error recuperando el servicio: '${idService}', error: ${error}`);
   }
 }
 
 export async function deleteService(service, idAuthor) {
   try {
-    console.log("servicio enviado a eliminar: ", service);
+    log('log',`servicio a eliminar '${service}'`);
     const serviceState = (await getStateForService(service.idService))[0];
     const serviceStateInactive = (await getServiceStateByName("INACTIVO"))[0];
 
-    console.log("serviceState: ", serviceState);
-    console.log("serviceStateInactive: ", serviceStateInactive);
+    log('debug',`serviceState:'${serviceState}'`);
+    log('debug',`serviceStateInactive:'${serviceStateInactive}'`);
     if (serviceState.idServiceState == serviceStateInactive.idServiceState) {
       throw { message: "El servicio ya se encuentra eliminado!", code: 400 };
     }
@@ -373,7 +357,7 @@ export async function deleteService(service, idAuthor) {
 
     return;
   } catch (error) {
-    console.log(error);
+    log('error',`error eliminando el serivicio: ${service}, error:'${error}'`);
     throw error;
   }
 }
@@ -402,14 +386,14 @@ export async function getStateForService(idService) {
 export async function createServicePetTypes(idService, petTypes) {
   try {
     for (const petType of petTypes) {
-      console.log("idService: %s, idPetType: ", idService, petType);
+      log('log',`idService: '${idService}', PetType: '${petType}'`);
       await ServicePet.create({
         idService: idService,
         idPetType: petType.idPetType,
       });
     }
   } catch (error) {
-    console.log(error);
+    log('error',`Error creando los tipos de mascota para el serivicio: '${idService}, error: ${error}`);
     throw error;
   }
 }
@@ -423,7 +407,7 @@ export async function deleteServicePetTypes(idService, petTypes) {
       );
     }
   } catch (error) {
-    console.log(error);
+    log('error',`Error eliminando los tipos de mascota para el serivicio: '${idService}, error: ${error}`);
     throw error;
   }
 }
@@ -446,16 +430,10 @@ export async function calculateAverageRating(service) {
       }
     );
 
-    console.log(
-      "Valoración promedio actualizada para el servicio:",
-      service.idService
-    );
+    log('log',`Valoración promedio actualizada para el servicio:'${service.idService}'`);
+    return;
   } catch (err) {
-    console.error(
-      "Error al calcular la valoración promedio del servicio: %s, error:",
-      service.idService,
-      err
-    );
+    log('error',`Error al calcular la valoración promedio del servicio: '${service.idService}', error: ${err}`);
     throw err;
   }
 }
@@ -467,7 +445,7 @@ export async function retriveServiceTypesDB() {
 
     return formattedTypes;
   } catch (err) {
-    console.error("Error al obtener los tipos de servicio: ", err);
+    log('error',`Error al obtener los tipos de servicio de la BD, error: '${err}'`);
     throw err;
   }
 }
@@ -494,7 +472,8 @@ export async function getServicesEvery() {
 
     return services;
   } catch (error) {
-    console.log(error);
+    log('error',`Error en la obtencion de todos los servicios', error: ${error}`);
+
     throw error;
   }
 }

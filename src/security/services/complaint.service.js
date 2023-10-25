@@ -9,6 +9,7 @@ import { deleteService, getServiceById } from "../../services/services/service.s
 import { changeStateUser } from "./stateUser.service.js";
 import { getStateForUser, updateUser } from "./user.service.js";
 import { getUserStateByName } from "./userState.service.js";
+import log  from "../../helpers/loggerHelper.js";
 
 
 export async function createComplaint(data, idComplainant) {
@@ -43,12 +44,12 @@ export async function createComplaint(data, idComplainant) {
     try{
       await createNotificationForPermission('READ_DENUNCIAS',`Se ha creado una nueva denuncia, referencia: ${referenceAtribute}: ${idReference}`);
     }catch(error){
-      console.log("error creando notificacion para un los usuarios moderadores de una nueva denuncia: ",error);
+      log('error',`error creando notificacion para un los usuarios moderadores de una nueva denuncia, error: ${error}`);
     }
 
     return newComplaint;
   } catch (error) {
-    console.log(error);
+    log('error',`Error en la creacion de la denuncia, error: ${error}`);
     throw error;
   }
 }
@@ -101,7 +102,7 @@ export async function aproveComplaint(validateComplaintDto) {
 
   await validateComplaint(complaint.idComplaint);
 
-  console.debug("valor de denuncia: ",complaint);
+  log('debug',`"valor de denuncia: ${complaint} "`);
 
   try {
     switch (complaint.category) {
@@ -112,7 +113,7 @@ export async function aproveComplaint(validateComplaintDto) {
           await createNotificationForUser(complaint.idUserReported,
             `Se ha eliminado tu servicio por que no cumple con nuestros terminos y condiciones.`);
         }catch(error){
-          console.log("error creando notificacion para un servicio eliminado por denuncias: ",error);
+          log('warn',`error creando notificacion para un servicio eliminado por denuncias, error: ${error}`);
         }
         break;
       case 'SEARCH':
@@ -121,7 +122,7 @@ export async function aproveComplaint(validateComplaintDto) {
           await createNotificationForUser(complaint.idUserReported,
             `Se ha eliminado tu Busqueda por que no cumple con nuestros terminos y condiciones.`);
         }catch(error){
-          console.log("error creando notificacion para una busqueda eliminada por denuncias: ",error);
+          log('warn',`error creando notificacion para una busqueda eliminada por denuncias, error: ${error}`);
         }
         break;
       case 'ADOPTION':
@@ -130,21 +131,21 @@ export async function aproveComplaint(validateComplaintDto) {
           await createNotificationForUser(complaint.idUserReported,
             `Se ha eliminado tu adopcion por que no cumple con nuestros terminos y condiciones.`);
         }catch(error){
-          console.log("error creando notificacion para una adopcion eliminada por denuncias: ",error);
+          log('warn',`error creando notificacion para una adopcion eliminada por denuncias, error: ${error}`);
         }
         break;
       default:
         throw new Error("Error en la categoria del servicio");
     }
   } catch (error) {
-    console.log("Error ejecutando el borrado de la denuncia: ", error);
+    log('warn',`Error ejecutando el borrado de la denuncia, error: ${error}`);
     throw error;
   }
 
   try {
     const userComplaints = await getComplaintsByUser(complaint.idUserReported);
 
-    console.debug("userComplaints: ", userComplaints);
+    log('debug',`userComplaints: ${userComplaints}`);
 
     if (userComplaints.length >= 3) {
       const userState = await getStateForUser(complaint.idUserReported);
@@ -153,19 +154,19 @@ export async function aproveComplaint(validateComplaintDto) {
       } 
 
       const bloquedUserState = (await getUserStateByName('BLOQUEADO'))[0].dataValues;
-      console.log(bloquedUserState);
+      log('log',`estado usuario bloqueado obtenido: ${bloquedUserState}`);
       await updateUser(complaint.idUserReported,{blocked: true, blockedReason: "Maximo de denuncias superado"});
       await changeStateUser(complaint.idUserReported, bloquedUserState.idUserState, validateComplaintDto.author.idUser);
       try{
         await createNotificationForUser(complaint.idUserReported,
           `Has superado el maximo permitido de infracciones y por lo tanto tu usuario se encuentra bloqueado. Para poder desbloquearlo deberas comunicarte a projectapplicationbuddy@gmail.com`);
       }catch(error){
-        console.log("error creando notificacion para un usuario bloqueado: ",error);
+        log('warn',`error creando notificacion para un usuario bloqueado, error: ${error}`);
       }
     }
     return;
   } catch (error) {
-    console.log("error validando el bloqueo del usuario: ", error);
+    log('error',`error validando el bloqueo del usuario, error: ${error}`);
     throw error;
 
   }
@@ -187,7 +188,7 @@ export async function deleteComplaint(complaint) {
     await createNotificationForUser(complaint.idUserReporting,
       `La denuncia que levantaste, fue analizada y rechazada por nuestro equipo, si crees que fue un error comunicate a porjectapplicationbuddy@gmail.com. Seguí contribuyendo a mejorar la app!`);
     }catch(error){
-      console.log("error creando notificacion para una denuncia eliminada: ",error);
+      log('warn',`error creando notificacion para la eliminacion de una denuncia, error:${error}`);
     }
     return;
   } catch (error) {
@@ -205,7 +206,7 @@ export async function validateComplaint(idComplaint) {
 
     return complaint;
   } catch (error) {
-    console.log(error);
+    log('error',`Error en la validacion de una denuncia, error:${error}`);
     throw error;
   }
 }

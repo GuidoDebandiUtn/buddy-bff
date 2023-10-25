@@ -10,6 +10,7 @@ import {
   getPublicationsByUser,
   closePublication,
 } from "../services/publication.service.js";
+import log  from "../../helpers/loggerHelper.js";
 
 export async function getPublications(req, res) {
   const { modelType, page, size } = req.query;
@@ -47,7 +48,7 @@ export async function getPublications(req, res) {
 
     return res.status(200).json(data);
   } catch (error) {
-    console.log(error);
+    log('log',`error en la obtención de las publicaciones, error: ${error}`);
     res.status(500).json({
       message: error.message,
     });
@@ -80,11 +81,10 @@ export async function obtainPublicationsByUser(req, res) {
         .status(404)
         .json({ message: "No se han encontrado el usuario indicado" });
     }
-
-    console.log("user obtenido correctamente");
+    log('debug',`user obtenido correctamente`);
     const data = await getPublicationsByUser(idUser);
 
-    console.log("publicaciones obtenidas correctamente");
+    log('debug',`publicaciones obtenidas correctamente`);
     if (!data) {
       return res.status(204).json({
         message: "No se han encontrado ninguna publicacion para el usuario",
@@ -174,9 +174,7 @@ export async function deletePublication(req, res) {
   );
 
   const publication = await getPublicationById(idPublication, modelType);
-  console.debug(
-    `publicacion obtenida correctamente. entidad obtenida: '${publication}'`
-  );
+  log('debug',`publicacion obtenida correctamente. entidad obtenida: '${publication}'`);
   if (!publication) {
     return res
       .status(404)
@@ -195,9 +193,7 @@ export async function deletePublication(req, res) {
       .json({ message: `El parametro modelType es obligatorio`, code: 400 });
   }
 
-  console.log(
-    `Iniciado proceso de eliminacion de publicacion - Parametros modelType='${modelType}', idPublication= '${idPublication}'`
-  );
+  log('debug',`Iniciado proceso de eliminacion de publicacion - Parametros modelType='${modelType}', idPublication= '${idPublication}'`);
 
   try {
     await publicationDelete(idPublication, modelType);
@@ -242,23 +238,15 @@ export async function putPublication(req, res) {
   );
 
   let publication = await getPublicationById(idPublication, modelType);
-  console.debug(
-    "resultado busqueda publicacion: ",
-    publication,
-    ", id: ",
-    idPublication
-  );
+  log('debug',`resultado busqueda publicacion: '${publication}', id: ${idPublication}`);
+
   if (!publication) {
     return res.status(404).json({
       message: `No se ha podido encontrar la publicacion de Id: '${idPublication}'.`,
     });
   }
-  console.debug(
-    "idUser de la publicacion: ",
-    publication.user.idUser,
-    ", id: ",
-    idPublication
-  );
+  log('debug',`idUser de la publicacion: '${publication.user.idUser}', id: ${idPublication}`);
+
   if (!hasAllPermissions && publication.user.idUser != idUser) {
     return res
       .status(403)
@@ -322,9 +310,7 @@ export async function postSolvePublication(req, res) {
       .json({ message: "Solo es posible resolver las publicaciones propias!" });
   }
 
-  console.debug(
-    `Iniciado proceso de resolucion de publicacion - Parametros modelType='${modelType}', idPublication= '${idPublication}'`
-  );
+  log('debug',`Iniciado proceso de resolucion de publicacion - Parametros modelType='${modelType}', idPublication= '${idPublication}'`);
 
   try {
     let publication = await closePublication(

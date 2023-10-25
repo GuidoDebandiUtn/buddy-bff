@@ -8,6 +8,7 @@ import {
   updateVaccine,
 } from "../services/vaccine.service.js";
 import { getPetById } from "../services/pet.service.js";
+import log  from "../../helpers/loggerHelper.js";
 
 
 const dateRegex = /^(\d{4}[-\/\\]\d{2}[-\/\\]\d{2}|\d{2}[-\/\\]\d{2}[-\/\\]\d{4})(?: \d{2}:\d{2}:\d{2})?$/;
@@ -19,14 +20,14 @@ export async function vaccineCreate(req, res) {
   const userPermissions = req.user.permissions;
 
   if (!dateRegex.test(req.body.vaccineDate)) {
-    console.log ("error en el formato de la fecha de la vacuna: obtenido: %s, esperado AAAA-mm-dd HH:mm:ss",req.body.vaccineDate);
+    log('error',`Error en el formato de la fecha de la vacuna: obtenido: '${req.body.vaccineDate}', esperado AAAA-mm-dd HH:mm:ss`);
     return res
     .status(400)
     .json({ message: "Error en el formato de fecha" });
   }
 
   if (req.body.nextVaccineDate && !dateRegex.test(req.body.nextVaccineDate)) {
-    console.log ("error en el formato de la fecha de la proxima vacuna: obtenido: %s, esperado AAAA-mm-dd HH:mm:ss",req.body.vaccineDate);
+    log('error',`Error en el formato de la fecha de la proxima vacuna: obtenido: '${req.body.nextVaccineDate}', esperado AAAA-mm-dd HH:mm:ss`);
     return res
     .status(400)
     .json({ message: "Error en el formato de fecha" });
@@ -148,7 +149,7 @@ export async function vaccineUpdate(req, res) {
     }
 
     if (!dateRegex.test(req.body.vaccineDate)) {
-      console.log ("error en el formato de la fecha de la vacuna: obtenido: %s, esperado AAAA-mm-dd HH:mm:ss",req.body.vaccineDate);
+      log('error',`error en el formato de la fecha de la vacuna: obtenido: '${req.body.vaccineDate}', esperado AAAA-mm-dd HH:mm:ss`);
       return res
       .status(400)
       .json({ message: "Error en el formato de fecha" });

@@ -10,6 +10,7 @@ import bcrypt from "bcryptjs";
 import { UserState } from "../../models/UserState.js";
 import { Role } from "../../models/Role.js";
 import { Document } from "../../models/Document.js";
+import log  from "../../helpers/loggerHelper.js";
 
 export async function createUser(data) {
   const {
@@ -106,7 +107,7 @@ export async function createUser(data) {
 
     return newUser;
   } catch (error) {
-    console.log("Error creating user: %s, error: ", userName, error);
+    log('error',`Error creando un el usuario: '${userName}', error: ${error}`);
     throw error;
   }
 }
@@ -156,7 +157,7 @@ export async function getUserById(idUser) {
 
     return user;
   } catch (error) {
-    console.error("error obteniendo al usuario: ", idUser, error )
+    log('error',`error obteniendo al usuario:${idUser}, error: ${error}`);
   }
 }
 
@@ -219,7 +220,7 @@ export async function getPermissionsForUser(idUser) {
 
     return permissionsArray;
   } catch (error) {
-    console.log(error);
+    log('error',`error en la consulta a BD para los permisos del usuario: ${idUser}, error: ${error}`);
     throw error;
   }
 }
@@ -348,12 +349,7 @@ export async function updateUser(idUser, data) {
     }
 
     await User.update(updates, updateOptions);
-    console.debug(
-      "usuario: ",
-      idUser,
-      "modificado correctamente con : ",
-      updates
-    );
+    log('debug',`"usuario: '${idUser}', modificado correctamente con : ${updates}`);
 
     return;
   } catch (error) {
@@ -429,11 +425,7 @@ export async function getUsersByPermission(tokenClaim) {
 
     return formattedUsers;
   } catch (error) {
-    console.log(
-      "error en la obtencion de usuarios para el permiso:",
-      permission,
-      error
-    );
+    log('error',`error en la obtencion de usuarios para el permiso: ${permission}, error: ${error}`);
     throw error;
   }
 }
@@ -458,11 +450,7 @@ export async function getUsersBylocality(idLocality) {
 
     return formattedUsers;
   } catch (error) {
-    console.log(
-      "error en la obtencion de usuarios por localidad, para localidad:",
-      idLocality,
-      error
-    );
+    log('error',`error en la obtencion de usuarios por localidad, para localidad:${idLocality}, error: ${error}`);
     throw error;
   }
 }
@@ -503,11 +491,7 @@ export async function getUsersByRole(roleName) {
 
     return formattedUsers;
   } catch (error) {
-    console.log(
-      "error en la obtencion de usuarios para el rol:",
-      roleName,
-      error
-    );
+    log('error',`error en la obtencion de usuarios para el rol: '${roleName}', error: ${error}`);
     throw error;
   }
 }

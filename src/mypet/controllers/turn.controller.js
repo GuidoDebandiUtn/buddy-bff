@@ -8,7 +8,7 @@ import {
   updateTurn,
 } from "../services/turn.service.js";
 import { getPetById } from "../services/pet.service.js";
-
+import log  from "../../helpers/loggerHelper.js";
 
 
 const dateRegex = /^(\d{4}[-\/\\]\d{2}[-\/\\]\d{2}|\d{2}[-\/\\]\d{2}[-\/\\]\d{4})(?: \d{2}:\d{2}:\d{2})?$/;
@@ -35,7 +35,7 @@ export async function turnCreate(req, res) {
     }
 
     if (!dateRegex.test(req.body.turnDate)) {
-      console.log ("error en el formato del turno: obtenido: %s, esperado AAAA-mm-dd HH:mm:ss",req.body.turnDate);
+      log('error',`Error en el formato del turno: obtenido: '${req.body.turnDate}', esperado AAAA-mm-dd HH:mm:ss`);
       return res
       .status(400)
       .json({ message: "Error en el formato de fecha" });
@@ -126,7 +126,7 @@ export async function turnUpdate(req, res) {
   const userPermissions = req.user.permissions;
 
   if (!dateRegex.test(req.body.turnDate)) {
-    console.log("error en el formato del turno: obtenido: %s, esperado AAAA-mm-dd HH:mm:ss",req.body.turnDate);
+    log('error',`error en el formato del turno: obtenido: ${req.body.turnDate}, esperado AAAA-mm-dd HH:mm:ss`);
     return res
     .status(400)
     .json({ message: "Error en el formato de fecha" });
@@ -272,7 +272,7 @@ export async function turnArchive(req, res) {
         .status(404)
         .json({ message: "No existe información con ese id" });
     }
-    console.log(turn[0].archive);
+    log('debug',`estado atributo archive del turno: ${turn[0].archive}`);
     await archiveTurn(idTurn, turn[0].archive);
 
     return res

@@ -13,7 +13,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const statics = `${__dirname}/public`;
 
-console.log(statics);
+//console.log(statics);
 
 app.use(express.static(statics));
 

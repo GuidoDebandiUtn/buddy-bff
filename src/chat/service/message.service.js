@@ -2,6 +2,7 @@ import { Message } from "../../models/Message.js";
 import { Chat } from "../../models/Chat.js";
 import { createNotificationForUser } from "../../reports/service/notifications.services.js";
 import { getUserById } from "../../security/services/user.service.js";
+import log  from "../../helpers/loggerHelper.js";
 
 export async function getMessagesByChat(idUser, idChat) {
   try {
@@ -19,11 +20,7 @@ export async function getMessagesByChat(idUser, idChat) {
 
     return messages;
   } catch (error) {
-    console.log(
-      "error en la obtención de los mensajes del chat: ",
-      idChat,
-      error
-    );
+    log('log',`error en la obtención de los mensajes del chat:${idChat}, error: ${error}`);
     throw error;
   }
 }
@@ -64,7 +61,7 @@ export async function createMessage(idUser, content, idChat) {
       await createNotificationForUser(chat.idUserEmitter,`${sender.username} te ha enviado un nuevo mensaje: ${content}`);
     }
   }catch(error){
-    console.error("error creando notificacion para un nuevo mensaje de un chat",error);
+    log('warn',`error creando notificacion para un nuevo mensaje de un chat, error: ${error}`);
   }
 
 

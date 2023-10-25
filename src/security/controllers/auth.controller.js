@@ -8,6 +8,7 @@ import {
 } from "../services/user.service.js";
 import { resetPasswordMail } from "../../helpers/mailHelper.js";
 import bcrypt from "bcryptjs";
+import log  from "../../helpers/loggerHelper.js";
 
 export async function login(req, res) {
   const { password } = req.body;
@@ -57,7 +58,7 @@ export async function verifyToken(req, res, next) {
 
   try {
     if (!token) {
-      console.log("error en la obtencion del token en el header");
+      log('error',`error en la obtencion del token en el header`);
       return res.status(401).json({
         error: "Aún no ha iniciado sesión",
       });
@@ -81,11 +82,11 @@ export async function verifyToken(req, res, next) {
 
     req.user = verified;
     req.userPermissions = permissions;
-    // console.log("usuario obtenido del token : ", verified);
+    log('debug',`usuario obtenido del token : ${verified}`);
 
     next();
   } catch (error) {
-    console.log(error);
+    log('error',`Error en la verificacion del token : ${error}`);
     return res.status(500).json({
       error: "El token no es válido",
     });

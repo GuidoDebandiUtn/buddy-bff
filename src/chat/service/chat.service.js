@@ -3,6 +3,7 @@ import { Message } from "../../models/Message.js";
 import { User } from "../../models/User.js";
 import { Op } from "sequelize";
 import { getUserById } from "../../security/services/user.service.js";
+import log  from "../../helpers/loggerHelper.js";
 
 export async function getChatsByUser(idUser, archived) {
   const archivedValue = archived.toLowerCase() === "true" ? 1 : 0;
@@ -152,7 +153,7 @@ export async function archiveChat(idUser, idChat, archive) {
 
     return chat;
   } catch (error) {
-    console.log("Error Archivando el chat: ", idChat, error);
+    log('error',`Error Archivando el chat:${idChat}, error:${error}`);
     throw error;
   }
 }

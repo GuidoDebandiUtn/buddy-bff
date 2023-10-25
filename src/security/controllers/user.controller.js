@@ -15,7 +15,7 @@ import {
 } from "../services/user.service.js";
 import { changeUserRole } from "../services/userRole.service.js";
 import { getUserStateByName } from "../services/userState.service.js";
-
+import log  from "../../helpers/loggerHelper.js";
 import bcrypt from "bcryptjs";
 
 export async function userCreate(req, res) {
@@ -32,7 +32,7 @@ export async function userCreate(req, res) {
 
     const newUser = await createUser(data);
 
-    console.log(`usuario: ${newUser.mail} creado con exito`);
+    log('log',`usuario: ${newUser.mail} creado con exito`);
 
     await validateMail(newUser.mail, newUser.idUser);
 
@@ -40,7 +40,7 @@ export async function userCreate(req, res) {
       .status(201)
       .json({ message: "Se creó correctamente el usuario", user: newUser });
   } catch (error) {
-    console.log(`error en el registro del nuevo usuario, error: ${error}`);
+    log('error',`error en el registro del nuevo usuario, error: ${error}`);
     await destroyUser(data.mail);
 
     if (error.code) {
@@ -56,7 +56,7 @@ export async function userCreate(req, res) {
 }
 
 export async function getUsers(req, res) {
-  console.log("permisos del usuario: ", req.user.permissions);
+  log('debug',`permisos del usuario: ${req.user.permissions}`);
   const userPermissions = req.user.permissions;
   let requiredPermissions = ["READ_USUARIOS"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
@@ -103,7 +103,7 @@ export async function getUser(req, res) {
 
     return res.status(200).json(user);
   } catch (error) {
-    console.log(error.message);
+    log('error',`error en la obtencion del usuario, error: ${error.message}`);
     return res.status(500).json({ error: error.message });
   }
 }
@@ -332,7 +332,7 @@ export async function userPermission(req, res) {
 
     return res.status(200).json(permissions);
   } catch (error) {
-    console.log(error);
+    log('error',`error en la obtencion de los permissos del usuario, error: ${error}`);
     return res.status(500).json({ error: error.message });
   }
 }

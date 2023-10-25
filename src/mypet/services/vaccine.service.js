@@ -1,5 +1,6 @@
 import { Vaccine } from "../../models/Vaccine.js";
 import { sequelize } from "../../database/database.js";
+import log  from "../../helpers/loggerHelper.js";
 
 export async function createVaccine(data, idPet) {
   const { titleVaccine, descriptionVaccine, vaccineDate,doseQuantity, nextVaccineDate } = data;
@@ -125,7 +126,7 @@ export async function archiveVaccine(idVaccine, archive) {
   try {
     const updates = {};
     const updateOptions = { where: { idVaccine } };
-    console.log(archive);
+    log('debug',`estado atributo archive enviado: ${archive}`);
     if (archive) {
       updates.archive = false;
     } else {

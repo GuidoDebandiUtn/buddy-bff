@@ -1,4 +1,5 @@
 import { UserRole } from "../../models/UserRole.js";
+import log  from "../../helpers/loggerHelper.js";
 
 export async function createUserRole(idUser, idRole, idUserAuthor) {
   let idAuthor;
@@ -23,7 +24,7 @@ export async function createUserRole(idUser, idRole, idUserAuthor) {
 
     return newUserRole;
   } catch (error) {
-    console.log("error creando el nuevo rol del usuario");
+    log('error',`error creando el nuevo rol del usuario: '${idUser}'`);
     throw error;
   }
 }

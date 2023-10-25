@@ -8,6 +8,7 @@ import {
   retriveServiceTypesDB,
   updateService,
 } from "../services/service.service.js";
+import log  from "../../helpers/loggerHelper.js";
 
 
 export async function serviceCreate(req, res) {
@@ -68,11 +69,7 @@ export async function getServicesByUser(req, res) {
   try {
     const services = await getServicesByIdUser(idUser);
 
-    console.debug(
-      "Se han obtenido los siguientes servicios para el user %s, ",
-      idUser,
-      services
-    );
+    log('debug',`"Se han obtenido los siguientes servicios para el user: '${idUser}', ${services} "`);
 
     if (!services[0]) {
       return res
