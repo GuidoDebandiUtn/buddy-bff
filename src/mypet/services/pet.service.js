@@ -1,5 +1,8 @@
 import { Pet } from "../../models/Pet.js";
+import { Vaccine } from "../../models/Vaccine.js";
+import { Turn } from "../../models/Turn.js";
 import { sequelize } from "../../database/database.js";
+import { createNotificationForUser } from "../../reports/service/notifications.services.js";
 
 export async function createPet(data, idUser) {
   const { petName, birthDate, idPetType, idPetBreed, image, idPetColor  } = data;
@@ -138,6 +141,72 @@ export async function activePet(idPet) {
 
     return;
   } catch (error) {
+    throw error;
+  }
+}
+
+export async function notifyUsersForUpcomingEvents() {
+  const pets = await getPetsWithUpcomingEvents();
+  try {
+    for (const pet of pets) {
+      const { idUser, turns, vaccines } = pet;
+
+      for (const turn of turns) {
+        const turnNotificationContent = `Quedan menos de 24hs para tu turno: ${turn.turnTittle}, prepara todo lo necesario!`;
+        await createNotificationForUser(idUser, turnNotificationContent);
+      }
+
+      for (const vaccine of vaccines) {
+        const vaccineNotificationContent = `Quedan menos de 24hs para la próxima dosis de la vacuna: ${vaccine.vaccineTittle}, prepara todo lo necesario!`;
+        await createNotificationForUser(idUser, vaccineNotificationContent);
+      }
+    }
+  } catch (error) {
+    console.error('Error notifying users:', error);
+    throw error;
+  }
+}
+
+async function getPetsWithUpcomingEvents() {
+  try {
+    const allPets = await Pet.findAll({
+      include: [
+        { 
+          model: Turn, as: "turns",
+          attributes:["titleTurn","active","turnDate",],
+          where: {active: 1,} 
+        },
+        { 
+          model: Vaccine, as: "vaccines",
+          attributes:["nextVaccineDate","active","vaccineDate","titleVaccine",],
+          where: {active: 1} 
+        },
+      ],
+      where: {active:1}
+    });
+
+    const petsWithUpcomingEvents = allPets.map((pet) => {
+      const upcomingTurns = pet.turns.filter((turn) => {
+        return turn.turnDate > new Date() && turn.turnDate < new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+      });
+
+      const upcomingVaccines = pet.vaccines.filter((vaccine) => {
+        return (
+          vaccine.nextVaccineDate > new Date() &&
+          vaccine.nextVaccineDate < new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
+        );
+      });
+
+      return {
+        ...pet.get({ plain: true }),
+        turns: upcomingTurns.map(turn=>turn.get({plain:true})),
+        vaccines: upcomingVaccines.map(vaccine=>vaccine.get({plain:true})),
+      };
+    });
+
+    return petsWithUpcomingEvents.filter((pet) => pet.turns.length > 0 || pet.vaccines.length > 0);
+  } catch (error) {
+    console.error('Error fetching pets with events:', error);
     throw error;
   }
 }

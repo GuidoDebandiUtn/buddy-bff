@@ -5,6 +5,14 @@ export async function createVaccine(data, idPet) {
   const { titleVaccine, descriptionVaccine, vaccineDate,doseQuantity, nextVaccineDate } = data;
 
   try {
+
+    const now = new Date();
+    const nextVaccineDateTime = new Date(nextVaccineDate);
+  
+    if (nextVaccineDateTime <= now || nextVaccineDateTime - now < 24 * 60 * 60 * 1000) {
+      throw {message:"La fecha de la proxima dosis debe ser al menos 24 horas en el futuro.", code: 400};
+    }
+
     const newVaccine = await Vaccine.create(
       {
         titleVaccine,
@@ -21,6 +29,7 @@ export async function createVaccine(data, idPet) {
 
     return newVaccine;
   } catch (error) {
+    console.error(`Error en la creacion de una nueva vacuna para la mascota: ${idPet}, error: ${error}`);
     throw error;
   }
 }
@@ -65,6 +74,15 @@ export async function updateVaccine(idVaccine, data) {
   const { titleVaccine, descriptionVaccine, vaccineDate,doseQuantity, nextVaccineDate } = data;
 
   try {
+
+    
+    const now = new Date();
+    const nextVaccineDateTime = new Date(nextVaccineDate);
+  
+    if (nextVaccineDateTime <= now || nextVaccineDateTime - now < 24 * 60 * 60 * 1000) {
+      throw {message:"La fecha de la proxima dosis debe ser al menos 24 horas en el futuro.", code: 400};
+    }
+
     const updates = {};
     const updateOptions = { where: { idVaccine } };
 
@@ -91,6 +109,7 @@ export async function updateVaccine(idVaccine, data) {
 
     return;
   } catch (error) {
+    console.error(`Error en la modificacion de la vacuna: ${idVaccine}, error: ${error}`);
     throw error;
   }
 }

@@ -4,6 +4,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "start-all": "concurrently \"npm run start\" \"npm run schedule\"" ,
+    "schedule": "node src/helpers/scriptHelper.js",
     "dev": "nodemon src/index.js",
     "start": "node src/index.js"
   },
@@ -18,6 +20,7 @@
     "jsonwebtoken": "^9.0.1",
     "morgan": "^1.10.0",
     "mysql2": "^3.5.2",
+    "node-cron": "^3.0.2",
     "nodemailer": "^6.9.4",
     "pug": "^3.0.2",
     "sequelize": "^6.32.1",

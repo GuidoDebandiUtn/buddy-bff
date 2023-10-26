@@ -37,9 +37,13 @@ import "./models/User.js";
 import "./models/UserRole.js";
 import "./models/UserState.js";
 import "./models/Vaccine.js";
+import { startCron } from "./helpers/scriptHelper.js";
 
 async function main() {
   await sequelize.sync({ force: false });
+
+  startCron();
+
   app.listen(4000, () => {
     console.log("Server on port 4000");
     swaggerDocs(app, 4000);

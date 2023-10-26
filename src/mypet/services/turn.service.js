@@ -4,6 +4,13 @@ import { sequelize } from "../../database/database.js";
 export async function createTurn(data, idPet) {
   const { titleTurn, descriptionTurn, turnDate } = data;
 
+  const now = new Date();
+  const turnDateTime = new Date(turnDate);
+
+  if (turnDateTime <= now || turnDateTime - now < 24 * 60 * 60 * 1000) {
+    throw {message:"La fecha del turno debe ser al menos 24 horas en el futuro.", code: 400};
+  }
+
   try {
     const newTurn = await Turn.create(
       {
@@ -19,6 +26,7 @@ export async function createTurn(data, idPet) {
 
     return newTurn;
   } catch (error) {
+    console.error(`Error en la creacion de un nuevo turno para la mascota: ${idPet}, error: ${error}`);
     throw error;
   }
 }
@@ -63,6 +71,14 @@ export async function updateTurn(idTurn, data) {
   const { titleTurn, descriptionTurn, turnDate } = data;
 
   try {
+
+    const now = new Date();
+    const turnDateTime = new Date(turnDate);
+  
+    if (turnDateTime <= now || turnDateTime - now < 24 * 60 * 60 * 1000) {
+      throw {message:"La fecha del turno debe ser al menos 24 horas en el futuro.", code: 400};
+    }
+
     const updates = {};
     const updateOptions = { where: { idTurn } };
 
@@ -82,6 +98,7 @@ export async function updateTurn(idTurn, data) {
 
     return;
   } catch (error) {
+    console.error(`Error en la actualizacion del turno: ${idTurn}, error: ${error}`);
     throw error;
   }
 }
