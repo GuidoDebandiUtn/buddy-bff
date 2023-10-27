@@ -25,6 +25,13 @@ export async function login(req, res) {
       return res.status(400).json({ message: "Aun no ha validado el usuario" });
     }
 
+    console.log("usuario obtenido:", user[0].dataValues.userStateName );
+
+    if (user[0].dataValues.userStateName == "BLOQUEADO") {
+      return res.status(400).json({ 
+        message: `No es posible acceder a la aplicacion porque el usuario se encuentra bloqueado. Para desbloquearlo enviar una solicitud al mail projectapplicationbuddy@gmail.com` });
+    }
+
     let token;
 
     const passwordMatch = await bcrypt.compare(password, user[0].password);

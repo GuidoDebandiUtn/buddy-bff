@@ -195,8 +195,15 @@ export async function getUserPassword(idUser) {
 export async function getUserByMail(mail) {
   try {
     const query = `
-      SELECT idUser, mail, validated, password, image,address,phoneNumber,cuitCuil,birthDate
+      SELECT users.idUser, users.mail, users.validated, users.password, users.image,users.address,users.phoneNumber,users.cuitCuil,users.birthDate,
+      userStates.idUserState, userStates.userStateName
       FROM users
+      INNER JOIN (
+        SELECT idUser, idUserState
+        FROM stateUsers
+        where active = true
+      ) AS ultimosEstados ON users.idUser = ultimosEstados.idUser
+      INNER JOIN userStates ON ultimosEstados.idUserState = userStates.idUserState
       WHERE mail = '${mail}'
       `;
 
