@@ -145,9 +145,22 @@ export async function getAllUsers() {
 export async function getUserById(idUser) {
   try {
     const query = `
-    SELECT idUser, mail, userName, name, image,address,phoneNumber,cuitCuil,birthDate
+    SELECT users.idUser, users.mail, users.userName, users.name, users.image,users.address,users.phoneNumber,users.cuitCuil,users.birthDate,
+    roles.idRole,roles.roleName,roles.roleDescription
     FROM users
-    WHERE idUser = '${idUser}'
+    INNER JOIN (
+      SELECT idUser, idUserState
+      FROM stateUsers
+      where active = true
+    ) AS ultimosEstados ON users.idUser = ultimosEstados.idUser
+    INNER JOIN userStates ON ultimosEstados.idUserState = userStates.idUserState
+    INNER JOIN (
+      SELECT idUser, idRole
+      FROM userRoles 
+      where active = true
+    ) AS ultimosRoles ON users.idUser = ultimosRoles.idUser
+    INNER JOIN roles ON ultimosRoles.idRole = roles.idRole
+    WHERE users.idUser = '${idUser}'
     `;
     const user = await sequelize.query(query, {
       model: User,
