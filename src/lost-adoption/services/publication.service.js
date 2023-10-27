@@ -323,7 +323,7 @@ function getModel(modelType) {
   let orderBy;
   let model;
   let include = [
-    {model: User,attributes:["userName","idUser"],},
+    {model: User,attributes:["userName","idUser","image"],},
     { model: PetColor, attributes: ["petColorName"] },
     { model: Locality, attributes: ["localityName"] },
     { model: PetBreed,
