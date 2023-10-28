@@ -57,10 +57,10 @@ export async function createMessage(idUser, content, idChat) {
     await chat.save();
   try{
     if(chat.idUserEmitter !== idUser){
-      const sender = await getUserById(chat.idUserReceptor);
+      const sender = await getUserById(idUser);
       await createNotificationForUser(chat.idUserEmitter,`${sender[0].dataValues.userName} te ha enviado un nuevo mensaje: ${content}`);
     }else{
-      const sender = await getUserById(chat.idUserReceptor);
+      const sender = await getUserById(idUser);
       await createNotificationForUser(chat.idUserReceptor,`${sender[0].dataValues.userName} te ha enviado un nuevo mensaje: ${content}`);
     }
   }catch(error){
