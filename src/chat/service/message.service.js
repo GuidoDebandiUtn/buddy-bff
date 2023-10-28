@@ -58,10 +58,10 @@ export async function createMessage(idUser, content, idChat) {
   try{
     if(chat.idUserEmitter !== idUser){
       const sender = await getUserById(chat.idUserReceptor);
-      await createNotificationForUser(chat.idUserEmitter,`${sender.username} te ha enviado un nuevo mensaje: ${content}`);
+      await createNotificationForUser(chat.idUserEmitter,`${sender[0].dataValues.userName} te ha enviado un nuevo mensaje: ${content}`);
     }else{
-      const sender = await getUserById(chat.idUserEmitter);
-      await createNotificationForUser(chat.idUserEmitter,`${sender.username} te ha enviado un nuevo mensaje: ${content}`);
+      const sender = await getUserById(chat.idUserReceptor);
+      await createNotificationForUser(chat.idUserReceptor,`${sender[0].dataValues.userName} te ha enviado un nuevo mensaje: ${content}`);
     }
   }catch(error){
     console.error("error creando notificacion para un nuevo mensaje de un chat",error);
