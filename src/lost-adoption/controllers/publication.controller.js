@@ -183,7 +183,7 @@ export async function deletePublication(req, res) {
       .json({ message: `No se ha podido encontrar la publicacion a eliminar` });
   }
 
-  if (!hasAllPermissions && publication[0].idUser != idUser) {
+  if (!hasAllPermissions && publication.get('idUser') != idUser) {
     return res
       .status(403)
       .json({ message: "No se cuenta con todos los permissions necesarios" });
@@ -246,7 +246,7 @@ export async function getPublication(req, res) {
       .json({ message: `No se ha podido encontrar la publicacion` });
   }
 
-  if (!hasAllPermissions && publication[0].idUser != idUser) {
+  if (publication.get('idUser') != idUser && !hasAllPermissions ) {
     return res
       .status(403)
       .json({ message: "No se cuenta con todos los permissions necesarios" });
@@ -361,7 +361,7 @@ export async function postSolvePublication(req, res) {
     });
   }
 
-  if (!hasAllPermissions && publication[0].idUser != idUser) {
+  if (!hasAllPermissions && publication.get('idUser') != idUser) {
     return res
       .status(403)
       .json({ message: "Solo es posible resolver las publicaciones propias!" });
