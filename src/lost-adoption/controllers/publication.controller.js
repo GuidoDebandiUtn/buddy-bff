@@ -212,6 +212,51 @@ export async function deletePublication(req, res) {
   }
 }
 
+
+export async function getPublication(req, res) {
+  const { idPublication } = req.params;
+  const { modelType } = req.query;
+  const idUser = req.user.idUser;
+
+  const userPermissions = req.user.permissions;
+
+  let requiredPermissions = [];
+  if (!modelType) {
+    return res
+      .status(400)
+      .json({ message: `El parametro modelType es obligatorio`, code: 400 });
+  }
+  if (modelType.toUpperCase() == "ADOPTION") {
+    requiredPermissions.push("READ_PUBLICACION_ADOPCION");
+  } else {
+    requiredPermissions.push("READ_PUBLICACION_BUSQUEDA");
+  }
+
+  const hasAllPermissions = requiredPermissions.every((permission) =>
+    userPermissions.includes(permission)
+  );
+
+  const publication = await getPublicationById(idPublication, modelType);
+  console.debug(
+    `publicacion obtenida correctamente. entidad obtenida: '${publication}'`
+  );
+  if (!publication) {
+    return res
+      .status(404)
+      .json({ message: `No se ha podido encontrar la publicacion` });
+  }
+
+  if (!hasAllPermissions && publication[0].idUser != idUser) {
+    return res
+      .status(403)
+      .json({ message: "No se cuenta con todos los permissions necesarios" });
+  }
+
+  return res.status(200).json({publication: publication});
+
+
+}
+
 export async function putPublication(req, res) {
   const { modelType } = req.query;
   const { idPublication } = req.params;

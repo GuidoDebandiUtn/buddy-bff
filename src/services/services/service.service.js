@@ -192,7 +192,8 @@ export async function getAllServices() {
         services.images,services.serviceTitle, services.serviceDescription, services.address, services.openTime, services.closeTime, services.open24hs, services.idService,services.avgRating,services.emailService, services.idUser,
         serviceStates.serviceStateName,serviceStates.idServiceState,
         GROUP_CONCAT(petTypes.idPetType) AS idPetTypes, GROUP_CONCAT(petTypes.petTypeName) AS petTypesName,
-        servicetypes.idServiceType,servicetypes.serviceTypeName 
+        servicetypes.idServiceType,servicetypes.serviceTypeName,
+        localities.idLocality, localities.localityName
       FROM services
       INNER JOIN (
         SELECT idService , idServiceState , active
@@ -203,6 +204,7 @@ export async function getAllServices() {
       INNER JOIN servicepets   ON services.idService = ServicePets.idService
       INNER JOIN PetTypes ON ServicePets.idPetType = PetTypes.idPetType
       INNER JOIN servicetypes ON servicetypes.idServiceType = services.idServiceType
+      INNER JOIN localities ON services.idLocality = localities.idLocality
       WHERE  serviceStates.serviceStateName = 'ACTIVO'  AND ultimosEstados.active = 1
       GROUP BY services.serviceTitle,services.serviceDescription,services.address,services.openTime,services.closeTime, services.open24hs
     `;

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {    getPublications, postAdoption, postSearch,deletePublication, putPublication, obtainPublicationsByUser, postSolvePublication} from "../controllers/publication.controller.js";
+import {    getPublications, postAdoption, postSearch,deletePublication, putPublication, obtainPublicationsByUser, postSolvePublication, getPublication} from "../controllers/publication.controller.js";
 import { verifyToken } from "../../security/controllers/auth.controller.js";
 
 const router = Router();
@@ -285,6 +285,41 @@ router.post('/adoption', verifyToken,postAdoption);
  *          description: Error interno del servicio
  */
 router.delete('/:idPublication',verifyToken,deletePublication);
+
+/**
+ * @swagger
+ * /publications/publication/:idPublication:
+ *   get:
+ *     summary: Obtiene una publicacion indicando el Id
+ *     parameters:
+ *       - in: path
+ *         name: modelType
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Tipo de publicacion, puede ser Search o Adoption.
+ *       - in: query
+ *         name: idPublication
+ *         schema:
+ *           type: uuid
+ *         description: Id de la publicacion a eliminar.
+ *     tags: [PUBLICATION]
+ *     responses:
+ *       200:
+ *         description: Publicacion eliminada correctamente.
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *       400:
+ *         description: Error en los atributos de la publicacion.
+ *       500:
+ *          description: Error interno del servicio
+ */
+router.get('/:idPublication',verifyToken,getPublication);
 
 /**
  * @swagger
