@@ -88,7 +88,7 @@ export async function getRole(req, res) {
   try {
     const role = await getRoleById(idRole);
 
-    if (!role[0]) {
+    if (!role) {
       return res.status(404).json({
         message: "No existe ningun rol con ese id",
       });

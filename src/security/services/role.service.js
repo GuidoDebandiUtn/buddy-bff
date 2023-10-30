@@ -65,20 +65,56 @@ export async function getEveryRol() {
 export async function getRoleById(idRole) {
   try {
     const query = `
-    SELECT roles.idRole, roles.roleName, roles.roleDescription, GROUP_CONCAT(permissions.tokenClaim) AS permissions
+    SELECT roles.idRole, roles.roleName, roles.roleDescription
     FROM roles
-    LEFT JOIN rolePermissions ON roles.idRole = rolePermissions.idRole
-    LEFT JOIN permissions ON rolePermissions.idPermission = permissions.idPermission
     WHERE roles.idRole = '${idRole}'
     GROUP BY roles.idRole, roles.roleName`;
 
-    const role = await sequelize.query(query, {
+    let role = await sequelize.query(query, {
       model: Role,
       mapToModel: true,
     });
 
+    const permissions = await getPermissionsForRole(idRole);
+
+    console.log(`Obtenidos los siguientes permisos para el rol: ${permissions}`);
+    
+    // Acceder a los valores del modelo utilizando dataValues
+    role = role[0].dataValues;
+
+    // Asignar el atributo permissions al objeto role
+    role.permissions = permissions;
+
+    console.log(`rol: ${role}`);
+
     return role;
   } catch (error) {
+    throw error;
+  }
+}
+
+
+
+export async function getPermissionsForRole(idRole) {
+  try {
+    const query = `
+      SELECT p.tokenclaim AS permissions
+      FROM roles AS r
+      JOIN rolepermissions AS rp ON r.idRole = rp.idRole
+      JOIN permissions AS p ON p.idPermission = rp.idPermission
+      WHERE r.idRole = '${idRole}'
+      `;
+
+    const role = await sequelize.query(query, {
+      type: sequelize.QueryTypes.SELECT,
+    });
+
+    const permissionsArray = [];
+    role.map((role) => permissionsArray.push(role.permissions));
+
+    return permissionsArray;
+  } catch (error) {
+    console.log(error);
     throw error;
   }
 }
