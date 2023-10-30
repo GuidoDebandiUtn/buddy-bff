@@ -12,7 +12,6 @@ dotenv.config();
 //     }
 // )
 
-
 let backgroundProcessLogShown = false;
 
 export const sequelize = new Sequelize(
@@ -24,15 +23,14 @@ export const sequelize = new Sequelize(
     dialect: "mysql",
     timezone: "-03:00",
     logging: (msg) => {
-      //if (!msg.startsWith('Executing (default):')){
-      if (!msg.startsWith('Executing (default): SHOW INDEX') && !msg.startsWith('Executing (default): SELECT TABLE_NAME')) {
+      if (!msg.startsWith("Executing (default):")) {
+        // if (!msg.startsWith('Executing (default): SHOW INDEX') && !msg.startsWith('Executing (default): SELECT TABLE_NAME')) {
         console.log(msg);
       }
       if (!backgroundProcessLogShown) {
-        console.log('Initializing Database processes...');
+        console.log("Initializing Database processes...");
         backgroundProcessLogShown = true;
       }
     },
-  },
-  
+  }
 );

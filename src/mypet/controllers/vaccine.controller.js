@@ -9,9 +9,8 @@ import {
 } from "../services/vaccine.service.js";
 import { getPetById } from "../services/pet.service.js";
 
-
-const dateRegex = /^(\d{4}[-\/\\]\d{2}[-\/\\]\d{2}|\d{2}[-\/\\]\d{2}[-\/\\]\d{4})(?: \d{2}:\d{2}:\d{2})?$/;
-
+const dateRegex =
+  /^(\d{4}[-\/\\]\d{2}[-\/\\]\d{2}|\d{2}[-\/\\]\d{2}[-\/\\]\d{4})(?: \d{2}:\d{2}:\d{2})?$/;
 
 export async function vaccineCreate(req, res) {
   const { idPet } = req.params;
@@ -19,17 +18,19 @@ export async function vaccineCreate(req, res) {
   const userPermissions = req.user.permissions;
 
   if (!dateRegex.test(req.body.vaccineDate)) {
-    console.log ("error en el formato de la fecha de la vacuna: obtenido: %s, esperado AAAA-mm-dd HH:mm:ss",req.body.vaccineDate);
-    return res
-    .status(400)
-    .json({ message: "Error en el formato de fecha" });
+    console.log(
+      "error en el formato de la fecha de la vacuna: obtenido: %s, esperado AAAA-mm-dd HH:mm:ss",
+      req.body.vaccineDate
+    );
+    return res.status(400).json({ message: "Error en el formato de fecha" });
   }
 
   if (req.body.nextVaccineDate && !dateRegex.test(req.body.nextVaccineDate)) {
-    console.log ("error en el formato de la fecha de la proxima vacuna: obtenido: %s, esperado AAAA-mm-dd HH:mm:ss",req.body.vaccineDate);
-    return res
-    .status(400)
-    .json({ message: "Error en el formato de fecha" });
+    console.log(
+      "error en el formato de la fecha de la proxima vacuna: obtenido: %s, esperado AAAA-mm-dd HH:mm:ss",
+      req.body.vaccineDate
+    );
+    return res.status(400).json({ message: "Error en el formato de fecha" });
   }
 
   try {
@@ -40,11 +41,15 @@ export async function vaccineCreate(req, res) {
         .status(404)
         .json({ message: "No existe ninguna mascota con ese id" });
     }
-    let requiredPermissions=['WRITE_MI_MASCOTA',];
-    const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
-  
+    let requiredPermissions = ["WRITE_MI_MASCOTA"];
+    const hasAllPermissions = requiredPermissions.every((permission) =>
+      userPermissions.includes(permission)
+    );
+
     if (!hasAllPermissions && pet[0].idUser != idUser) {
-      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+      return res
+        .status(403)
+        .json({ message: "No se cuenta con todos los permissions necesarios" });
     }
 
     const newVaccine = await createVaccine(req.body, idPet);
@@ -71,13 +76,16 @@ export async function getVaccines(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    let requiredPermissions=['READ_MI_MASCOTA',];
-    const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
-  
-    if (!hasAllPermissions && pet[0].idUser != idUser) {
-      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
-    }
+    let requiredPermissions = ["READ_MI_MASCOTA"];
+    const hasAllPermissions = requiredPermissions.every((permission) =>
+      userPermissions.includes(permission)
+    );
 
+    if (!hasAllPermissions && pet[0].idUser != idUser) {
+      return res
+        .status(403)
+        .json({ message: "No se cuenta con todos los permissions necesarios" });
+    }
 
     const vaccines = await getAllVaccines(idPet);
 
@@ -105,11 +113,15 @@ export async function getVaccine(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    let requiredPermissions=['READ_MI_MASCOTA',];
-    const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
-  
+    let requiredPermissions = ["READ_MI_MASCOTA"];
+    const hasAllPermissions = requiredPermissions.every((permission) =>
+      userPermissions.includes(permission)
+    );
+
     if (!hasAllPermissions && pet[0].idUser != idUser) {
-      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+      return res
+        .status(403)
+        .json({ message: "No se cuenta con todos los permissions necesarios" });
     }
 
     const vaccine = await getVaccineById(idVaccine);
@@ -140,18 +152,23 @@ export async function vaccineUpdate(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    let requiredPermissions=['WRITE_MI_MASCOTA',];
-    const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
-  
+    let requiredPermissions = ["WRITE_MI_MASCOTA"];
+    const hasAllPermissions = requiredPermissions.every((permission) =>
+      userPermissions.includes(permission)
+    );
+
     if (!hasAllPermissions && pet[0].idUser != idUser) {
-      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+      return res
+        .status(403)
+        .json({ message: "No se cuenta con todos los permissions necesarios" });
     }
 
     if (!dateRegex.test(req.body.vaccineDate)) {
-      console.log ("error en el formato de la fecha de la vacuna: obtenido: %s, esperado AAAA-mm-dd HH:mm:ss",req.body.vaccineDate);
-      return res
-      .status(400)
-      .json({ message: "Error en el formato de fecha" });
+      console.log(
+        "error en el formato de la fecha de la vacuna: obtenido: %s, esperado AAAA-mm-dd HH:mm:ss",
+        req.body.vaccineDate
+      );
+      return res.status(400).json({ message: "Error en el formato de fecha" });
     }
 
     const vaccine = await getVaccineById(idVaccine);
@@ -186,11 +203,15 @@ export async function vaccineDelete(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    let requiredPermissions=['WRITE_MI_MASCOTA',];
-    const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
-  
+    let requiredPermissions = ["WRITE_MI_MASCOTA"];
+    const hasAllPermissions = requiredPermissions.every((permission) =>
+      userPermissions.includes(permission)
+    );
+
     if (!hasAllPermissions && pet[0].idUser != idUser) {
-      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+      return res
+        .status(403)
+        .json({ message: "No se cuenta con todos los permissions necesarios" });
     }
 
     const vaccine = await getVaccineById(idVaccine);
@@ -225,11 +246,15 @@ export async function vaccineActive(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    let requiredPermissions=['WRITE_MI_MASCOTA',];
-    const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
-  
+    let requiredPermissions = ["WRITE_MI_MASCOTA"];
+    const hasAllPermissions = requiredPermissions.every((permission) =>
+      userPermissions.includes(permission)
+    );
+
     if (!hasAllPermissions && pet[0].idUser != idUser) {
-      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+      return res
+        .status(403)
+        .json({ message: "No se cuenta con todos los permissions necesarios" });
     }
 
     const vaccine = await getVaccineById(idVaccine);
@@ -264,11 +289,15 @@ export async function vaccineArchive(req, res) {
         .json({ message: "No existe ninguna mascota con ese id" });
     }
 
-    let requiredPermissions=['WRITE_MI_MASCOTA',];
-    const hasAllPermissions = requiredPermissions.every(permission => userPermissions.includes(permission));
-  
+    let requiredPermissions = ["WRITE_MI_MASCOTA"];
+    const hasAllPermissions = requiredPermissions.every((permission) =>
+      userPermissions.includes(permission)
+    );
+
     if (!hasAllPermissions && pet[0].idUser != idUser) {
-      return res.status(403).json({ message: "No se cuenta con todos los permissions necesarios" });
+      return res
+        .status(403)
+        .json({ message: "No se cuenta con todos los permissions necesarios" });
     }
 
     const vaccine = await getVaccineById(idVaccine);

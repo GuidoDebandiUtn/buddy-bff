@@ -217,7 +217,7 @@ export async function petBreedDelete(req, res) {
 export async function getPetBreedsByType(req, res) {
   const { petTypeName } = req.params;
   const userPermissions = req.user.permissions;
-  let requiredPermissions = ["WRITE_PETBREEDS"];
+  let requiredPermissions = ["READ_PETBREEDS"];
   const hasAllPermissions = requiredPermissions.every((permission) =>
     userPermissions.includes(permission)
   );
